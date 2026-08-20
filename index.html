@@ -3698,10 +3698,8 @@ function onBarcodeDetected(
   decodedResult
 ) {
 
-
   const barcode =
-    String(decodedText)
-      .trim();
+    String(decodedText || "").trim();
 
 
   if (!barcode) {
@@ -3709,33 +3707,26 @@ function onBarcodeDetected(
   }
 
 
-  /*
-   * Prevent the same barcode from
-   * being added repeatedly while
-   * the camera sees it.
-   */
+  /* =================================================
+     PREVENT DUPLICATE SCANS
+  ================================================= */
 
-  const now =
-    Date.now();
-
+  const now = Date.now();
 
   if (
     barcode === lastScannedBarcode &&
     now - lastScanTime < 1500
   ) {
-
     return;
-
   }
 
+  lastScannedBarcode = barcode;
+  lastScanTime = now;
 
-  lastScannedBarcode =
-    barcode;
 
-
-  lastScanTime =
-    now;
-
+  /* =================================================
+     SHOW DETECTED BARCODE
+  ================================================= */
 
   setScannerStatus(
     "Product detected: " +
@@ -3743,10 +3734,15 @@ function onBarcodeDetected(
   );
 
 
-  /*
-   * Look up product through the
-   * Mobile POS Web App API.
-   */
+  console.log(
+    "BARCODE DETECTED:",
+    barcode
+  );
+
+
+  /* =================================================
+     LOOK UP PRODUCT
+  ================================================= */
 
   callPOSApi(
     "product",
@@ -3754,7 +3750,21 @@ function onBarcodeDetected(
       barcode: barcode
     },
 
+    /* ===============================================
+       SUCCESS
+    ============================================== */
+
     function(result) {
+
+      console.log(
+        "PRODUCT API RESPONSE:",
+        result
+      );
+
+
+      /* ---------------------------------------------
+         PRODUCT NOT FOUND
+      --------------------------------------------- */
 
       if (
         !result ||
@@ -3762,6 +3772,13 @@ function onBarcodeDetected(
         !result.found ||
         !result.product
       ) {
+
+        console.error(
+          "PRODUCT NOT FOUND:",
+          barcode,
+          result
+        );
+
 
         setScannerStatus(
           "Product not found: " +
@@ -3786,42 +3803,96 @@ function onBarcodeDetected(
       }
 
 
-      /*
-       * Add product to cart.
-       */
+      /* =============================================
+         PRODUCT FOUND
+      ============================================= */
 
-      addProductToCart(
-        result.product
+      const product =
+        result.product;
+
+
+      console.log(
+        "PRODUCT FOUND:",
+        product
       );
 
 
-      setScannerStatus(
-        result.product.productName +
-        " added"
-      );
+      /* =============================================
+         ADD PRODUCT TO CART
+      ============================================= */
+
+      try {
+
+        addProductToCart(
+          product
+        );
 
 
-      /*
-       * Scanner remains running.
-       */
+        console.log(
+          "PRODUCT ADDED TO CART:",
+          product
+        );
 
-      setTimeout(
-        function() {
 
-          setScannerStatus(
-            "Scanner ready — scan next product"
-          );
+        /* -------------------------------------------
+           UPDATE SCANNER STATUS
+        ------------------------------------------ */
 
-        },
-        1000
-      );
+        setScannerStatus(
+          product.productName +
+          " added"
+        );
+
+
+        /* -------------------------------------------
+           READY FOR NEXT SCAN
+        ------------------------------------------ */
+
+        setTimeout(
+          function() {
+
+            setScannerStatus(
+              "Scanner ready — scan next product"
+            );
+
+          },
+          1000
+        );
+
+
+      }
+
+      catch (error) {
+
+        console.error(
+          "ADD TO CART ERROR:",
+          error
+        );
+
+
+        setScannerStatus(
+          "Error adding product to cart"
+        );
+
+
+        alert(
+          "The product was found, but could not be added to the cart.\n\n" +
+          error.message
+        );
+
+      }
 
     },
+
+
+    /* ===============================================
+       API ERROR
+    ============================================== */
 
     function(error) {
 
       console.error(
-        "Product lookup error:",
+        "PRODUCT LOOKUP ERROR:",
         error
       );
 
@@ -3830,12 +3901,21 @@ function onBarcodeDetected(
         "Unable to find product"
       );
 
+
+      alert(
+        "Unable to connect to the product database.\n\n" +
+        (
+          error && error.message
+            ? error.message
+            : "Unknown error"
+        )
+      );
+
     }
+
   );
 
 }
-
-
 
 /* =================================================
    SCANNER ERROR CALLBACK
