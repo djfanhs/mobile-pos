@@ -3057,13 +3057,38 @@ function escapeHtml(value) {
    CHECKOUT
 ================================================= */
 
+/* =================================================
+   CHECKOUT
+================================================= */
+
 function checkout() {
 
+  console.log(
+    "================================="
+  );
 
-  if (cart.length === 0) {
+  console.log(
+    "CHECKOUT STARTED"
+  );
+
+  console.log(
+    "CART:",
+    cart
+  );
+
+
+  /* =============================================
+     CHECK EMPTY CART
+  ============================================= */
+
+  if (
+    !cart ||
+    cart.length === 0
+  ) {
 
     alert(
-      "The cart is empty."
+      "CART IS EMPTY.\n\n" +
+      "Please scan a product first."
     );
 
     return;
@@ -3071,30 +3096,401 @@ function checkout() {
   }
 
 
-  /*
-   * Checkout/payment interface
-   * will be expanded in the next
-   * checkout part.
-   */
+  /* =============================================
+     CALCULATE TOTAL
+  ============================================= */
 
-  const total =
-    cart.reduce(
-      (sum, item) =>
-        sum +
+  let total =
+    0;
+
+
+  cart.forEach(
+    function(item) {
+
+      total +=
         (
-          Number(item.quantity) *
-          Number(item.unitPrice)
-        ),
-      0
+          Number(item.unitPrice) ||
+          0
+        ) *
+        (
+          Number(item.quantity) ||
+          0
+        );
+
+    }
+  );
+
+
+  total =
+    Number(
+      total.toFixed(2)
     );
 
 
-  alert(
-    "ORDER TOTAL\n\n₱" +
-    formatMoney(total) +
-    "\n\n" +
-    "Payment and stock deduction " +
-    "will be connected in the checkout part."
+  console.log(
+    "CHECKOUT TOTAL:",
+    total
+  );
+
+
+  /* =============================================
+     ASK FOR CASH
+  ============================================= */
+
+  const cashInput =
+    prompt(
+      "TOTAL: ₱" +
+      total.toFixed(2) +
+      "\n\n" +
+      "Enter CASH RECEIVED:"
+    );
+
+
+  /*
+   * Cancelled.
+   */
+
+  if (
+    cashInput === null
+  ) {
+
+    return;
+
+  }
+
+
+  const cash =
+    Number(
+      String(cashInput)
+        .replace(/,/g, "")
+        .trim()
+    );
+
+
+  /* =============================================
+     VALIDATE CASH
+  ============================================= */
+
+  if (
+    !Number.isFinite(cash) ||
+    cash < 0
+  ) {
+
+    alert(
+      "INVALID CASH AMOUNT."
+    );
+
+    return;
+
+  }
+
+
+  if (
+    cash < total
+  ) {
+
+    alert(
+
+      "INSUFFICIENT CASH.\n\n" +
+
+      "Total: ₱" +
+      total.toFixed(2) +
+
+      "\nCash: ₱" +
+      cash.toFixed(2) +
+
+      "\n\nShort by: ₱" +
+      (
+        total - cash
+      ).toFixed(2)
+
+    );
+
+    return;
+
+  }
+
+
+  const change =
+    cash - total;
+
+
+  /* =============================================
+     CONFIRM TRANSACTION
+  ============================================= */
+
+  const confirmed =
+    confirm(
+
+      "CONFIRM PAYMENT\n\n" +
+
+      "TOTAL: ₱" +
+      total.toFixed(2) +
+
+      "\nCASH: ₱" +
+      cash.toFixed(2) +
+
+      "\nCHANGE: ₱" +
+      change.toFixed(2) +
+
+      "\n\n" +
+
+      "Complete this transaction?"
+
+    );
+
+
+  if (!confirmed) {
+
+    return;
+
+  }
+
+
+  /* =============================================
+     PREPARE CHECKOUT DATA
+  ============================================= */
+
+  const checkoutData = {
+
+    items:
+      cart.map(
+        function(item) {
+
+          return {
+
+            barcode:
+              item.barcode,
+
+            productId:
+              item.productId,
+
+            productName:
+              item.productName,
+
+            unitPrice:
+              Number(
+                item.unitPrice
+              ) || 0,
+
+            quantity:
+              Number(
+                item.quantity
+              ) || 0
+
+          };
+
+        }
+      ),
+
+    cash:
+      cash
+
+  };
+
+
+  console.log(
+    "CHECKOUT DATA:",
+    checkoutData
+  );
+
+
+  /* =============================================
+     DISABLE CHECKOUT BUTTON
+  ============================================= */
+
+  const checkoutButton =
+    document.getElementById(
+      "checkoutButton"
+    );
+
+
+  if (checkoutButton) {
+
+    checkoutButton.disabled =
+      true;
+
+    checkoutButton.textContent =
+      "PROCESSING...";
+
+  }
+
+
+  /* =============================================
+     SEND TO GOOGLE APPS SCRIPT
+  ============================================= */
+
+  callPOSApi(
+
+    "checkout",
+
+    {
+      data:
+        JSON.stringify(
+          checkoutData
+        )
+    },
+
+
+    /* =========================================
+       SUCCESS
+    ========================================= */
+
+    function(result) {
+
+      console.log(
+        "CHECKOUT RESPONSE:",
+        result
+      );
+
+
+      /*
+       * Re-enable button.
+       */
+
+      if (checkoutButton) {
+
+        checkoutButton.disabled =
+          false;
+
+        checkoutButton.textContent =
+          "CHECKOUT";
+
+      }
+
+
+      /*
+       * Check server response.
+       */
+
+      if (
+        !result ||
+        result.success !== true
+      ) {
+
+        alert(
+
+          "CHECKOUT FAILED.\n\n" +
+
+          (
+            result &&
+            result.message
+              ? result.message
+              : "Unable to complete transaction."
+          )
+
+        );
+
+        return;
+
+      }
+
+
+      /* =======================================
+         SUCCESS
+      ======================================= */
+
+      const transactionId =
+        result.transactionId ||
+        "N/A";
+
+
+      alert(
+
+        "TRANSACTION COMPLETED!\n\n" +
+
+        "Transaction ID:\n" +
+        transactionId +
+
+        "\n\n" +
+
+        "TOTAL: ₱" +
+        Number(
+          result.total || total
+        ).toFixed(2) +
+
+        "\n" +
+
+        "CASH: ₱" +
+        Number(
+          result.cash || cash
+        ).toFixed(2) +
+
+        "\n" +
+
+        "CHANGE: ₱" +
+        Number(
+          result.change || change
+        ).toFixed(2)
+
+      );
+
+
+      /* =======================================
+         CLEAR CART ONLY AFTER SUCCESS
+      ======================================= */
+
+      cart = [];
+
+
+      renderCart();
+
+
+      /*
+       * Return scanner to ready state.
+       */
+
+      setScannerStatus(
+        "Scanner ready — scan a product"
+      );
+
+
+      console.log(
+        "TRANSACTION COMPLETED:",
+        transactionId
+      );
+
+    },
+
+
+    /* =========================================
+       FAILURE
+    ========================================= */
+
+    function(error) {
+
+      console.error(
+        "CHECKOUT ERROR:",
+        error
+      );
+
+
+      if (checkoutButton) {
+
+        checkoutButton.disabled =
+          false;
+
+        checkoutButton.textContent =
+          "CHECKOUT";
+
+      }
+
+
+      alert(
+
+        "CHECKOUT FAILED.\n\n" +
+
+        (
+          error &&
+          error.message
+            ? error.message
+            : "Unable to connect to the POS server."
+        )
+
+      );
+
+    }
+
   );
 
 }
