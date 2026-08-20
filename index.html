@@ -1,0 +1,3789 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <base target="_top">
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
+  <meta name="viewport"
+        content="width=device-width,
+                 initial-scale=1,
+                 maximum-scale=1,
+                 user-scalable=no">
+
+  <title>Mobile POS</title>
+
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+    }
+
+
+    body {
+
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+      background: #f4f6f8;
+
+      color: #111827;
+
+      -webkit-tap-highlight-color:
+        transparent;
+
+    }
+
+
+    button,
+    input {
+      font-family: inherit;
+    }
+
+
+    button {
+      cursor: pointer;
+    }
+
+
+    /* =================================================
+       APP
+    ================================================= */
+
+    .app {
+
+      width: 100%;
+
+      max-width: 600px;
+
+      min-height: 100vh;
+
+      margin: auto;
+
+      background: #ffffff;
+
+      position: relative;
+
+      overflow-x: hidden;
+
+    }
+
+
+    /* =================================================
+       HEADER
+    ================================================= */
+
+    .top-header {
+
+      background: #111827;
+
+      color: #ffffff;
+
+      padding:
+        20px
+        20px
+        18px;
+
+      position: sticky;
+
+      top: 0;
+
+      z-index: 50;
+
+    }
+
+
+    .brand {
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 12px;
+
+    }
+
+
+    .brand-icon {
+
+      width: 44px;
+
+      height: 44px;
+
+      border-radius: 13px;
+
+      background: #ffffff;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      font-size: 24px;
+
+    }
+
+
+    .brand-name {
+
+      font-size: 21px;
+
+      font-weight: 700;
+
+    }
+
+
+    .brand-subtitle {
+
+      margin-top: 3px;
+
+      font-size: 12px;
+
+      opacity: .7;
+
+    }
+
+
+    /* =================================================
+       PAGE
+    ================================================= */
+
+    .page {
+
+      display: none;
+
+      padding:
+        20px
+        20px
+        100px;
+
+      min-height: calc(100vh - 82px);
+
+    }
+
+
+    .page.active {
+      display: block;
+    }
+
+
+    /* =================================================
+       PAGE TITLE
+    ================================================= */
+
+    .page-heading {
+
+      margin-bottom: 18px;
+
+    }
+
+
+    .page-title {
+
+      font-size: 25px;
+
+      font-weight: 700;
+
+    }
+
+
+    .page-description {
+
+      margin-top: 5px;
+
+      color: #6b7280;
+
+      font-size: 13px;
+
+      line-height: 1.5;
+
+    }
+
+
+    /* =================================================
+       SALES CARD
+    ================================================= */
+
+    .sales-card {
+
+      background: #111827;
+
+      color: white;
+
+      border-radius: 20px;
+
+      padding: 22px;
+
+      margin-bottom: 18px;
+
+      position: relative;
+
+      overflow: hidden;
+
+    }
+
+
+    .sales-card::after {
+
+      content: "";
+
+      position: absolute;
+
+      width: 130px;
+
+      height: 130px;
+
+      border-radius: 50%;
+
+      background: rgba(255,255,255,.05);
+
+      right: -45px;
+
+      top: -45px;
+
+    }
+
+
+    .sales-label {
+
+      font-size: 12px;
+
+      opacity: .7;
+
+      letter-spacing: .5px;
+
+    }
+
+
+    .sales-value {
+
+      font-size: 34px;
+
+      font-weight: 700;
+
+      margin-top: 7px;
+
+    }
+
+
+    .sales-today {
+
+      margin-top: 6px;
+
+      font-size: 12px;
+
+      opacity: .7;
+
+    }
+
+
+    /* =================================================
+       STAT GRID
+    ================================================= */
+
+    .stats-grid {
+
+      display: grid;
+
+      grid-template-columns:
+        1fr 1fr;
+
+      gap: 12px;
+
+      margin-bottom: 22px;
+
+    }
+
+
+    .stat-card {
+
+      border: 1px solid #e5e7eb;
+
+      background: #ffffff;
+
+      border-radius: 17px;
+
+      padding: 17px;
+
+    }
+
+
+    .stat-icon {
+
+      font-size: 24px;
+
+      margin-bottom: 10px;
+
+    }
+
+
+    .stat-label {
+
+      font-size: 12px;
+
+      color: #6b7280;
+
+    }
+
+
+    .stat-value {
+
+      font-size: 24px;
+
+      font-weight: 700;
+
+      margin-top: 5px;
+
+    }
+
+
+    /* =================================================
+       SECTION
+    ================================================= */
+
+    .section {
+
+      margin-top: 22px;
+
+    }
+
+
+    .section-header {
+
+      display: flex;
+
+      justify-content: space-between;
+
+      align-items: center;
+
+      margin-bottom: 12px;
+
+    }
+
+
+    .section-title {
+
+      font-size: 17px;
+
+      font-weight: 700;
+
+    }
+
+
+    /* =================================================
+       ACTION GRID
+    ================================================= */
+
+    .action-grid {
+
+      display: grid;
+
+      grid-template-columns:
+        1fr 1fr;
+
+      gap: 12px;
+
+    }
+
+
+    .action {
+
+      border: none;
+
+      border-radius: 18px;
+
+      padding: 20px 12px;
+
+      background: #f3f4f6;
+
+      text-align: left;
+
+      min-height: 105px;
+
+      transition:
+        transform .1s ease;
+
+    }
+
+
+    .action:active {
+
+      transform: scale(.97);
+
+    }
+
+
+    .action-icon {
+
+      font-size: 29px;
+
+      margin-bottom: 10px;
+
+    }
+
+
+    .action-title {
+
+      display: block;
+
+      font-size: 15px;
+
+      font-weight: 700;
+
+    }
+
+
+    .action-description {
+
+      display: block;
+
+      margin-top: 4px;
+
+      color: #6b7280;
+
+      font-size: 11px;
+
+    }
+
+
+    /* =================================================
+       INVENTORY STATUS
+    ================================================= */
+
+    .inventory-status {
+
+      display: grid;
+
+      grid-template-columns:
+        1fr 1fr 1fr;
+
+      gap: 9px;
+
+    }
+
+
+    .status-card {
+
+      border-radius: 15px;
+
+      padding: 14px 10px;
+
+      text-align: center;
+
+      background: #f3f4f6;
+
+    }
+
+
+    .status-number {
+
+      font-size: 21px;
+
+      font-weight: 700;
+
+    }
+
+
+    .status-label {
+
+      margin-top: 4px;
+
+      font-size: 10px;
+
+      color: #6b7280;
+
+    }
+
+
+    /* =================================================
+       PLACEHOLDER PAGES
+    ================================================= */
+
+    .empty-page {
+
+      min-height: 50vh;
+
+      display: flex;
+
+      flex-direction: column;
+
+      align-items: center;
+
+      justify-content: center;
+
+      text-align: center;
+
+      color: #6b7280;
+
+    }
+
+
+    .empty-icon {
+
+      font-size: 55px;
+
+      margin-bottom: 15px;
+
+    }
+
+
+    .empty-title {
+
+      color: #111827;
+
+      font-size: 21px;
+
+      font-weight: 700;
+
+    }
+
+
+    .empty-text {
+
+      max-width: 300px;
+
+      margin-top: 7px;
+
+      font-size: 13px;
+
+      line-height: 1.5;
+
+    }
+
+
+    /* =================================================
+       BOTTOM NAV
+    ================================================= */
+
+    .bottom-nav {
+
+      position: fixed;
+
+      bottom: 0;
+
+      left: 50%;
+
+      transform: translateX(-50%);
+
+      width: 100%;
+
+      max-width: 600px;
+
+      height: 76px;
+
+      background: rgba(
+        255,
+        255,
+        255,
+        .97
+      );
+
+      border-top:
+        1px solid #e5e7eb;
+
+      display: grid;
+
+      grid-template-columns:
+        repeat(4, 1fr);
+
+      z-index: 100;
+
+      padding-bottom:
+        env(safe-area-inset-bottom);
+
+    }
+
+
+    .nav-item {
+
+      border: none;
+
+      background: transparent;
+
+      color: #6b7280;
+
+      display: flex;
+
+      flex-direction: column;
+
+      align-items: center;
+
+      justify-content: center;
+
+      gap: 4px;
+
+      position: relative;
+
+    }
+
+
+    .nav-item.active {
+
+      color: #111827;
+
+      font-weight: 700;
+
+    }
+
+
+    .nav-item.active::before {
+
+      content: "";
+
+      position: absolute;
+
+      top: 0;
+
+      left: 25%;
+
+      right: 25%;
+
+      height: 3px;
+
+      background: #111827;
+
+      border-radius:
+        0 0 5px 5px;
+
+    }
+
+
+    .nav-icon {
+
+      font-size: 21px;
+
+    }
+
+
+    .nav-label {
+
+      font-size: 10px;
+
+    }
+
+
+    /* =================================================
+       LOADING
+    ================================================= */
+
+    .loading {
+
+      position: fixed;
+
+      inset: 0;
+
+      background:
+        rgba(255,255,255,.85);
+
+      z-index: 999;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+    }
+
+
+    .loading-box {
+
+      background: white;
+
+      border-radius: 17px;
+
+      padding: 20px 25px;
+
+      box-shadow:
+        0 10px 35px
+        rgba(0,0,0,.12);
+
+      text-align: center;
+
+    }
+
+
+    .spinner {
+
+      width: 30px;
+
+      height: 30px;
+
+      border:
+        3px solid #e5e7eb;
+
+      border-top-color:
+        #111827;
+
+      border-radius: 50%;
+
+      animation:
+        spin .7s linear infinite;
+
+      margin: auto auto 10px;
+
+    }
+
+
+    @keyframes spin {
+
+      to {
+        transform: rotate(360deg);
+      }
+
+    }
+
+
+    /* =================================================
+       RESPONSIVE
+    ================================================= */
+
+    @media (max-width: 380px) {
+
+      .page {
+
+        padding:
+          17px
+          15px
+          95px;
+
+      }
+
+      .sales-value {
+
+        font-size: 29px;
+
+      }
+
+      .action {
+
+        min-height: 98px;
+
+      }
+
+    }
+
+/* =================================================
+   POS SCANNER
+================================================= */
+
+.scanner-card {
+
+  background: #111827;
+
+  color: white;
+
+  border-radius: 20px;
+
+  padding: 16px;
+
+  margin-bottom: 20px;
+
+}
+
+
+.scanner-header {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  margin-bottom: 14px;
+
+}
+
+
+.scanner-title {
+
+  font-size: 17px;
+
+  font-weight: 700;
+
+}
+
+
+.scanner-subtitle {
+
+  margin-top: 4px;
+
+  font-size: 11px;
+
+  opacity: .65;
+
+}
+
+
+.scanner-icon {
+
+  width: 42px;
+
+  height: 42px;
+
+  border-radius: 13px;
+
+  background: rgba(255,255,255,.08);
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-size: 22px;
+
+}
+
+
+/* SCANNER BOX */
+
+.scanner-box {
+
+  height: 230px;
+
+  border-radius: 15px;
+
+  background: #050505;
+
+  position: relative;
+
+  overflow: hidden;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+}
+
+
+.scanner-message {
+
+  text-align: center;
+
+  color: rgba(255,255,255,.75);
+
+  font-size: 14px;
+
+}
+
+
+.scanner-message small {
+
+  display: block;
+
+  margin-top: 7px;
+
+  font-size: 10px;
+
+  color: rgba(255,255,255,.45);
+
+}
+
+
+.scanner-camera-icon {
+
+  font-size: 35px;
+
+  margin-bottom: 8px;
+
+  opacity: .8;
+
+}
+
+
+/* SCANNER CORNERS */
+
+.scanner-corners {
+
+  position: absolute;
+
+  inset: 35px;
+
+}
+
+
+.corner {
+
+  position: absolute;
+
+  width: 35px;
+
+  height: 35px;
+
+  border-color: rgba(255,255,255,.8);
+
+  border-style: solid;
+
+}
+
+
+.top-left {
+
+  top: 0;
+
+  left: 0;
+
+  border-width: 3px 0 0 3px;
+
+}
+
+
+.top-right {
+
+  top: 0;
+
+  right: 0;
+
+  border-width: 3px 3px 0 0;
+
+}
+
+
+.bottom-left {
+
+  bottom: 0;
+
+  left: 0;
+
+  border-width: 0 0 3px 3px;
+
+}
+
+
+.bottom-right {
+
+  bottom: 0;
+
+  right: 0;
+
+  border-width: 0 3px 3px 0;
+
+}
+
+
+/* SCANNER LINE */
+
+.scanner-line {
+
+  position: absolute;
+
+  left: 35px;
+
+  right: 35px;
+
+  top: 50%;
+
+  height: 2px;
+
+  background: rgba(255,255,255,.65);
+
+  opacity: .65;
+
+}
+
+
+/* MANUAL BARCODE */
+
+.manual-scan {
+
+  display: flex;
+
+  gap: 8px;
+
+  margin-top: 12px;
+
+}
+
+
+.manual-scan input {
+
+  flex: 1;
+
+  min-width: 0;
+
+  height: 45px;
+
+  border: none;
+
+  border-radius: 11px;
+
+  padding: 0 13px;
+
+  background: rgba(255,255,255,.1);
+
+  color: white;
+
+  outline: none;
+
+}
+
+
+.manual-scan input::placeholder {
+
+  color: rgba(255,255,255,.45);
+
+}
+
+
+.manual-scan button {
+
+  width: 70px;
+
+  border: none;
+
+  border-radius: 11px;
+
+  background: white;
+
+  color: #111827;
+
+  font-weight: 700;
+
+}
+
+
+
+/* =================================================
+   CART
+================================================= */
+
+.cart-section {
+
+  margin-bottom: 15px;
+
+}
+
+
+.cart-header {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  margin-bottom: 12px;
+
+}
+
+
+.cart-title {
+
+  font-size: 18px;
+
+  font-weight: 700;
+
+}
+
+
+.clear-cart-button {
+
+  border: none;
+
+  background: transparent;
+
+  color: #6b7280;
+
+  font-size: 12px;
+
+  padding: 6px;
+
+}
+
+
+.cart-items {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 10px;
+
+}
+
+
+.cart-item {
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 16px;
+
+  padding: 15px;
+
+  background: white;
+
+}
+
+
+.cart-item-top {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  gap: 10px;
+
+}
+
+
+.cart-product-name {
+
+  font-size: 15px;
+
+  font-weight: 700;
+
+}
+
+
+.cart-barcode {
+
+  margin-top: 3px;
+
+  color: #9ca3af;
+
+  font-size: 10px;
+
+}
+
+
+.cart-item-price {
+
+  font-size: 15px;
+
+  font-weight: 700;
+
+  white-space: nowrap;
+
+}
+
+
+.cart-controls {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  margin-top: 13px;
+
+}
+
+
+.quantity-controls {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+}
+
+
+.quantity-button {
+
+  width: 34px;
+
+  height: 34px;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 9px;
+
+  background: #f9fafb;
+
+  font-size: 18px;
+
+}
+
+
+.quantity-value {
+
+  width: 35px;
+
+  text-align: center;
+
+  font-weight: 700;
+
+}
+
+
+.item-subtotal {
+
+  font-size: 13px;
+
+  color: #6b7280;
+
+}
+
+
+.remove-item {
+
+  border: none;
+
+  background: transparent;
+
+  color: #9ca3af;
+
+  font-size: 11px;
+
+  margin-left: 10px;
+
+}
+
+
+.remove-item:active {
+
+  color: #111827;
+
+}
+
+
+
+/* =================================================
+   EMPTY CART
+================================================= */
+
+.empty-cart {
+
+  text-align: center;
+
+  padding: 35px 20px;
+
+  border:
+    1px dashed #d1d5db;
+
+  border-radius: 16px;
+
+  color: #9ca3af;
+
+}
+
+
+.empty-cart-icon {
+
+  font-size: 40px;
+
+  margin-bottom: 8px;
+
+}
+
+
+.empty-cart-title {
+
+  color: #374151;
+
+  font-weight: 700;
+
+  font-size: 15px;
+
+}
+
+
+.empty-cart-text {
+
+  margin-top: 5px;
+
+  font-size: 11px;
+
+}
+
+
+
+/* =================================================
+   TOTAL CARD
+================================================= */
+
+.total-card {
+
+  background: #f3f4f6;
+
+  border-radius: 19px;
+
+  padding: 18px;
+
+  margin-bottom: 20px;
+
+}
+
+
+.total-row {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  color: #6b7280;
+
+  font-size: 13px;
+
+  margin-bottom: 9px;
+
+}
+
+
+.total-row strong {
+
+  color: #111827;
+
+}
+
+
+.total-divider {
+
+  height: 1px;
+
+  background: #d1d5db;
+
+  margin: 13px 0;
+
+}
+
+
+.grand-total-row {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  margin-bottom: 16px;
+
+}
+
+
+.grand-total-row span {
+
+  font-size: 15px;
+
+  font-weight: 700;
+
+}
+
+
+.grand-total-row strong {
+
+  font-size: 27px;
+
+}
+
+
+.checkout-button {
+
+  width: 100%;
+
+  height: 53px;
+
+  border: none;
+
+  border-radius: 14px;
+
+  background: #111827;
+
+  color: white;
+
+  font-size: 15px;
+
+  font-weight: 700;
+
+}
+
+
+.checkout-button:disabled {
+
+  background: #d1d5db;
+
+  color: #9ca3af;
+
+  cursor: not-allowed;
+
+}
+
+/* =================================================
+   REAL BARCODE SCANNER
+================================================= */
+
+.barcode-reader {
+
+  width: 100%;
+
+  height: 100%;
+
+  overflow: hidden;
+
+  background: #050505;
+
+}
+
+
+/*
+ * html5-qrcode generates the video element
+ * automatically.
+ */
+
+.barcode-reader video {
+
+  width: 100% !important;
+
+  height: 100% !important;
+
+  object-fit: cover !important;
+
+}
+
+
+/*
+ * Hide the library's default controls.
+ */
+
+.barcode-reader img {
+
+  display: none !important;
+
+}
+
+
+.barcode-reader__dashboard {
+
+  padding: 0 !important;
+
+}
+
+
+.barcode-reader__dashboard_section {
+
+  padding: 0 !important;
+
+}
+
+
+.barcode-reader__camera_selection {
+
+  display: none !important;
+
+}
+
+
+/*
+ * Scanner border.
+ */
+
+.scanner-box {
+
+  border:
+    2px solid
+    rgba(255,255,255,.25);
+
+}
+
+
+/*
+ * Scanner status.
+ */
+
+.scanner-status {
+
+  margin-top: 10px;
+
+  text-align: center;
+
+  font-size: 11px;
+
+  color: rgba(255,255,255,.65);
+
+}
+
+
+/*
+ * Start scanner button.
+ */
+
+.start-scanner-button {
+
+  width: 100%;
+
+  height: 45px;
+
+  margin-top: 10px;
+
+  border: none;
+
+  border-radius: 11px;
+
+  background: white;
+
+  color: #111827;
+
+  font-weight: 700;
+
+}
+
+
+/*
+ * Stop scanner button.
+ */
+
+.stop-scanner-button {
+
+  width: 100%;
+
+  height: 42px;
+
+  margin-top: 8px;
+
+  border: none;
+
+  border-radius: 11px;
+
+  background: rgba(255,255,255,.1);
+
+  color: white;
+
+  font-size: 12px;
+
+}
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+<div class="app">
+
+
+  <!-- ===============================================
+       HEADER
+  ================================================ -->
+
+  <header class="top-header">
+
+    <div class="brand">
+
+      <div class="brand-icon">
+        🛒
+      </div>
+
+      <div>
+
+        <div class="brand-name">
+          Mobile POS
+        </div>
+
+        <div class="brand-subtitle">
+          Sales & Inventory
+        </div>
+
+      </div>
+
+    </div>
+
+  </header>
+
+
+
+  <!-- ===============================================
+       DASHBOARD
+  ================================================ -->
+
+  <section
+    id="dashboardPage"
+    class="page active">
+
+
+    <div class="page-heading">
+
+      <div class="page-title">
+        Dashboard
+      </div>
+
+      <div class="page-description">
+        Here's your sales and inventory overview.
+      </div>
+
+    </div>
+
+
+    <!-- TODAY SALES -->
+
+    <div class="sales-card">
+
+      <div class="sales-label">
+        TODAY'S TOTAL SALES
+      </div>
+
+      <div
+        id="todaySales"
+        class="sales-value">
+
+        ₱0.00
+
+      </div>
+
+      <div
+        id="todayTransactions"
+        class="sales-today">
+
+        0 transactions today
+
+      </div>
+
+    </div>
+
+
+    <!-- STAT CARDS -->
+
+    <div class="stats-grid">
+
+
+      <div class="stat-card">
+
+        <div class="stat-icon">
+          📦
+        </div>
+
+        <div class="stat-label">
+          Total Products
+        </div>
+
+        <div
+          id="totalProducts"
+          class="stat-value">
+
+          0
+
+        </div>
+
+      </div>
+
+
+      <div class="stat-card">
+
+        <div class="stat-icon">
+          🏷️
+        </div>
+
+        <div class="stat-label">
+          Available Stock
+        </div>
+
+        <div
+          id="totalAvailable"
+          class="stat-value">
+
+          0
+
+        </div>
+
+      </div>
+
+
+    </div>
+
+
+    <!-- QUICK ACTIONS -->
+
+    <div class="section">
+
+      <div class="section-header">
+
+        <div class="section-title">
+          Quick Actions
+        </div>
+
+      </div>
+
+
+      <div class="action-grid">
+
+
+        <button
+          class="action"
+          onclick="showPage('pos')">
+
+          <div class="action-icon">
+            🛒
+          </div>
+
+          <span class="action-title">
+            POS
+          </span>
+
+          <span class="action-description">
+            Scan & sell products
+          </span>
+
+        </button>
+
+
+        <button
+          class="action"
+          onclick="showPage('addProduct')">
+
+          <div class="action-icon">
+            ➕
+          </div>
+
+          <span class="action-title">
+            Add Product
+          </span>
+
+          <span class="action-description">
+            Register new product
+          </span>
+
+        </button>
+
+
+        <button
+          class="action"
+          onclick="showPage('inventory')">
+
+          <div class="action-icon">
+            📦
+          </div>
+
+          <span class="action-title">
+            Inventory
+          </span>
+
+          <span class="action-description">
+            View available stock
+          </span>
+
+        </button>
+
+
+        <button
+          class="action"
+          onclick="showPage('sales')">
+
+          <div class="action-icon">
+            📊
+          </div>
+
+          <span class="action-title">
+            Sales
+          </span>
+
+          <span class="action-description">
+            View sales records
+          </span>
+
+        </button>
+
+
+      </div>
+
+    </div>
+
+
+    <!-- INVENTORY STATUS -->
+
+    <div class="section">
+
+      <div class="section-header">
+
+        <div class="section-title">
+          Inventory Status
+        </div>
+
+      </div>
+
+
+      <div class="inventory-status">
+
+
+        <div class="status-card">
+
+          <div
+            id="availableStatus"
+            class="status-number">
+
+            0
+
+          </div>
+
+          <div class="status-label">
+            Available
+          </div>
+
+        </div>
+
+
+        <div class="status-card">
+
+          <div
+            id="lowStock"
+            class="status-number">
+
+            0
+
+          </div>
+
+          <div class="status-label">
+            Low Stock
+          </div>
+
+        </div>
+
+
+        <div class="status-card">
+
+          <div
+            id="outOfStock"
+            class="status-number">
+
+            0
+
+          </div>
+
+          <div class="status-label">
+            Out of Stock
+          </div>
+
+        </div>
+
+
+      </div>
+
+    </div>
+
+
+  </section>
+
+
+
+  <!-- ===============================================
+       POS PAGE
+  ================================================ -->
+
+  <!-- ===============================================
+     POS PAGE
+================================================ -->
+
+<section
+  id="posPage"
+  class="page">
+
+
+  <div class="page-heading">
+
+    <div class="page-title">
+      Point of Sale
+    </div>
+
+    <div class="page-description">
+      Scan products and build the customer's order.
+    </div>
+
+  </div>
+
+
+  <!-- =============================================
+       SCANNER AREA
+  ============================================== -->
+
+  <div class="scanner-card">
+
+    <div class="scanner-header">
+
+      <div>
+
+        <div class="scanner-title">
+          Scan Product
+        </div>
+
+        <div class="scanner-subtitle">
+          Barcode scanner will appear here
+        </div>
+
+      </div>
+
+      <div class="scanner-icon">
+        📷
+      </div>
+
+    </div>
+
+
+    <div class="scanner-box">
+
+  <div
+    id="barcode-reader"
+    class="barcode-reader">
+  </div>
+
+</div>
+
+
+    <!-- Temporary manual barcode input.
+         This will later be replaced/combined
+         with the actual scanner. -->
+
+    <div class="manual-scan">
+
+      <input
+        id="manualBarcode"
+        type="text"
+        inputmode="numeric"
+        placeholder="Enter barcode manually">
+
+      <button
+        onclick="addBarcodeToCart()">
+
+        ADD
+
+      </button>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- =============================================
+       CART
+  ============================================== -->
+
+  <div class="cart-section">
+
+
+    <div class="cart-header">
+
+      <div class="cart-title">
+        Current Order
+      </div>
+
+      <button
+        class="clear-cart-button"
+        onclick="clearCart()">
+
+        Clear
+
+      </button>
+
+    </div>
+
+
+    <div
+      id="cartItems"
+      class="cart-items">
+
+      <!-- Cart items generated by JavaScript -->
+
+    </div>
+
+
+    <!-- EMPTY CART -->
+
+    <div
+      id="emptyCart"
+      class="empty-cart">
+
+      <div class="empty-cart-icon">
+        🛒
+      </div>
+
+      <div class="empty-cart-title">
+        Cart is Empty
+      </div>
+
+      <div class="empty-cart-text">
+        Scan a product to add it to the order.
+      </div>
+
+    </div>
+
+
+  </div>
+
+
+
+  <!-- =============================================
+       TOTAL
+  ============================================== -->
+
+  <div class="total-card">
+
+
+    <div class="total-row">
+
+      <span>
+        Items
+      </span>
+
+      <strong id="cartItemCount">
+        0
+      </strong>
+
+    </div>
+
+
+    <div class="total-row">
+
+      <span>
+        Subtotal
+      </span>
+
+      <strong id="cartSubtotal">
+        ₱0.00
+      </strong>
+
+    </div>
+
+
+    <div class="total-divider"></div>
+
+
+    <div class="grand-total-row">
+
+      <span>
+        TOTAL
+      </span>
+
+      <strong id="cartTotal">
+        ₱0.00
+      </strong>
+
+    </div>
+
+
+    <button
+      id="checkoutButton"
+      class="checkout-button"
+      onclick="checkout()"
+      disabled>
+
+      CHECKOUT
+
+    </button>
+
+
+  </div>
+
+
+</section>
+
+
+
+  <!-- ===============================================
+       ADD PRODUCT PAGE
+  ================================================ -->
+
+  <section
+    id="addProductPage"
+    class="page">
+
+
+    <div class="page-heading">
+
+      <div class="page-title">
+        Add Product
+      </div>
+
+      <div class="page-description">
+        Register a new product in your inventory.
+      </div>
+
+    </div>
+
+
+    <div class="empty-page">
+
+      <div class="empty-icon">
+        ➕
+      </div>
+
+      <div class="empty-title">
+        Add Product Coming Next
+      </div>
+
+      <div class="empty-text">
+        The embedded barcode scanner,
+        product details and registration
+        form will be added later.
+      </div>
+
+    </div>
+
+
+  </section>
+
+
+
+  <!-- ===============================================
+       INVENTORY PAGE
+  ================================================ -->
+
+  <section
+    id="inventoryPage"
+    class="page">
+
+
+    <div class="page-heading">
+
+      <div class="page-title">
+        Inventory
+      </div>
+
+      <div class="page-description">
+        Monitor your available products and stock.
+      </div>
+
+    </div>
+
+
+    <div class="empty-page">
+
+      <div class="empty-icon">
+        📦
+      </div>
+
+      <div class="empty-title">
+        Inventory Coming Next
+      </div>
+
+      <div class="empty-text">
+        The product inventory list,
+        search and stock status will
+        be added in the inventory part.
+      </div>
+
+    </div>
+
+
+  </section>
+
+
+
+  <!-- ===============================================
+       SALES PAGE
+  ================================================ -->
+
+  <section
+    id="salesPage"
+    class="page">
+
+
+    <div class="page-heading">
+
+      <div class="page-title">
+        Sales
+      </div>
+
+      <div class="page-description">
+        Review your sales and transactions.
+      </div>
+
+    </div>
+
+
+    <div class="empty-page">
+
+      <div class="empty-icon">
+        📊
+      </div>
+
+      <div class="empty-title">
+        Sales Coming Next
+      </div>
+
+      <div class="empty-text">
+        Sales records and reports will
+        be added in a later part.
+      </div>
+
+    </div>
+
+
+  </section>
+
+
+
+  <!-- ===============================================
+       BOTTOM NAVIGATION
+  ================================================ -->
+
+  <nav class="bottom-nav">
+
+
+    <button
+      id="navDashboard"
+      class="nav-item active"
+      onclick="showPage('dashboard')">
+
+      <span class="nav-icon">
+        🏠
+      </span>
+
+      <span class="nav-label">
+        Dashboard
+      </span>
+
+    </button>
+
+
+    <button
+      id="navPOS"
+      class="nav-item"
+      onclick="showPage('pos')">
+
+      <span class="nav-icon">
+        🛒
+      </span>
+
+      <span class="nav-label">
+        POS
+      </span>
+
+    </button>
+
+
+    <button
+      id="navInventory"
+      class="nav-item"
+      onclick="showPage('inventory')">
+
+      <span class="nav-icon">
+        📦
+      </span>
+
+      <span class="nav-label">
+        Stock
+      </span>
+
+    </button>
+
+
+    <button
+      id="navSales"
+      class="nav-item"
+      onclick="showPage('sales')">
+
+      <span class="nav-icon">
+        📊
+      </span>
+
+      <span class="nav-label">
+        Sales
+      </span>
+
+    </button>
+
+
+  </nav>
+
+
+</div>
+
+
+
+<!-- ===============================================
+     LOADING
+================================================ -->
+
+<div
+  id="loading"
+  class="loading">
+
+  <div class="loading-box">
+
+    <div class="spinner"></div>
+
+    <div>
+      Loading Mobile POS...
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<script>
+
+  /*******************************************************
+   * GOOGLE APPS SCRIPT WEB APP URL
+   *******************************************************/
+
+  const API_URL =
+    "https://script.google.com/macros/s/AKfycbxQDcGzC2LMuDGawzSIRZPmVmIMWDSJrRzsNNl-Q566HTUX-KU1G_2FWRwZZjmjNdpyQw/exec";
+
+
+  /*******************************************************
+   * JSONP API HELPER
+   *
+   * Used instead of fetch() because an externally hosted
+   * HTML page may be blocked by browser CORS rules when
+   * calling Apps Script ContentService.
+   *******************************************************/
+
+  function callPOSApi(action, params, success, failure) {
+
+    const callbackName =
+      "__posApiCallback_" +
+      Date.now() +
+      "_" +
+      Math.floor(Math.random() * 100000);
+
+
+    const query = new URLSearchParams();
+
+    query.append("action", action);
+    query.append("callback", callbackName);
+
+
+    if (params) {
+
+      Object.keys(params).forEach(function(key) {
+
+        query.append(
+          key,
+          params[key]
+        );
+
+      });
+
+    }
+
+
+    const script =
+      document.createElement("script");
+
+
+    let finished = false;
+
+
+    function cleanup() {
+
+      if (finished) {
+        return;
+      }
+
+      finished = true;
+
+      try {
+        delete window[callbackName];
+      } catch (error) {
+        window[callbackName] = undefined;
+      }
+
+      if (script.parentNode) {
+        script.parentNode.removeChild(script);
+      }
+
+    }
+
+
+    window[callbackName] =
+      function(result) {
+
+        cleanup();
+
+        if (typeof success === "function") {
+          success(result);
+        }
+
+      };
+
+
+    script.onerror =
+      function() {
+
+        cleanup();
+
+        if (typeof failure === "function") {
+          failure(
+            new Error(
+              "Unable to connect to the Mobile POS server."
+            )
+          );
+        }
+
+      };
+
+
+    script.src =
+      API_URL +
+      "?" +
+      query.toString();
+
+
+    document.body.appendChild(script);
+
+  }
+
+
+
+  /* =================================================
+     PAGE NAVIGATION
+  ================================================= */
+
+  function showPage(page) {
+
+
+    const pages = [
+      "dashboard",
+      "pos",
+      "addProduct",
+      "inventory",
+      "sales"
+    ];
+
+
+    pages.forEach(name => {
+
+      const element =
+        document.getElementById(
+          name + "Page"
+        );
+
+      if (element) {
+
+        element.classList.toggle(
+          "active",
+          name === page
+        );
+
+      }
+
+    });
+
+
+    /*
+     * Bottom navigation
+     */
+
+    document
+      .querySelectorAll(".nav-item")
+      .forEach(button => {
+
+        button.classList.remove("active");
+
+      });
+
+
+    if (page === "dashboard") {
+
+      document
+        .getElementById("navDashboard")
+        .classList.add("active");
+
+    }
+
+
+    if (page === "pos") {
+
+      document
+        .getElementById("navPOS")
+        .classList.add("active");
+
+    }
+
+
+    if (page === "inventory") {
+
+      document
+        .getElementById("navInventory")
+        .classList.add("active");
+
+    }
+
+
+    if (page === "sales") {
+
+      document
+        .getElementById("navSales")
+        .classList.add("active");
+
+    }
+
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+
+  }
+
+
+
+/* =================================================
+   POS CART
+================================================= */
+
+let cart = [];
+
+
+/* =================================================
+   ADD BARCODE TO CART
+================================================= */
+
+function addBarcodeToCart() {
+
+  const input =
+    document.getElementById(
+      "manualBarcode"
+    );
+
+
+  const barcode =
+    input.value.trim();
+
+
+  if (!barcode) {
+
+    return;
+
+  }
+
+
+   /*
+   * Ask the Mobile POS Web App API
+   * for the product.
+   */
+
+  callPOSApi(
+    "product",
+    {
+      barcode: barcode
+    },
+
+    function(result) {
+
+      if (
+        !result ||
+        !result.success ||
+        !result.found ||
+        !result.product
+      ) {
+
+        alert(
+          "PRODUCT NOT FOUND.\n\n" +
+          "Barcode: " +
+          barcode
+        );
+
+        input.focus();
+
+        return;
+
+      }
+
+
+      addProductToCart(
+        result.product
+      );
+
+
+      input.value = "";
+      input.focus();
+
+    },
+
+    function(error) {
+
+      console.error(
+        "Product lookup error:",
+        error
+      );
+
+
+      alert(
+        error.message ||
+        "Unable to find product."
+      );
+
+    }
+  );
+
+}
+
+
+/* =================================================
+   ADD PRODUCT
+================================================= */
+
+function addProductToCart(product) {
+
+
+  /*
+   * Check whether product already exists
+   * in the current cart.
+   */
+
+  const existing =
+    cart.find(
+      item =>
+        String(item.barcode) ===
+        String(product.barcode)
+    );
+
+
+  if (existing) {
+
+
+    /*
+     * Don't allow quantity to exceed stock.
+     */
+
+    if (
+      existing.quantity >=
+      Number(product.available)
+    ) {
+
+      alert(
+        "INSUFFICIENT STOCK.\n\n" +
+        product.productName +
+        "\nAvailable: " +
+        product.available
+      );
+
+      return;
+
+    }
+
+
+    existing.quantity++;
+
+
+  } else {
+
+
+    if (
+      Number(product.available) <= 0
+    ) {
+
+      alert(
+        "OUT OF STOCK.\n\n" +
+        product.productName
+      );
+
+      return;
+
+    }
+
+
+    cart.push({
+
+      barcode:
+        product.barcode,
+
+      productId:
+        product.productId,
+
+      productName:
+        product.productName,
+
+      unitPrice:
+        Number(product.price) || 0,
+
+      quantity: 1,
+
+      available:
+        Number(product.available) || 0
+
+    });
+
+  }
+
+
+  renderCart();
+
+}
+
+
+
+/* =================================================
+   CHANGE QUANTITY
+================================================= */
+
+function changeQuantity(index, amount) {
+
+
+  const item = cart[index];
+
+
+  if (!item) return;
+
+
+  const newQuantity =
+    item.quantity + amount;
+
+
+  if (newQuantity <= 0) {
+
+    removeCartItem(index);
+
+    return;
+
+  }
+
+
+  if (
+    newQuantity >
+    Number(item.available)
+  ) {
+
+    alert(
+      "Only " +
+      item.available +
+      " available."
+    );
+
+    return;
+
+  }
+
+
+  item.quantity =
+    newQuantity;
+
+
+  renderCart();
+
+}
+
+
+
+/* =================================================
+   REMOVE ITEM
+================================================= */
+
+function removeCartItem(index) {
+
+  cart.splice(index, 1);
+
+  renderCart();
+
+}
+
+
+
+/* =================================================
+   CLEAR CART
+================================================= */
+
+function clearCart() {
+
+
+  if (cart.length === 0) {
+    return;
+  }
+
+
+  if (
+    !confirm(
+      "Clear all products from the cart?"
+    )
+  ) {
+
+    return;
+
+  }
+
+
+  cart = [];
+
+  renderCart();
+
+}
+
+
+
+/* =================================================
+   RENDER CART
+================================================= */
+
+function renderCart() {
+
+
+  const container =
+    document.getElementById(
+      "cartItems"
+    );
+
+
+  const emptyCart =
+    document.getElementById(
+      "emptyCart"
+    );
+
+
+  const checkoutButton =
+    document.getElementById(
+      "checkoutButton"
+    );
+
+
+  if (cart.length === 0) {
+
+
+    container.innerHTML = "";
+
+    emptyCart.style.display =
+      "block";
+
+    checkoutButton.disabled =
+      true;
+
+
+    updateCartTotals();
+
+    return;
+
+  }
+
+
+  emptyCart.style.display =
+    "none";
+
+
+  checkoutButton.disabled =
+    false;
+
+
+  container.innerHTML =
+    cart.map(
+      (item, index) => {
+
+
+        const subtotal =
+          item.quantity *
+          item.unitPrice;
+
+
+        return `
+
+          <div class="cart-item">
+
+            <div class="cart-item-top">
+
+              <div>
+
+                <div class="cart-product-name">
+                  ${escapeHtml(
+                    item.productName
+                  )}
+                </div>
+
+                <div class="cart-barcode">
+                  ${escapeHtml(
+                    String(item.barcode)
+                  )}
+                </div>
+
+              </div>
+
+
+              <div class="cart-item-price">
+
+                ₱${formatMoney(
+                  item.unitPrice
+                )}
+
+              </div>
+
+            </div>
+
+
+            <div class="cart-controls">
+
+
+              <div class="quantity-controls">
+
+
+                <button
+                  class="quantity-button"
+                  onclick="
+                    changeQuantity(
+                      ${index},
+                      -1
+                    )
+                  ">
+
+                  −
+
+                </button>
+
+
+                <div
+                  class="quantity-value">
+
+                  ${item.quantity}
+
+                </div>
+
+
+                <button
+                  class="quantity-button"
+                  onclick="
+                    changeQuantity(
+                      ${index},
+                      1
+                    )
+                  ">
+
+                  +
+
+                </button>
+
+
+                <button
+                  class="remove-item"
+                  onclick="
+                    removeCartItem(
+                      ${index}
+                    )
+                  ">
+
+                  Remove
+
+                </button>
+
+
+              </div>
+
+
+              <div class="item-subtotal">
+
+                ₱${formatMoney(
+                  subtotal
+                )}
+
+              </div>
+
+
+            </div>
+
+          </div>
+
+        `;
+
+      }
+    )
+    .join("");
+
+
+  updateCartTotals();
+
+}
+
+
+
+/* =================================================
+   CART TOTALS
+================================================= */
+
+function updateCartTotals() {
+
+
+  let itemCount = 0;
+
+  let total = 0;
+
+
+  cart.forEach(item => {
+
+    itemCount +=
+      Number(item.quantity);
+
+    total +=
+      Number(item.quantity) *
+      Number(item.unitPrice);
+
+  });
+
+
+  document.getElementById(
+    "cartItemCount"
+  ).textContent =
+    itemCount;
+
+
+  document.getElementById(
+    "cartSubtotal"
+  ).textContent =
+    "₱" +
+    formatMoney(total);
+
+
+  document.getElementById(
+    "cartTotal"
+  ).textContent =
+    "₱" +
+    formatMoney(total);
+
+}
+
+
+
+/* =================================================
+   MONEY
+================================================= */
+
+function formatMoney(value) {
+
+  return Number(value || 0)
+    .toLocaleString(
+      "en-PH",
+      {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }
+    );
+
+}
+
+
+
+/* =================================================
+   HTML SAFETY
+================================================= */
+
+function escapeHtml(value) {
+
+  return String(value)
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+    .replace(
+      /</g,
+      "&lt;"
+    )
+    .replace(
+      />/g,
+      "&gt;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
+}
+
+
+
+/* =================================================
+   CHECKOUT
+================================================= */
+
+function checkout() {
+
+
+  if (cart.length === 0) {
+
+    alert(
+      "The cart is empty."
+    );
+
+    return;
+
+  }
+
+
+  /*
+   * Checkout/payment interface
+   * will be expanded in the next
+   * checkout part.
+   */
+
+  const total =
+    cart.reduce(
+      (sum, item) =>
+        sum +
+        (
+          Number(item.quantity) *
+          Number(item.unitPrice)
+        ),
+      0
+    );
+
+
+  alert(
+    "ORDER TOTAL\n\n₱" +
+    formatMoney(total) +
+    "\n\n" +
+    "Payment and stock deduction " +
+    "will be connected in the checkout part."
+  );
+
+}
+
+
+  /* =================================================
+     LOAD DASHBOARD
+  ================================================= */
+
+  function loadDashboard() {
+
+    callPOSApi(
+      "dashboard",
+      {},
+
+      function(data) {
+
+        if (!data) {
+
+          throw new Error(
+            "No dashboard data was returned."
+          );
+
+        }
+
+
+        /*
+         * Today's sales
+         */
+
+        const sales =
+          Number(data.todaySales || 0);
+
+
+        document.getElementById(
+          "todaySales"
+        ).textContent =
+
+          "₱" +
+
+          sales.toLocaleString(
+            "en-PH",
+            {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2
+            }
+          );
+
+
+        /*
+         * Transactions
+         */
+
+        const transactions =
+          Number(
+            data.todayTransactions || 0
+          );
+
+
+        document.getElementById(
+          "todayTransactions"
+        ).textContent =
+
+          transactions +
+          (
+            transactions === 1
+              ? " transaction today"
+              : " transactions today"
+          );
+
+
+        /*
+         * Products
+         */
+
+        document.getElementById(
+          "totalProducts"
+        ).textContent =
+
+          Number(
+            data.totalProducts || 0
+          ).toLocaleString();
+
+
+        /*
+         * Available stock
+         */
+
+        document.getElementById(
+          "totalAvailable"
+        ).textContent =
+
+          Number(
+            data.totalAvailable || 0
+          ).toLocaleString();
+
+
+        document.getElementById(
+          "availableStatus"
+        ).textContent =
+
+          Number(
+            data.totalAvailable || 0
+          ).toLocaleString();
+
+
+        /*
+         * Low stock
+         */
+
+        document.getElementById(
+          "lowStock"
+        ).textContent =
+
+          Number(
+            data.lowStock || 0
+          ).toLocaleString();
+
+
+        /*
+         * Out of stock
+         */
+
+        document.getElementById(
+          "outOfStock"
+        ).textContent =
+
+          Number(
+            data.outOfStock || 0
+          ).toLocaleString();
+
+
+        document.getElementById(
+          "loading"
+        ).style.display = "none";
+
+      },
+
+      function(error) {
+
+        console.error(
+          "Dashboard error:",
+          error
+        );
+
+
+        document.getElementById(
+          "loading"
+        ).style.display = "none";
+
+      }
+    );
+
+  }
+
+
+  /* =================================================
+     INITIALIZE APP
+  ================================================= */
+
+  document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+      /*
+       * setupDatabase() is intentionally NOT called
+       * from the external mobile frontend.
+       *
+       * Database creation is an Apps Script-side
+       * setup operation. The dashboard simply loads
+       * the existing database.
+       */
+
+      loadDashboard();
+
+    }
+  );
+
+/* =================================================
+   BARCODE SCANNER
+================================================= */
+
+let barcodeScanner = null;
+
+let scannerRunning = false;
+
+let lastScannedBarcode = "";
+
+let lastScanTime = 0;
+
+
+
+/*******************************************************
+ * GOOGLE APPS SCRIPT WEB APP URL
+ *******************************************************/
+
+const API_URL =
+  "https://script.google.com/macros/s/AKfycbxQDcGzC2LMuDGawzSIRZPmVmIMWDSJrRzsNNl-Q566HTUX-KU1G_2FWRwZZjmjNdpyQw/exec";
+/* =================================================
+   START SCANNER
+================================================= */
+
+function startBarcodeScanner() {
+
+  if (scannerRunning) {
+    return;
+  }
+
+
+  /*
+   * Make sure the scanner library loaded.
+   */
+
+  if (
+    typeof Html5Qrcode ===
+    "undefined"
+  ) {
+
+    alert(
+      "Barcode scanner library could not be loaded."
+    );
+
+    return;
+
+  }
+
+
+  const reader =
+    document.getElementById(
+      "barcode-reader"
+    );
+
+
+  if (!reader) {
+    return;
+  }
+
+
+  /*
+   * Create scanner.
+   */
+
+  barcodeScanner =
+    new Html5Qrcode(
+      "barcode-reader"
+    );
+
+
+  /*
+   * Barcode formats supported by
+   * common retail products.
+   */
+
+  const formatsToSupport = [
+
+    Html5QrcodeSupportedFormats.EAN_13,
+
+    Html5QrcodeSupportedFormats.EAN_8,
+
+    Html5QrcodeSupportedFormats.UPC_A,
+
+    Html5QrcodeSupportedFormats.UPC_E,
+
+    Html5QrcodeSupportedFormats.CODE_128,
+
+    Html5QrcodeSupportedFormats.CODE_39,
+
+    Html5QrcodeSupportedFormats.ITF,
+
+    Html5QrcodeSupportedFormats.CODABAR
+
+  ];
+
+
+  const config = {
+
+    fps: 10,
+
+    qrbox: {
+
+      width: 260,
+
+      height: 130
+
+    },
+
+    formatsToSupport:
+      formatsToSupport,
+
+    aspectRatio: 1.777
+
+  };
+
+
+  barcodeScanner
+    .start(
+
+      {
+        facingMode: "environment"
+      },
+
+      config,
+
+      onBarcodeDetected,
+
+      onBarcodeScanError
+
+    )
+
+    .then(function() {
+
+      scannerRunning = true;
+
+      setScannerStatus(
+        "Scanner ready — scan a product"
+      );
+
+    })
+
+    .catch(function(error) {
+
+      scannerRunning = false;
+
+      console.error(
+        "Scanner error:",
+        error
+      );
+
+
+      setScannerStatus(
+        "Camera could not be started"
+      );
+
+
+      alert(
+        "Unable to start the barcode scanner.\n\n" +
+        "Please allow camera access for this web app."
+      );
+
+    });
+
+}
+
+
+
+/* =================================================
+   BARCODE DETECTED
+================================================= */
+
+function onBarcodeDetected(
+  decodedText,
+  decodedResult
+) {
+
+
+  const barcode =
+    String(decodedText)
+      .trim();
+
+
+  if (!barcode) {
+    return;
+  }
+
+
+  /*
+   * Prevent the same barcode from
+   * being added repeatedly while
+   * the camera sees it.
+   */
+
+  const now =
+    Date.now();
+
+
+  if (
+    barcode === lastScannedBarcode &&
+    now - lastScanTime < 1500
+  ) {
+
+    return;
+
+  }
+
+
+  lastScannedBarcode =
+    barcode;
+
+
+  lastScanTime =
+    now;
+
+
+  setScannerStatus(
+    "Product detected: " +
+    barcode
+  );
+
+
+  /*
+   * Look up product through the
+   * Mobile POS Web App API.
+   */
+
+  callPOSApi(
+    "product",
+    {
+      barcode: barcode
+    },
+
+    function(result) {
+
+      if (
+        !result ||
+        !result.success ||
+        !result.found ||
+        !result.product
+      ) {
+
+        setScannerStatus(
+          "Product not found: " +
+          barcode
+        );
+
+
+        setTimeout(
+          function() {
+
+            setScannerStatus(
+              "Scanner ready — scan a product"
+            );
+
+          },
+          1500
+        );
+
+
+        return;
+
+      }
+
+
+      /*
+       * Add product to cart.
+       */
+
+      addProductToCart(
+        result.product
+      );
+
+
+      setScannerStatus(
+        result.product.productName +
+        " added"
+      );
+
+
+      /*
+       * Scanner remains running.
+       */
+
+      setTimeout(
+        function() {
+
+          setScannerStatus(
+            "Scanner ready — scan next product"
+          );
+
+        },
+        1000
+      );
+
+    },
+
+    function(error) {
+
+      console.error(
+        "Product lookup error:",
+        error
+      );
+
+
+      setScannerStatus(
+        "Unable to find product"
+      );
+
+    }
+  );
+
+}
+
+
+
+/* =================================================
+   SCANNER ERROR CALLBACK
+================================================= */
+
+function onBarcodeScanError(errorMessage) {
+
+  /*
+   * Ignore normal scan failures.
+   *
+   * The library generates many of these
+   * while it is simply looking for a barcode.
+   */
+
+}
+
+
+
+/* =================================================
+   SCANNER STATUS
+================================================= */
+
+function setScannerStatus(message) {
+
+
+  let status =
+    document.getElementById(
+      "scannerStatus"
+    );
+
+
+  if (!status) {
+
+    status =
+      document.createElement(
+        "div"
+      );
+
+
+    status.id =
+      "scannerStatus";
+
+
+    status.className =
+      "scanner-status";
+
+
+    const scannerCard =
+      document.querySelector(
+        ".scanner-card"
+      );
+
+
+    if (scannerCard) {
+
+      scannerCard.appendChild(
+        status
+      );
+
+    }
+
+  }
+
+
+  status.textContent =
+    message;
+
+}
+
+
+
+/* =================================================
+   STOP SCANNER
+================================================= */
+
+function stopBarcodeScanner() {
+
+
+  if (
+    !barcodeScanner ||
+    !scannerRunning
+  ) {
+
+    return;
+
+  }
+
+
+  barcodeScanner
+    .stop()
+
+    .then(function() {
+
+      scannerRunning = false;
+
+      setScannerStatus(
+        "Scanner stopped"
+      );
+
+    })
+
+    .catch(function(error) {
+
+      console.error(error);
+
+      scannerRunning = false;
+
+    });
+
+}
+
+
+
+/* =================================================
+   START WHEN POS OPENS
+================================================= */
+
+const originalShowPage =
+  showPage;
+
+
+showPage = function(page) {
+
+
+  originalShowPage(page);
+
+
+  if (page === "pos") {
+
+    /*
+     * Give the POS page a moment to
+     * become visible before starting
+     * the camera.
+     */
+
+    setTimeout(
+      function() {
+
+        startBarcodeScanner();
+
+      },
+      300
+    );
+
+  }
+
+  else {
+
+    stopBarcodeScanner();
+
+  }
+
+};
+
+</script>
+
+
+</body>
+
+</html>
