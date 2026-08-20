@@ -2394,15 +2394,20 @@
 
 
     window[callbackName] =
-      function(result) {
+  function(result) {
 
-        cleanup();
+    console.log(
+      "POS API RESPONSE:",
+      result
+    );
 
-        if (typeof success === "function") {
-          success(result);
-        }
+    cleanup();
 
-      };
+    if (typeof success === "function") {
+      success(result);
+    }
+
+  };
 
 
     script.onerror =
@@ -2588,7 +2593,10 @@ function addBarcodeToCart() {
 
       }
 
-
+      console.log(
+  "PRODUCT RETURNED FROM API:",
+  result.product
+);
       addProductToCart(
         result.product
       );
