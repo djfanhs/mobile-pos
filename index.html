@@ -3990,31 +3990,19 @@ function onBarcodeDetected(
   decodedResult
 ) {
 
+  console.log(
+    "BARCODE DETECTED:",
+    decodedText
+  );
+
 
   const barcode =
-    String(
-      decodedText || ""
-    ).trim();
+    String(decodedText || "")
+      .trim();
 
 
   if (!barcode) {
-
     return;
-
-  }
-
-
-  /*
-   * Do not process another request
-   * while one barcode is being looked up.
-   */
-
-  if (
-    barcodeLookupRunning
-  ) {
-
-    return;
-
   }
 
 
@@ -4022,17 +4010,9 @@ function onBarcodeDetected(
     Date.now();
 
 
-  /*
-   * Prevent duplicate detections.
-   */
-
   if (
-    barcode ===
-      lastScannedBarcode &&
-
-    now -
-      lastScanTime <
-      1500
+    barcode === lastScannedBarcode &&
+    now - lastScanTime < 1500
   ) {
 
     return;
@@ -4048,18 +4028,14 @@ function onBarcodeDetected(
     now;
 
 
-  barcodeLookupRunning =
-    true;
-
-
-  console.log(
-    "BARCODE DETECTED:",
+  setScannerStatus(
+    "Product detected: " +
     barcode
   );
 
 
-  setScannerStatus(
-    "Product detected: " +
+  console.log(
+    "Looking up barcode:",
     barcode
   );
 
@@ -4069,30 +4045,29 @@ function onBarcodeDetected(
     "product",
 
     {
-      barcode:
-        barcode
+      barcode: barcode
     },
 
 
     function(result) {
 
-
       console.log(
-        "SCANNED PRODUCT RESPONSE:",
+        "PRODUCT API RESULT:",
         result
       );
 
 
-      barcodeLookupRunning =
-        false;
-
-
       if (
         !result ||
-        !result.success ||
-        !result.found ||
+        result.success !== true ||
+        result.found !== true ||
         !result.product
       ) {
+
+        console.error(
+          "Invalid product response:",
+          result
+        );
 
 
         setScannerStatus(
@@ -4100,46 +4075,29 @@ function onBarcodeDetected(
           barcode
         );
 
-
-        setTimeout(
-          function() {
-
-            setScannerStatus(
-              "Scanner ready — scan a product"
-            );
-
-          },
-          1500
-        );
-
-
         return;
 
       }
 
 
-      /*
-       * THIS IS THE IMPORTANT PART.
-       *
-       * Product returned from
-       * Google Sheets is passed
-       * directly into the cart.
-       */
+      const product =
+        result.product;
+
+
+      console.log(
+        "PRODUCT FOUND:",
+        product
+      );
+
 
       addProductToCart(
-        result.product
+        product
       );
 
 
       setScannerStatus(
-        result.product.productName +
+        product.productName +
         " added"
-      );
-
-
-      console.log(
-        "PRODUCT ADDED TO CART:",
-        result.product
       );
 
 
@@ -4159,19 +4117,20 @@ function onBarcodeDetected(
 
     function(error) {
 
-
-      barcodeLookupRunning =
-        false;
-
-
       console.error(
-        "PRODUCT LOOKUP ERROR:",
+        "PRODUCT LOOKUP FAILED:",
         error
       );
 
 
       setScannerStatus(
-        "Unable to find product"
+        "Database connection failed"
+      );
+
+
+      alert(
+        "Unable to connect to the product database.\n\n" +
+        "The Mobile POS server did not respond."
       );
 
     }
@@ -4179,7 +4138,6 @@ function onBarcodeDetected(
   );
 
 }
-
 
 /* =========================================================
    SCANNER ERROR
