@@ -2337,7 +2337,7 @@
    GOOGLE APPS SCRIPT API
 ========================================================= */
 
-const API_URL =
+const apiURL =
   "https://script.google.com/macros/s/AKfycbxQDcGzC2LMuDGawzSIRZPmVmIMWDSJrRzsNNl-Q566HTUX-KU1G_2FWRwZZjmjNdpyQw/exec";
 
 
@@ -2345,37 +2345,32 @@ const API_URL =
    POS API — JSONP
 ========================================================= */
 
-function callPOSApi(
-  action,
-  params,
-  success,
-  failure
-) {
+function callPOSApi(action, params, success, failure) {
+
+  console.log("=================================");
+  console.log("MOBILE POS API REQUEST");
+  console.log("Action:", action);
+  console.log("Params:", params);
+  console.log("=================================");
 
   const callbackName =
-    "__posCallback_" +
+    "__mobilePOSCallback_" +
     Date.now() +
     "_" +
-    Math.floor(
-      Math.random() * 1000000
-    );
-
+    Math.floor(Math.random() * 1000000);
 
   const query =
     new URLSearchParams();
-
 
   query.append(
     "action",
     action
   );
 
-
   query.append(
     "callback",
     callbackName
   );
-
 
   if (params) {
 
@@ -2384,7 +2379,7 @@ function callPOSApi(
 
         query.append(
           key,
-          params[key]
+          String(params[key])
         );
 
       }
@@ -2392,22 +2387,13 @@ function callPOSApi(
 
   }
 
-
   const script =
-    document.createElement(
-      "script"
-    );
-
+    document.createElement("script");
 
   let finished = false;
 
+  let timeout;
 
-  let timeoutId = null;
-
-
-  /* -------------------------------------------------------
-     CLEANUP
-  ------------------------------------------------------- */
 
   function cleanup() {
 
@@ -2415,35 +2401,17 @@ function callPOSApi(
       return;
     }
 
-
     finished = true;
 
-
-    if (timeoutId) {
-
-      clearTimeout(
-        timeoutId
-      );
-
-    }
-
+    clearTimeout(timeout);
 
     try {
-
-      delete window[
-        callbackName
-      ];
-
+      delete window[callbackName];
     }
 
     catch (error) {
-
-      window[
-        callbackName
-      ] = undefined;
-
+      window[callbackName] = undefined;
     }
-
 
     if (
       script &&
@@ -2459,67 +2427,48 @@ function callPOSApi(
   }
 
 
-  /* -------------------------------------------------------
-     GOOGLE APPS SCRIPT CALLBACK
-  ------------------------------------------------------- */
+  window[callbackName] =
+    function(result) {
 
-  window[
-    callbackName
-  ] = function(result) {
+      console.log(
+        "================================="
+      );
 
-    console.log(
-      "================================"
-    );
+      console.log(
+        "MOBILE POS API RESPONSE:"
+      );
 
-    console.log(
-      "POS API CALLBACK RECEIVED"
-    );
+      console.log(
+        result
+      );
 
-    console.log(
-      "Action:",
-      action
-    );
+      console.log(
+        "================================="
+      );
 
-    console.log(
-      "Result:",
-      result
-    );
+      cleanup();
 
-    console.log(
-      "================================"
-    );
+      if (
+        typeof success ===
+        "function"
+      ) {
 
+        success(result);
 
-    cleanup();
+      }
 
+    };
 
-    if (
-      typeof success ===
-      "function"
-    ) {
-
-      success(result);
-
-    }
-
-  };
-
-
-  /* -------------------------------------------------------
-     SCRIPT ERROR
-  ------------------------------------------------------- */
 
   script.onerror =
     function(error) {
 
       console.error(
-        "POS API SCRIPT ERROR:",
+        "MOBILE POS API ERROR:",
         error
       );
 
-
       cleanup();
-
 
       if (
         typeof failure ===
@@ -2528,7 +2477,7 @@ function callPOSApi(
 
         failure(
           new Error(
-            "Unable to connect to the Mobile POS server."
+            "The Mobile POS server did not respond."
           )
         );
 
@@ -2537,61 +2486,7 @@ function callPOSApi(
     };
 
 
-  /* -------------------------------------------------------
-     SCRIPT LOADED
-  ------------------------------------------------------- */
-
-  script.onload =
-    function() {
-
-      console.log(
-        "POS API SCRIPT LOADED:"
-      );
-
-      console.log(
-        "Callback:",
-        callbackName
-      );
-
-    };
-
-
-  /* -------------------------------------------------------
-     REQUEST URL
-  ------------------------------------------------------- */
-
-  const requestURL =
-    API_URL +
-    "?" +
-    query.toString();
-
-
-  console.log(
-    "================================"
-  );
-
-  console.log(
-    "POS API REQUEST"
-  );
-
-  console.log(
-    requestURL
-  );
-
-  console.log(
-    "================================"
-  );
-
-
-  script.src =
-    requestURL;
-
-
-  /* -------------------------------------------------------
-     TIMEOUT
-  ------------------------------------------------------- */
-
-  timeoutId =
+  timeout =
     setTimeout(
       function() {
 
@@ -2599,14 +2494,11 @@ function callPOSApi(
           return;
         }
 
-
         console.error(
-          "POS API TIMEOUT"
+          "MOBILE POS API TIMEOUT"
         );
 
-
         cleanup();
-
 
         if (
           typeof failure ===
@@ -2615,29 +2507,44 @@ function callPOSApi(
 
           failure(
             new Error(
-              "The Mobile POS server did not respond within 10 seconds."
+              "The Mobile POS server took too long to respond."
             )
           );
 
         }
 
       },
-      10000
+      15000
     );
 
 
-  /* -------------------------------------------------------
-     SEND REQUEST
-  ------------------------------------------------------- */
+  const requestURL =
+    apiURL +
+    "?" +
+    query.toString();
 
-  document.body.appendChild(
+
+  console.log(
+    "MOBILE POS API URL:"
+  );
+
+  console.log(
+    requestURL
+  );
+
+
+  script.src =
+    requestURL;
+
+  script.async =
+    true;
+
+
+  document.head.appendChild(
     script
   );
 
-}
-
-
-/* =========================================================
+}/* =========================================================
    PAGE NAVIGATION
 ========================================================= */
 
