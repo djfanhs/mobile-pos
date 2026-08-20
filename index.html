@@ -2326,248 +2326,101 @@
 
 <script>
 
-/* =========================================================
-   MOBILE POS
-   JAVASCRIPT
-   GITHUB PAGES + GOOGLE APPS SCRIPT API
-========================================================= */
+  /*******************************************************
+   * GOOGLE APPS SCRIPT WEB APP URL
+   *******************************************************/
+
+  const API_URL =
+    "https://script.google.com/macros/s/AKfycbxQDcGzC2LMuDGawzSIRZPmVmIMWDSJrRzsNNl-Q566HTUX-KU1G_2FWRwZZjmjNdpyQw/exec";
 
 
-/* =========================================================
-   GOOGLE APPS SCRIPT API
-========================================================= */
+  /* =================================================
+     JSONP API HELPER
+     GitHub Pages -> Google Apps Script
+  ================================================= */
 
-const apiURL =
-  "https://script.google.com/macros/s/AKfycbxQDcGzC2LMuDGawzSIRZPmVmIMWDSJrRzsNNl-Q566HTUX-KU1G_2FWRwZZjmjNdpyQw/exec";
+  function callPOSApi(action, params, success, failure) {
 
+    const callbackName =
+      "mobilePOSCallback_" + Date.now() + "_" +
+      Math.floor(Math.random() * 1000000);
 
-/* =========================================================
-   POS API — JSONP
-========================================================= */
+    const query = new URLSearchParams();
+    query.set("action", action);
+    query.set("callback", callbackName);
 
-function callPOSApi(action, params, success, failure) {
+    if (params) {
+      Object.keys(params).forEach(function(key) {
+        query.set(key, String(params[key]));
+      });
+    }
 
-  console.log("=================================");
-  console.log("MOBILE POS API REQUEST");
-  console.log("Action:", action);
-  console.log("Params:", params);
-  console.log("=================================");
+    const script = document.createElement("script");
+    let finished = false;
 
-  const callbackName =
-    "__mobilePOSCallback_" +
-    Date.now() +
-    "_" +
-    Math.floor(Math.random() * 1000000);
+    function finish() {
+      if (finished) return false;
+      finished = true;
+      clearTimeout(timeout);
+      try { delete window[callbackName]; }
+      catch (e) { window[callbackName] = undefined; }
+      if (script.parentNode) script.parentNode.removeChild(script);
+      return true;
+    }
 
-  const query =
-    new URLSearchParams();
-
-  query.append(
-    "action",
-    action
-  );
-
-  query.append(
-    "callback",
-    callbackName
-  );
-
-  if (params) {
-
-    Object.keys(params).forEach(
-      function(key) {
-
-        query.append(
-          key,
-          String(params[key])
-        );
-
+    const timeout = setTimeout(function() {
+      if (!finish()) return;
+      console.error("Mobile POS API timeout:", action);
+      if (typeof failure === "function") {
+        failure(new Error("The Mobile POS server did not respond."));
       }
-    );
+    }, 12000);
 
-  }
+    window[callbackName] = function(result) {
+      if (!finish()) return;
+      console.log("Mobile POS API response:", action, result);
+      if (typeof success === "function") success(result);
+    };
 
-  const script =
-    document.createElement("script");
+    script.onerror = function() {
+      if (!finish()) return;
+      console.error("Mobile POS API connection error:", action);
+      if (typeof failure === "function") {
+        failure(new Error("Unable to connect to the Mobile POS server."));
+      }
+    };
 
-  let finished = false;
+    const requestURL = API_URL + "?" + query.toString();
+    console.log("Mobile POS API request:", requestURL);
 
-  let timeout;
-
-
-  function cleanup() {
-
-    if (finished) {
-      return;
-    }
-
-    finished = true;
-
-    clearTimeout(timeout);
-
-    try {
-      delete window[callbackName];
-    }
-
-    catch (error) {
-      window[callbackName] = undefined;
-    }
-
-    if (
-      script &&
-      script.parentNode
-    ) {
-
-      script.parentNode.removeChild(
-        script
-      );
-
-    }
-
+    script.async = true;
+    script.src = requestURL;
+    document.head.appendChild(script);
   }
 
 
-  window[callbackName] =
-    function(result) {
+  /* =================================================
+     PAGE NAVIGATION
+  ================================================= */
 
-      console.log(
-        "================================="
-      );
-
-      console.log(
-        "MOBILE POS API RESPONSE:"
-      );
-
-      console.log(
-        result
-      );
-
-      console.log(
-        "================================="
-      );
-
-      cleanup();
-
-      if (
-        typeof success ===
-        "function"
-      ) {
-
-        success(result);
-
-      }
-
-    };
+  function showPage(page) {
 
 
-  script.onerror =
-    function(error) {
-
-      console.error(
-        "MOBILE POS API ERROR:",
-        error
-      );
-
-      cleanup();
-
-      if (
-        typeof failure ===
-        "function"
-      ) {
-
-        failure(
-          new Error(
-            "The Mobile POS server did not respond."
-          )
-        );
-
-      }
-
-    };
+    const pages = [
+      "dashboard",
+      "pos",
+      "addProduct",
+      "inventory",
+      "sales"
+    ];
 
 
-  timeout =
-    setTimeout(
-      function() {
-
-        if (finished) {
-          return;
-        }
-
-        console.error(
-          "MOBILE POS API TIMEOUT"
-        );
-
-        cleanup();
-
-        if (
-          typeof failure ===
-          "function"
-        ) {
-
-          failure(
-            new Error(
-              "The Mobile POS server took too long to respond."
-            )
-          );
-
-        }
-
-      },
-      15000
-    );
-
-
-  const requestURL =
-    apiURL +
-    "?" +
-    query.toString();
-
-
-  console.log(
-    "MOBILE POS API URL:"
-  );
-
-  console.log(
-    requestURL
-  );
-
-
-  script.src =
-    requestURL;
-
-  script.async =
-    true;
-
-
-  document.head.appendChild(
-    script
-  );
-
-}/* =========================================================
-   PAGE NAVIGATION
-========================================================= */
-
-function showPage(page) {
-
-
-  const pages = [
-    "dashboard",
-    "pos",
-    "addProduct",
-    "inventory",
-    "sales"
-  ];
-
-
-  pages.forEach(
-    function(name) {
+    pages.forEach(name => {
 
       const element =
         document.getElementById(
           name + "Page"
         );
-
 
       if (element) {
 
@@ -2578,138 +2431,79 @@ function showPage(page) {
 
       }
 
-    }
-  );
+    });
 
 
-  document
-    .querySelectorAll(
-      ".nav-item"
-    )
-    .forEach(
-      function(button) {
+    /*
+     * Bottom navigation
+     */
 
-        button.classList.remove(
-          "active"
-        );
+    document
+      .querySelectorAll(".nav-item")
+      .forEach(button => {
 
-      }
-    );
+        button.classList.remove("active");
+
+      });
 
 
-  if (page === "dashboard") {
+    if (page === "dashboard") {
 
-    const button =
-      document.getElementById(
-        "navDashboard"
-      );
+      document
+        .getElementById("navDashboard")
+        .classList.add("active");
 
-    if (button) {
-      button.classList.add(
-        "active"
-      );
     }
 
-  }
 
+    if (page === "pos") {
 
-  if (page === "pos") {
+      document
+        .getElementById("navPOS")
+        .classList.add("active");
 
-    const button =
-      document.getElementById(
-        "navPOS"
-      );
-
-    if (button) {
-      button.classList.add(
-        "active"
-      );
     }
 
-  }
 
+    if (page === "inventory") {
 
-  if (page === "inventory") {
+      document
+        .getElementById("navInventory")
+        .classList.add("active");
 
-    const button =
-      document.getElementById(
-        "navInventory"
-      );
-
-    if (button) {
-      button.classList.add(
-        "active"
-      );
     }
 
-  }
 
+    if (page === "sales") {
 
-  if (page === "sales") {
+      document
+        .getElementById("navSales")
+        .classList.add("active");
 
-    const button =
-      document.getElementById(
-        "navSales"
-      );
-
-    if (button) {
-      button.classList.add(
-        "active"
-      );
     }
 
-  }
 
-
-  window.scrollTo(
-    0,
-    0
-  );
-
-
-  /* -------------------------------------------------------
-     START / STOP CAMERA
-  ------------------------------------------------------- */
-
-  if (page === "pos") {
-
-    setTimeout(
-      function() {
-
-        startBarcodeScanner();
-
-      },
-      300
-    );
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
 
   }
 
-  else {
-
-    stopBarcodeScanner();
-
-  }
-
-}
 
 
-/* =========================================================
-   CART
-========================================================= */
+/* =================================================
+   POS CART
+================================================= */
 
 let cart = [];
 
-let lastScannedBarcode = "";
 
-let lastScanTime = 0;
-
-
-/* =========================================================
-   MANUAL BARCODE
-========================================================= */
+/* =================================================
+   ADD BARCODE TO CART
+================================================= */
 
 function addBarcodeToCart() {
-
 
   const input =
     document.getElementById(
@@ -2717,30 +2511,21 @@ function addBarcodeToCart() {
     );
 
 
-  if (!input) {
-    return;
-  }
-
-
   const barcode =
-    String(
-      input.value || ""
-    ).trim();
+    input.value.trim();
 
 
   if (!barcode) {
 
-    input.focus();
-
     return;
 
   }
 
 
-  setScannerStatus(
-    "Looking up product..."
-  );
-
+   /*
+   * Ask the Mobile POS Web App API
+   * for the product.
+   */
 
   callPOSApi(
     "product",
@@ -2750,12 +2535,6 @@ function addBarcodeToCart() {
 
     function(result) {
 
-      console.log(
-        "MANUAL PRODUCT RESULT:",
-        result
-      );
-
-
       if (
         !result ||
         !result.success ||
@@ -2763,18 +2542,11 @@ function addBarcodeToCart() {
         !result.product
       ) {
 
-        setScannerStatus(
-          "Product not found: " +
-          barcode
-        );
-
-
         alert(
           "PRODUCT NOT FOUND.\n\n" +
           "Barcode: " +
           barcode
         );
-
 
         input.focus();
 
@@ -2789,28 +2561,15 @@ function addBarcodeToCart() {
 
 
       input.value = "";
-
-
       input.focus();
-
-
-      setScannerStatus(
-        result.product.productName +
-        " added"
-      );
 
     },
 
     function(error) {
 
       console.error(
-        "Manual product lookup error:",
+        "Product lookup error:",
         error
-      );
-
-
-      setScannerStatus(
-        "Unable to find product"
       );
 
 
@@ -2820,114 +2579,49 @@ function addBarcodeToCart() {
       );
 
     }
-
   );
 
 }
 
 
-/* =========================================================
-   ADD PRODUCT TO CART
-========================================================= */
+/* =================================================
+   ADD PRODUCT
+================================================= */
 
-function addProductToCart(
-  product
-) {
+function addProductToCart(product) {
 
 
-  console.log(
-    "================================"
-  );
-
-  console.log(
-    "ADDING PRODUCT TO CART"
-  );
-
-  console.log(
-    product
-  );
-
-  console.log(
-    "================================"
-  );
-
-
-  if (!product) {
-
-    console.error(
-      "Product object is empty."
-    );
-
-    return;
-
-  }
-
-
-  const barcode =
-    String(
-      product.barcode || ""
-    ).trim();
-
-
-  if (!barcode) {
-
-    console.error(
-      "Product has no barcode.",
-      product
-    );
-
-    return;
-
-  }
-
-
-  const available =
-    Number(
-      product.available
-    ) || 0;
-
-
-  const price =
-    Number(
-      product.price
-    ) || 0;
-
-
-  /* -------------------------------------------------------
-     CHECK EXISTING ITEM
-  ------------------------------------------------------- */
+  /*
+   * Check whether product already exists
+   * in the current cart.
+   */
 
   const existing =
     cart.find(
-      function(item) {
-
-        return String(
-          item.barcode
-        ) === barcode;
-
-      }
+      item =>
+        String(item.barcode) ===
+        String(product.barcode)
     );
 
-
-  /* -------------------------------------------------------
-     EXISTING ITEM
-  ------------------------------------------------------- */
 
   if (existing) {
 
 
+    /*
+     * Don't allow quantity to exceed stock.
+     */
+
     if (
       existing.quantity >=
-      available
+      Number(product.available)
     ) {
 
       alert(
         "INSUFFICIENT STOCK.\n\n" +
         product.productName +
         "\nAvailable: " +
-        available
+        product.available
       );
-
 
       return;
 
@@ -2937,17 +2631,11 @@ function addProductToCart(
     existing.quantity++;
 
 
-  }
-
-  /* -------------------------------------------------------
-     NEW ITEM
-  ------------------------------------------------------- */
-
-  else {
+  } else {
 
 
     if (
-      available <= 0
+      Number(product.available) <= 0
     ) {
 
       alert(
@@ -2955,50 +2643,33 @@ function addProductToCart(
         product.productName
       );
 
-
       return;
 
     }
 
 
-    const cartItem = {
+    cart.push({
 
       barcode:
-        barcode,
+        product.barcode,
 
       productId:
-        String(
-          product.productId || ""
-        ),
+        product.productId,
 
       productName:
-        String(
-          product.productName || ""
-        ),
+        product.productName,
 
       unitPrice:
-        price,
+        Number(product.price) || 0,
 
-      quantity:
-        1,
+      quantity: 1,
 
       available:
-        available
+        Number(product.available) || 0
 
-    };
-
-
-    cart.push(
-      cartItem
-    );
+    });
 
   }
-
-
-  console.log(
-    "CART AFTER ADD:",
-    cart
-  );
 
 
   renderCart();
@@ -3006,37 +2677,27 @@ function addProductToCart(
 }
 
 
-/* =========================================================
+
+/* =================================================
    CHANGE QUANTITY
-========================================================= */
+================================================= */
 
-function changeQuantity(
-  index,
-  amount
-) {
+function changeQuantity(index, amount) {
 
 
-  const item =
-    cart[index];
+  const item = cart[index];
 
 
-  if (!item) {
-    return;
-  }
+  if (!item) return;
 
 
   const newQuantity =
-    item.quantity +
-    amount;
+    item.quantity + amount;
 
 
-  if (
-    newQuantity <= 0
-  ) {
+  if (newQuantity <= 0) {
 
-    removeCartItem(
-      index
-    );
+    removeCartItem(index);
 
     return;
 
@@ -3045,9 +2706,7 @@ function changeQuantity(
 
   if (
     newQuantity >
-    Number(
-      item.available
-    )
+    Number(item.available)
   ) {
 
     alert(
@@ -3055,7 +2714,6 @@ function changeQuantity(
       item.available +
       " available."
     );
-
 
     return;
 
@@ -3071,38 +2729,30 @@ function changeQuantity(
 }
 
 
-/* =========================================================
+
+/* =================================================
    REMOVE ITEM
-========================================================= */
+================================================= */
 
-function removeCartItem(
-  index
-) {
+function removeCartItem(index) {
 
-  cart.splice(
-    index,
-    1
-  );
-
+  cart.splice(index, 1);
 
   renderCart();
 
 }
 
 
-/* =========================================================
+
+/* =================================================
    CLEAR CART
-========================================================= */
+================================================= */
 
 function clearCart() {
 
 
-  if (
-    cart.length === 0
-  ) {
-
+  if (cart.length === 0) {
     return;
-
   }
 
 
@@ -3119,28 +2769,17 @@ function clearCart() {
 
   cart = [];
 
-
   renderCart();
-
-
-  setScannerStatus(
-    "Scanner ready — scan a product"
-  );
 
 }
 
 
-/* =========================================================
+
+/* =================================================
    RENDER CART
-========================================================= */
+================================================= */
 
 function renderCart() {
-
-
-  console.log(
-    "RENDER CART:",
-    cart
-  );
 
 
   const container =
@@ -3161,40 +2800,19 @@ function renderCart() {
     );
 
 
-  if (
-    !container ||
-    !emptyCart ||
-    !checkoutButton
-  ) {
-
-    console.error(
-      "Cart HTML elements are missing."
-    );
+  if (cart.length === 0) {
 
 
-    return;
-
-  }
-
-
-  if (
-    cart.length === 0
-  ) {
-
-    container.innerHTML =
-      "";
-
+    container.innerHTML = "";
 
     emptyCart.style.display =
       "block";
-
 
     checkoutButton.disabled =
       true;
 
 
     updateCartTotals();
-
 
     return;
 
@@ -3211,16 +2829,12 @@ function renderCart() {
 
   container.innerHTML =
     cart.map(
-      function(item, index) {
+      (item, index) => {
 
 
         const subtotal =
-          Number(
-            item.quantity
-          ) *
-          Number(
-            item.unitPrice
-          );
+          item.quantity *
+          item.unitPrice;
 
 
         return `
@@ -3232,22 +2846,15 @@ function renderCart() {
               <div>
 
                 <div class="cart-product-name">
-
                   ${escapeHtml(
                     item.productName
                   )}
-
                 </div>
 
-
                 <div class="cart-barcode">
-
                   ${escapeHtml(
-                    String(
-                      item.barcode
-                    )
+                    String(item.barcode)
                   )}
-
                 </div>
 
               </div>
@@ -3266,7 +2873,9 @@ function renderCart() {
 
             <div class="cart-controls">
 
+
               <div class="quantity-controls">
+
 
                 <button
                   class="quantity-button"
@@ -3275,16 +2884,18 @@ function renderCart() {
                       ${index},
                       -1
                     )
-                  "
-                >
+                  ">
+
                   −
+
                 </button>
 
 
                 <div
-                  class="quantity-value"
-                >
+                  class="quantity-value">
+
                   ${item.quantity}
+
                 </div>
 
 
@@ -3295,9 +2906,10 @@ function renderCart() {
                       ${index},
                       1
                     )
-                  "
-                >
+                  ">
+
                   +
+
                 </button>
 
 
@@ -3307,23 +2919,24 @@ function renderCart() {
                     removeCartItem(
                       ${index}
                     )
-                  "
-                >
+                  ">
+
                   Remove
+
                 </button>
+
 
               </div>
 
 
-              <div
-                class="item-subtotal"
-              >
+              <div class="item-subtotal">
 
                 ₱${formatMoney(
                   subtotal
                 )}
 
               </div>
+
 
             </div>
 
@@ -3332,7 +2945,8 @@ function renderCart() {
         `;
 
       }
-    ).join("");
+    )
+    .join("");
 
 
   updateCartTotals();
@@ -3340,150 +2954,96 @@ function renderCart() {
 }
 
 
-/* =========================================================
+
+/* =================================================
    CART TOTALS
-========================================================= */
+================================================= */
 
 function updateCartTotals() {
 
 
   let itemCount = 0;
 
-
   let total = 0;
 
 
-  cart.forEach(
-    function(item) {
+  cart.forEach(item => {
 
-      itemCount +=
-        Number(
-          item.quantity
-        ) || 0;
+    itemCount +=
+      Number(item.quantity);
 
+    total +=
+      Number(item.quantity) *
+      Number(item.unitPrice);
 
-      total +=
-        (
-          Number(
-            item.quantity
-          ) || 0
-        ) *
-        (
-          Number(
-            item.unitPrice
-          ) || 0
-        );
-
-    }
-  );
+  });
 
 
-  const countElement =
-    document.getElementById(
-      "cartItemCount"
-    );
+  document.getElementById(
+    "cartItemCount"
+  ).textContent =
+    itemCount;
 
 
-  const subtotalElement =
-    document.getElementById(
-      "cartSubtotal"
-    );
+  document.getElementById(
+    "cartSubtotal"
+  ).textContent =
+    "₱" +
+    formatMoney(total);
 
 
-  const totalElement =
-    document.getElementById(
-      "cartTotal"
-    );
-
-
-  if (countElement) {
-
-    countElement.textContent =
-      itemCount;
-
-  }
-
-
-  if (subtotalElement) {
-
-    subtotalElement.textContent =
-      "₱" +
-      formatMoney(
-        total
-      );
-
-  }
-
-
-  if (totalElement) {
-
-    totalElement.textContent =
-      "₱" +
-      formatMoney(
-        total
-      );
-
-  }
+  document.getElementById(
+    "cartTotal"
+  ).textContent =
+    "₱" +
+    formatMoney(total);
 
 }
 
 
-/* =========================================================
+
+/* =================================================
    MONEY
-========================================================= */
+================================================= */
 
-function formatMoney(
-  value
-) {
+function formatMoney(value) {
 
-  return Number(
-    value || 0
-  ).toLocaleString(
-    "en-PH",
-    {
-      minimumFractionDigits:
-        2,
-
-      maximumFractionDigits:
-        2
-    }
-  );
+  return Number(value || 0)
+    .toLocaleString(
+      "en-PH",
+      {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }
+    );
 
 }
 
 
-/* =========================================================
+
+/* =================================================
    HTML SAFETY
-========================================================= */
+================================================= */
 
-function escapeHtml(
-  value
-) {
+function escapeHtml(value) {
 
-  return String(
-    value
-  )
-
+  return String(value)
     .replace(
       /&/g,
       "&amp;"
     )
-
     .replace(
       /</g,
       "&lt;"
     )
-
     .replace(
       />/g,
       "&gt;"
     )
-
     .replace(
       /"/g,
       "&quot;"
     )
-
     .replace(
       /'/g,
       "&#039;"
@@ -3492,16 +3052,15 @@ function escapeHtml(
 }
 
 
-/* =========================================================
+
+/* =================================================
    CHECKOUT
-========================================================= */
+================================================= */
 
 function checkout() {
 
 
-  if (
-    cart.length === 0
-  ) {
+  if (cart.length === 0) {
 
     alert(
       "The cart is empty."
@@ -3512,30 +3071,27 @@ function checkout() {
   }
 
 
+  /*
+   * Checkout/payment interface
+   * will be expanded in the next
+   * checkout part.
+   */
+
   const total =
     cart.reduce(
-      function(sum, item) {
-
-        return sum +
-          (
-            Number(
-              item.quantity
-            ) *
-            Number(
-              item.unitPrice
-            )
-          );
-
-      },
+      (sum, item) =>
+        sum +
+        (
+          Number(item.quantity) *
+          Number(item.unitPrice)
+        ),
       0
     );
 
 
   alert(
     "ORDER TOTAL\n\n₱" +
-    formatMoney(
-      total
-    ) +
+    formatMoney(total) +
     "\n\n" +
     "Payment and stock deduction " +
     "will be connected in the checkout part."
@@ -3544,286 +3100,85 @@ function checkout() {
 }
 
 
-/* =========================================================
-   DASHBOARD
-========================================================= */
+  /* =================================================
+     LOAD DASHBOARD
+  ================================================= */
 
-function loadDashboard() {
+  function loadDashboard() {
 
+    callPOSApi(
+      "dashboard",
+      {},
+      function(data) {
+        if (!data) return;
 
-  console.log(
-    "Loading dashboard..."
-  );
+        const sales = Number(data.todaySales || 0);
+        const transactions = Number(data.todayTransactions || 0);
+        const totalProducts = Number(data.totalProducts || 0);
+        const totalAvailable = Number(data.totalAvailable || 0);
+        const lowStock = Number(data.lowStock || 0);
+        const outOfStock = Number(data.outOfStock || 0);
 
+        const el = id => document.getElementById(id);
 
-  callPOSApi(
-    "dashboard",
-    {},
-
-    function(data) {
-
-
-      console.log(
-        "DASHBOARD RESPONSE:",
-        data
-      );
-
-
-      if (!data) {
-
-        throw new Error(
-          "No dashboard data was returned."
-        );
-
+        if (el("todaySales")) {
+          el("todaySales").textContent = "₱" + sales.toLocaleString("en-PH", {minimumFractionDigits:2, maximumFractionDigits:2});
+        }
+        if (el("todayTransactions")) {
+          el("todayTransactions").textContent = transactions + (transactions === 1 ? " transaction today" : " transactions today");
+        }
+        if (el("totalProducts")) el("totalProducts").textContent = totalProducts.toLocaleString();
+        if (el("totalAvailable")) el("totalAvailable").textContent = totalAvailable.toLocaleString();
+        if (el("availableStatus")) el("availableStatus").textContent = totalAvailable.toLocaleString();
+        if (el("lowStock")) el("lowStock").textContent = lowStock.toLocaleString();
+        if (el("outOfStock")) el("outOfStock").textContent = outOfStock.toLocaleString();
+      },
+      function(error) {
+        console.error("Dashboard API error:", error);
       }
-
-
-      const sales =
-        Number(
-          data.todaySales || 0
-        );
-
-
-      const transactions =
-        Number(
-          data.todayTransactions || 0
-        );
-
-
-      const totalProducts =
-        Number(
-          data.totalProducts || 0
-        );
-
-
-      const totalAvailable =
-        Number(
-          data.totalAvailable || 0
-        );
-
-
-      const lowStock =
-        Number(
-          data.lowStock || 0
-        );
-
-
-      const outOfStock =
-        Number(
-          data.outOfStock || 0
-        );
-
-
-      const todaySales =
-        document.getElementById(
-          "todaySales"
-        );
-
-
-      const todayTransactions =
-        document.getElementById(
-          "todayTransactions"
-        );
-
-
-      const products =
-        document.getElementById(
-          "totalProducts"
-        );
-
-
-      const available =
-        document.getElementById(
-          "totalAvailable"
-        );
-
-
-      const availableStatus =
-        document.getElementById(
-          "availableStatus"
-        );
-
-
-      const lowStockElement =
-        document.getElementById(
-          "lowStock"
-        );
-
-
-      const outOfStockElement =
-        document.getElementById(
-          "outOfStock"
-        );
-
-
-      if (todaySales) {
-
-        todaySales.textContent =
-          "₱" +
-          formatMoney(
-            sales
-          );
-
-      }
-
-
-      if (todayTransactions) {
-
-        todayTransactions.textContent =
-          transactions +
-          (
-            transactions === 1
-              ? " transaction today"
-              : " transactions today"
-          );
-
-      }
-
-
-      if (products) {
-
-        products.textContent =
-          totalProducts.toLocaleString();
-
-      }
-
-
-      if (available) {
-
-        available.textContent =
-          totalAvailable.toLocaleString();
-
-      }
-
-
-      if (availableStatus) {
-
-        availableStatus.textContent =
-          totalAvailable.toLocaleString();
-
-      }
-
-
-      if (lowStockElement) {
-
-        lowStockElement.textContent =
-          lowStock.toLocaleString();
-
-      }
-
-
-      if (outOfStockElement) {
-
-        outOfStockElement.textContent =
-          outOfStock.toLocaleString();
-
-      }
-
-
-      const loading =
-        document.getElementById(
-          "loading"
-        );
-
-
-      if (loading) {
-
-        loading.style.display =
-          "none";
-
-      }
-
-    },
-
-    function(error) {
-
-
-      console.error(
-        "DASHBOARD API ERROR:",
-        error
-      );
-
-
-      const loading =
-        document.getElementById(
-          "loading"
-        );
-
-
-      if (loading) {
-
-        loading.style.display =
-          "none";
-
-      }
-
-
-      /*
-       * Do not leave the whole app
-       * permanently blocked if the
-       * dashboard API fails.
-       */
-
-      setTimeout(
-        function() {
-
-          if (loading) {
-
-            loading.style.display =
-              "none";
-
-          }
-
-        },
-        100
-      );
-
+    );
+  }
+
+
+  /* =================================================
+     INITIALIZE APP
+  ================================================= */
+
+  document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+      const loading = document.getElementById("loading");
+      if (loading) loading.style.display = "none";
+      loadDashboard();
+      renderCart();
     }
-
   );
 
-}
-
-
-/* =========================================================
+/* =================================================
    BARCODE SCANNER
-========================================================= */
+================================================= */
 
-let barcodeScanner =
-  null;
+let barcodeScanner = null;
 
+let scannerRunning = false;
 
-let scannerRunning =
-  false;
+let lastScannedBarcode = "";
 
-
-let lastScannedBarcode =
-  "";
-
-
-let lastScanTime =
-  0;
-
-
-let barcodeLookupRunning =
-  false;
-
-
-/* =========================================================
-   START BARCODE SCANNER
-========================================================= */
+let lastScanTime = 0;
+/* =================================================
+   START SCANNER
+================================================= */
 
 function startBarcodeScanner() {
 
-
-  if (
-    scannerRunning
-  ) {
-
+  if (scannerRunning) {
     return;
-
   }
 
+
+  /*
+   * Make sure the scanner library loaded.
+   */
 
   if (
     typeof Html5Qrcode ===
@@ -3833,7 +3188,6 @@ function startBarcodeScanner() {
     alert(
       "Barcode scanner library could not be loaded."
     );
-
 
     return;
 
@@ -3847,30 +3201,24 @@ function startBarcodeScanner() {
 
 
   if (!reader) {
-
-    console.error(
-      "barcode-reader element not found."
-    );
-
-
     return;
-
   }
 
 
   /*
-   * Clear old scanner instance.
+   * Create scanner.
    */
-
-  reader.innerHTML =
-    "";
-
 
   barcodeScanner =
     new Html5Qrcode(
       "barcode-reader"
     );
 
+
+  /*
+   * Barcode formats supported by
+   * common retail products.
+   */
 
   const formatsToSupport = [
 
@@ -3908,23 +3256,16 @@ function startBarcodeScanner() {
     formatsToSupport:
       formatsToSupport,
 
-    aspectRatio:
-      1.777
+    aspectRatio: 1.777
 
   };
-
-
-  setScannerStatus(
-    "Starting scanner..."
-  );
 
 
   barcodeScanner
     .start(
 
       {
-        facingMode:
-          "environment"
+        facingMode: "environment"
       },
 
       config,
@@ -3935,236 +3276,108 @@ function startBarcodeScanner() {
 
     )
 
-    .then(
-      function() {
+    .then(function() {
 
-
-        scannerRunning =
-          true;
-
-
-        setScannerStatus(
-          "Scanner ready — scan a product"
-        );
-
-
-        console.log(
-          "Barcode scanner started."
-        );
-
-      }
-    )
-
-    .catch(
-      function(error) {
-
-
-        scannerRunning =
-          false;
-
-
-        console.error(
-          "Scanner error:",
-          error
-        );
-
-
-        setScannerStatus(
-          "Camera could not be started"
-        );
-
-
-        alert(
-          "Unable to start the barcode scanner.\n\n" +
-          "Please allow camera access for this web app."
-        );
-
-      }
-    );
-
-}
-
-
-/* =========================================================
-   BARCODE DETECTED
-========================================================= */
-
-function onBarcodeDetected(
-  decodedText,
-  decodedResult
-) {
-
-  console.log(
-    "BARCODE DETECTED:",
-    decodedText
-  );
-
-
-  const barcode =
-    String(decodedText || "")
-      .trim();
-
-
-  if (!barcode) {
-    return;
-  }
-
-
-  const now =
-    Date.now();
-
-
-  if (
-    barcode === lastScannedBarcode &&
-    now - lastScanTime < 1500
-  ) {
-
-    return;
-
-  }
-
-
-  lastScannedBarcode =
-    barcode;
-
-
-  lastScanTime =
-    now;
-
-
-  setScannerStatus(
-    "Product detected: " +
-    barcode
-  );
-
-
-  console.log(
-    "Looking up barcode:",
-    barcode
-  );
-
-
-  callPOSApi(
-
-    "product",
-
-    {
-      barcode: barcode
-    },
-
-
-    function(result) {
-
-      console.log(
-        "PRODUCT API RESULT:",
-        result
-      );
-
-
-      if (
-        !result ||
-        result.success !== true ||
-        result.found !== true ||
-        !result.product
-      ) {
-
-        console.error(
-          "Invalid product response:",
-          result
-        );
-
-
-        setScannerStatus(
-          "Product not found: " +
-          barcode
-        );
-
-        return;
-
-      }
-
-
-      const product =
-        result.product;
-
-
-      console.log(
-        "PRODUCT FOUND:",
-        product
-      );
-
-
-      addProductToCart(
-        product
-      );
-
+      scannerRunning = true;
 
       setScannerStatus(
-        product.productName +
-        " added"
+        "Scanner ready — scan a product"
       );
 
+    })
 
-      setTimeout(
-        function() {
+    .catch(function(error) {
 
-          setScannerStatus(
-            "Scanner ready — scan next product"
-          );
-
-        },
-        1000
-      );
-
-    },
-
-
-    function(error) {
+      scannerRunning = false;
 
       console.error(
-        "PRODUCT LOOKUP FAILED:",
+        "Scanner error:",
         error
       );
 
 
       setScannerStatus(
-        "Database connection failed"
+        "Camera could not be started"
       );
 
 
       alert(
-        "Unable to connect to the product database.\n\n" +
-        "The Mobile POS server did not respond."
+        "Unable to start the barcode scanner.\n\n" +
+        "Please allow camera access for this web app."
       );
 
-    }
-
-  );
+    });
 
 }
 
-/* =========================================================
-   SCANNER ERROR
-========================================================= */
 
-function onBarcodeScanError(
-  errorMessage
-) {
+
+/* =================================================
+   BARCODE DETECTED
+================================================= */
+
+function onBarcodeDetected(decodedText, decodedResult) {
+
+  const barcode = String(decodedText || "").trim();
+  if (!barcode) return;
+
+  const now = Date.now();
+  if (barcode === lastScannedBarcode && now - lastScanTime < 1500) return;
+
+  lastScannedBarcode = barcode;
+  lastScanTime = now;
+
+  setScannerStatus("Product detected: " + barcode);
+  console.log("Barcode detected:", barcode);
+
+  callPOSApi(
+    "product",
+    { barcode: barcode },
+    function(result) {
+
+      console.log("Product lookup result:", result);
+
+      if (!result || result.success !== true || result.found !== true || !result.product) {
+        setScannerStatus("Product not found: " + barcode);
+        setTimeout(function() { setScannerStatus("Scanner ready — scan a product"); }, 1500);
+        return;
+      }
+
+      addProductToCart(result.product);
+      setScannerStatus(String(result.product.productName || "Product") + " added");
+      setTimeout(function() { setScannerStatus("Scanner ready — scan next product"); }, 1000);
+    },
+    function(error) {
+      console.error("Product lookup failed:", error);
+      setScannerStatus("Database connection failed");
+      setTimeout(function() { setScannerStatus("Scanner ready — scan a product"); }, 2000);
+    }
+  );
+}
+
+
+/* =================================================
+   SCANNER ERROR CALLBACK
+================================================= */
+
+function onBarcodeScanError(errorMessage) {
 
   /*
-   * Normal scan failures are ignored.
+   * Ignore normal scan failures.
+   *
+   * The library generates many of these
+   * while it is simply looking for a barcode.
    */
 
 }
 
 
-/* =========================================================
-   SCANNER STATUS
-========================================================= */
 
-function setScannerStatus(
-  message
-) {
+/* =================================================
+   SCANNER STATUS
+================================================= */
+
+function setScannerStatus(message) {
 
 
   let status =
@@ -4174,7 +3387,6 @@ function setScannerStatus(
 
 
   if (!status) {
-
 
     status =
       document.createElement(
@@ -4196,9 +3408,7 @@ function setScannerStatus(
       );
 
 
-    if (
-      scannerCard
-    ) {
+    if (scannerCard) {
 
       scannerCard.appendChild(
         status
@@ -4209,19 +3419,16 @@ function setScannerStatus(
   }
 
 
-  if (status) {
-
-    status.textContent =
-      message;
-
-  }
+  status.textContent =
+    message;
 
 }
 
 
-/* =========================================================
-   STOP BARCODE SCANNER
-========================================================= */
+
+/* =================================================
+   STOP SCANNER
+================================================= */
 
 function stopBarcodeScanner() {
 
@@ -4239,106 +3446,68 @@ function stopBarcodeScanner() {
   barcodeScanner
     .stop()
 
-    .then(
-      function() {
+    .then(function() {
 
+      scannerRunning = false;
 
-        scannerRunning =
-          false;
+      setScannerStatus(
+        "Scanner stopped"
+      );
 
+    })
 
-        console.log(
-          "Barcode scanner stopped."
-        );
+    .catch(function(error) {
 
+      console.error(error);
 
-        setScannerStatus(
-          "Scanner stopped"
-        );
+      scannerRunning = false;
 
-      }
-    )
-
-    .catch(
-      function(error) {
-
-
-        console.error(
-          "Scanner stop error:",
-          error
-        );
-
-
-        scannerRunning =
-          false;
-
-      }
-    );
+    });
 
 }
 
 
-/* =========================================================
-   INITIALIZE
-========================================================= */
 
-document.addEventListener(
-  "DOMContentLoaded",
-  function() {
+/* =================================================
+   START WHEN POS OPENS
+================================================= */
+
+const originalShowPage =
+  showPage;
 
 
-    console.log(
-      "================================"
-    );
+showPage = function(page) {
 
-    console.log(
-      "MOBILE POS INITIALIZING"
-    );
 
-    console.log(
-      "API:",
-      API_URL
-    );
+  originalShowPage(page);
 
-    console.log(
-      "================================"
-    );
 
+  if (page === "pos") {
 
     /*
-     * Hide loading if something
-     * unexpected happens.
+     * Give the POS page a moment to
+     * become visible before starting
+     * the camera.
      */
 
-    const loading =
-      document.getElementById(
-        "loading"
-      );
+    setTimeout(
+      function() {
 
+        startBarcodeScanner();
 
-    if (loading) {
-
-      loading.style.display =
-        "flex";
-
-    }
-
-
-    /*
-     * Load dashboard.
-     */
-
-    loadDashboard();
-
-
-    /*
-     * Initial cart display.
-     */
-
-    renderCart();
+      },
+      300
+    );
 
   }
-);
+
+  else {
+
+    stopBarcodeScanner();
+
+  }
+
+};
 
 </script>
 
