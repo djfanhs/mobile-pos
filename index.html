@@ -1567,6 +1567,158 @@
   
 
 /* =================================================
+   TRANSACTION RECEIPT MODAL
+================================================= */
+
+.receipt-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.receipt-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.62);
+  backdrop-filter: blur(5px);
+}
+
+.receipt-box {
+  position: relative;
+  width: 100%;
+  max-width: 430px;
+  background: #fff;
+  border-radius: 26px;
+  padding: 28px 24px 22px;
+  box-shadow: 0 24px 70px rgba(0,0,0,.28);
+  animation: receiptModalIn .22s ease-out;
+}
+
+@keyframes receiptModalIn {
+  from { opacity: 0; transform: translateY(18px) scale(.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.receipt-success-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 14px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #dcfce7;
+  color: #15803d;
+  font-size: 34px;
+  font-weight: 900;
+}
+
+.receipt-title {
+  text-align: center;
+  font-size: 24px;
+  font-weight: 900;
+  color: #111827;
+}
+
+.receipt-subtitle {
+  text-align: center;
+  margin-top: 5px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.receipt-id-box {
+  margin: 20px 0 14px;
+  padding: 14px;
+  border-radius: 15px;
+  background: #f3f4f6;
+  text-align: center;
+}
+
+.receipt-id-label {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .8px;
+  color: #6b7280;
+}
+
+.receipt-id {
+  margin-top: 5px;
+  font-size: 13px;
+  font-weight: 800;
+  color: #111827;
+  word-break: break-all;
+}
+
+.receipt-summary {
+  border-top: 1px dashed #d1d5db;
+  border-bottom: 1px dashed #d1d5db;
+  padding: 13px 0;
+}
+
+.receipt-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 7px 0;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.receipt-row strong {
+  color: #111827;
+}
+
+.receipt-total-row {
+  margin-top: 5px;
+  padding-top: 13px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.receipt-total-row span {
+  font-size: 15px;
+  font-weight: 900;
+  color: #111827;
+}
+
+.receipt-total-row strong {
+  font-size: 25px;
+}
+
+.receipt-change-row strong {
+  color: #15803d;
+}
+
+.receipt-done-button {
+  width: 100%;
+  min-height: 54px;
+  margin-top: 18px;
+  border: none;
+  border-radius: 15px;
+  background: #111827;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+@media (max-width:480px) {
+  .receipt-modal {
+    align-items: flex-end;
+    padding: 0;
+  }
+  .receipt-box {
+    max-width: none;
+    border-radius: 26px 26px 0 0;
+    padding: 25px 18px calc(18px + env(safe-area-inset-bottom));
+  }
+}
+
+/* =================================================
    PAYMENT MODAL
 ================================================= */
 
@@ -2372,6 +2524,58 @@
 
 
 
+
+
+<!-- ===============================================
+     TRANSACTION RECEIPT MODAL
+================================================ -->
+
+<div id="receiptModal" class="receipt-modal" style="display:none;">
+  <div class="receipt-overlay"></div>
+
+  <div class="receipt-box">
+
+    <div class="receipt-success-icon">✓</div>
+
+    <div class="receipt-title">Transaction Completed!</div>
+    <div class="receipt-subtitle">Payment has been successfully recorded.</div>
+
+    <div class="receipt-id-box">
+      <div class="receipt-id-label">TRANSACTION ID</div>
+      <div id="receiptTransactionId" class="receipt-id">—</div>
+    </div>
+
+    <div class="receipt-summary">
+      <div class="receipt-row">
+        <span>Items</span>
+        <strong id="receiptItems">0</strong>
+      </div>
+
+      <div class="receipt-row">
+        <span>Total</span>
+        <strong id="receiptTotal">₱0.00</strong>
+      </div>
+
+      <div class="receipt-row">
+        <span>Cash Received</span>
+        <strong id="receiptCash">₱0.00</strong>
+      </div>
+
+      <div class="receipt-row receipt-change-row">
+        <span>Change</span>
+        <strong id="receiptChange">₱0.00</strong>
+      </div>
+
+      <div class="receipt-row receipt-total-row">
+        <span>AMOUNT PAID</span>
+        <strong id="receiptPaid">₱0.00</strong>
+      </div>
+    </div>
+
+    <button type="button" class="receipt-done-button" onclick="closeReceiptModal()">DONE</button>
+
+  </div>
+</div>
 
 
 <!-- ===============================================
@@ -3322,6 +3526,46 @@ function completePayment() {
 
 
 /* =================================================
+   TRANSACTION RECEIPT
+================================================= */
+
+function openReceiptModal(data) {
+
+  const modal = document.getElementById("receiptModal");
+  if (!modal) {
+    return;
+  }
+
+  document.getElementById("receiptTransactionId").textContent =
+    data.transactionId || "N/A";
+
+  document.getElementById("receiptItems").textContent =
+    Number(data.items || 0).toLocaleString();
+
+  document.getElementById("receiptTotal").textContent =
+    "₱" + formatMoney(Number(data.total) || 0);
+
+  document.getElementById("receiptCash").textContent =
+    "₱" + formatMoney(Number(data.cash) || 0);
+
+  document.getElementById("receiptChange").textContent =
+    "₱" + formatMoney(Number(data.change) || 0);
+
+  document.getElementById("receiptPaid").textContent =
+    "₱" + formatMoney(Number(data.cash) || 0);
+
+  modal.style.display = "flex";
+}
+
+function closeReceiptModal() {
+  const modal = document.getElementById("receiptModal");
+  if (modal) {
+    modal.style.display = "none";
+  }
+}
+
+
+/* =================================================
    PROCESS CHECKOUT PAYMENT
 ================================================= */
 
@@ -3392,17 +3636,21 @@ function processCheckoutPayment(cash, change) {
       const finalCash = Number(result.cash ?? cash);
       const finalChange = Number(result.change ?? change);
 
+      const cartItemCountForReceipt = cart.reduce(function(sum, item) {
+        return sum + (Number(item.quantity) || 0);
+      }, 0);
+
       cart = [];
       renderCart();
       setScannerStatus("Scanner ready — scan a product");
 
-      alert(
-        "TRANSACTION COMPLETED!\n\n" +
-        "Transaction ID:\n" + transactionId +
-        "\n\nTOTAL: ₱" + formatMoney(finalTotal) +
-        "\nCASH: ₱" + formatMoney(finalCash) +
-        "\nCHANGE: ₱" + formatMoney(finalChange)
-      );
+      openReceiptModal({
+        transactionId: transactionId,
+        items: cartItemCountForReceipt,
+        total: finalTotal,
+        cash: finalCash,
+        change: finalChange
+      });
 
       loadDashboard();
     },
