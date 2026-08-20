@@ -2597,9 +2597,14 @@ function addBarcodeToCart() {
   "PRODUCT RETURNED FROM API:",
   result.product
 );
+      console.log(
+  "ADDING PRODUCT TO CART:",
+  result.product
+);
       addProductToCart(
         result.product
       );
+
 
 
       input.value = "";
