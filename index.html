@@ -2336,7 +2336,7 @@
    * calling Apps Script ContentService.
    *******************************************************/
 
-  function callPOSApi(action, params, success, failure) {
+ function callPOSApi(action, params, success, failure) {
 
   const callbackName =
     "__posApiCallback_" +
@@ -2344,29 +2344,11 @@
     "_" +
     Math.floor(Math.random() * 100000);
 
-
-  console.log(
-    "CALLING POS API:",
-    action,
-    params
-  );
-
-
   const query =
     new URLSearchParams();
 
-
-  query.append(
-    "action",
-    action
-  );
-
-
-  query.append(
-    "callback",
-    callbackName
-  );
-
+  query.append("action", action);
+  query.append("callback", callbackName);
 
   if (params) {
 
@@ -2383,17 +2365,13 @@
 
   }
 
-
   const script =
     document.createElement("script");
 
-
   let finished = false;
 
+  let timeoutId;
 
-  /* ============================================
-     CLEANUP
-  ============================================ */
 
   function cleanup() {
 
@@ -2401,21 +2379,21 @@
       return;
     }
 
-
     finished = true;
 
 
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+
+
     try {
-
       delete window[callbackName];
-
     }
 
     catch (error) {
-
       window[callbackName] =
         undefined;
-
     }
 
 
@@ -2429,10 +2407,6 @@
 
   }
 
-
-  /* ============================================
-     JSONP CALLBACK
-  ============================================ */
 
   window[callbackName] =
     function(result) {
@@ -2457,10 +2431,6 @@
 
     };
 
-
-  /* ============================================
-     SCRIPT ERROR
-  ============================================ */
 
   script.onerror =
     function(error) {
@@ -2490,10 +2460,6 @@
     };
 
 
-  /* ============================================
-     SCRIPT LOADED
-  ============================================ */
-
   script.onload =
     function() {
 
@@ -2505,11 +2471,7 @@
     };
 
 
-  /* ============================================
-     TIMEOUT
-  ============================================ */
-
-  const timeout =
+  timeoutId =
     setTimeout(
       function() {
 
@@ -2545,10 +2507,6 @@
     );
 
 
-  /* ============================================
-     API URL
-  ============================================ */
-
   script.src =
     API_URL +
     "?" +
@@ -2556,14 +2514,10 @@
 
 
   console.log(
-    "POS API URL:",
+    "POS API REQUEST:",
     script.src
   );
 
-
-  /* ============================================
-     START REQUEST
-  ============================================ */
 
   document.body.appendChild(
     script
