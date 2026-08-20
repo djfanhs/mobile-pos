@@ -3144,21 +3144,56 @@ function checkout() {
      LOAD DASHBOARD
   ================================================= */
 
-  function loadDashboard() {
+ /* =================================================
+   LOAD DASHBOARD
+================================================= */
 
-    callPOSApi(
-      "dashboard",
-      {},
+function loadDashboard() {
 
-      function(data) {
+  const callbackName =
+    "__mobilePOSDashboard_" +
+    Date.now();
 
-        if (!data) {
 
-          throw new Error(
-            "No dashboard data was returned."
-          );
+  const script =
+    document.createElement("script");
 
-        }
+
+  let finished = false;
+
+
+  function finish() {
+
+    if (finished) {
+      return;
+    }
+
+    finished = true;
+
+
+    if (script.parentNode) {
+
+      script.parentNode.removeChild(
+        script
+      );
+
+    }
+
+  }
+
+
+  window[callbackName] =
+    function(data) {
+
+      finish();
+
+
+      try {
+
+        console.log(
+          "Dashboard API response:",
+          data
+        );
 
 
         /*
@@ -3166,22 +3201,30 @@ function checkout() {
          */
 
         const sales =
-          Number(data.todaySales || 0);
-
-
-        document.getElementById(
-          "todaySales"
-        ).textContent =
-
-          "₱" +
-
-          sales.toLocaleString(
-            "en-PH",
-            {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2
-            }
+          Number(
+            data.todaySales || 0
           );
+
+
+        const salesElement =
+          document.getElementById(
+            "todaySales"
+          );
+
+
+        if (salesElement) {
+
+          salesElement.textContent =
+            "₱" +
+            sales.toLocaleString(
+              "en-PH",
+              {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+              }
+            );
+
+        }
 
 
         /*
@@ -3194,124 +3237,289 @@ function checkout() {
           );
 
 
-        document.getElementById(
-          "todayTransactions"
-        ).textContent =
-
-          transactions +
-          (
-            transactions === 1
-              ? " transaction today"
-              : " transactions today"
+        const transactionElement =
+          document.getElementById(
+            "todayTransactions"
           );
 
 
+        if (transactionElement) {
+
+          transactionElement.textContent =
+
+            transactions +
+
+            (
+              transactions === 1
+                ? " transaction today"
+                : " transactions today"
+            );
+
+        }
+
+
         /*
-         * Products
+         * Total products
          */
 
-        document.getElementById(
-          "totalProducts"
-        ).textContent =
-
+        const totalProducts =
           Number(
             data.totalProducts || 0
-          ).toLocaleString();
+          );
+
+
+        const productsElement =
+          document.getElementById(
+            "totalProducts"
+          );
+
+
+        if (productsElement) {
+
+          productsElement.textContent =
+            totalProducts.toLocaleString();
+
+        }
 
 
         /*
          * Available stock
          */
 
-        document.getElementById(
-          "totalAvailable"
-        ).textContent =
-
+        const totalAvailable =
           Number(
             data.totalAvailable || 0
-          ).toLocaleString();
+          );
 
 
-        document.getElementById(
-          "availableStatus"
-        ).textContent =
+        const availableElement =
+          document.getElementById(
+            "totalAvailable"
+          );
 
-          Number(
-            data.totalAvailable || 0
-          ).toLocaleString();
+
+        if (availableElement) {
+
+          availableElement.textContent =
+            totalAvailable.toLocaleString();
+
+        }
+
+
+        /*
+         * Available stock status
+         */
+
+        const availableStatus =
+          document.getElementById(
+            "availableStatus"
+          );
+
+
+        if (availableStatus) {
+
+          availableStatus.textContent =
+            totalAvailable.toLocaleString();
+
+        }
 
 
         /*
          * Low stock
          */
 
-        document.getElementById(
-          "lowStock"
-        ).textContent =
-
+        const lowStock =
           Number(
             data.lowStock || 0
-          ).toLocaleString();
+          );
+
+
+        const lowStockElement =
+          document.getElementById(
+            "lowStock"
+          );
+
+
+        if (lowStockElement) {
+
+          lowStockElement.textContent =
+            lowStock.toLocaleString();
+
+        }
 
 
         /*
          * Out of stock
          */
 
-        document.getElementById(
-          "outOfStock"
-        ).textContent =
-
+        const outOfStock =
           Number(
             data.outOfStock || 0
-          ).toLocaleString();
+          );
 
 
-        document.getElementById(
-          "loading"
-        ).style.display = "none";
+        const outOfStockElement =
+          document.getElementById(
+            "outOfStock"
+          );
 
-      },
 
-      function(error) {
+        if (outOfStockElement) {
+
+          outOfStockElement.textContent =
+            outOfStock.toLocaleString();
+
+        }
+
+
+      }
+
+      catch (error) {
 
         console.error(
-          "Dashboard error:",
+          "Dashboard display error:",
           error
         );
 
-
-        document.getElementById(
-          "loading"
-        ).style.display = "none";
-
       }
-    );
 
-  }
-
-
-  /* =================================================
-     INITIALIZE APP
-  ================================================= */
-
-  document.addEventListener(
-    "DOMContentLoaded",
-    function() {
 
       /*
-       * setupDatabase() is intentionally NOT called
-       * from the external mobile frontend.
-       *
-       * Database creation is an Apps Script-side
-       * setup operation. The dashboard simply loads
-       * the existing database.
+       * IMPORTANT:
+       * Always remove the loading screen
+       * after the API responds.
        */
 
-      loadDashboard();
+      const loading =
+        document.getElementById(
+          "loading"
+        );
 
-    }
+
+      if (loading) {
+
+        loading.style.display =
+          "none";
+
+      }
+
+
+      try {
+
+        delete window[
+          callbackName
+        ];
+
+      }
+
+      catch (error) {
+
+        window[
+          callbackName
+        ] = undefined;
+
+      }
+
+    };
+
+
+  /*
+   * Handle API connection failure.
+   */
+
+  script.onerror =
+    function() {
+
+      finish();
+
+
+      console.error(
+        "Unable to connect to Dashboard API."
+      );
+
+
+      const loading =
+        document.getElementById(
+          "loading"
+        );
+
+
+      if (loading) {
+
+        loading.style.display =
+          "none";
+
+      }
+
+
+      try {
+
+        delete window[
+          callbackName
+        ];
+
+      }
+
+      catch (error) {
+
+        window[
+          callbackName
+        ] = undefined;
+
+      }
+
+    };
+
+
+  /*
+   * Apps Script API URL
+   */
+
+  const apiURL =
+    "https://script.google.com/macros/s/AKfycbxQDcGzC2LMuDGawzSIRZPmVmIMWDSJrRzsNNl-Q566HTUX-KU1G_2FWRwZZjmjNdpyQw/exec";
+
+
+  script.src =
+
+    apiURL +
+
+    "?action=dashboard" +
+
+    "&callback=" +
+
+    encodeURIComponent(
+      callbackName
+    );
+
+
+  document.body.appendChild(
+    script
   );
+
+}
+
+
+
+/* =================================================
+   INITIALIZE APP
+================================================= */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function() {
+
+    /*
+     * The database is already created
+     * by Apps Script.
+     *
+     * Do NOT call setupDatabase()
+     * from GitHub Pages.
+     */
+
+    loadDashboard();
+
+  }
+);
 
 /* =================================================
    BARCODE SCANNER
