@@ -1564,466 +1564,76 @@
 
 }
 
+  
+
 /* =================================================
    PAYMENT MODAL
 ================================================= */
 
 .payment-modal {
-
   position: fixed;
-
   inset: 0;
-
   z-index: 99999;
-
   display: flex;
-
   align-items: center;
-
   justify-content: center;
-
   padding: 20px;
-
 }
-
 
 .payment-modal-overlay {
-
   position: absolute;
-
   inset: 0;
-
-  background:
-    rgba(0, 0, 0, 0.60);
-
-  backdrop-filter:
-    blur(4px);
-
+  background: rgba(0,0,0,.60);
+  backdrop-filter: blur(4px);
 }
-
 
 .payment-modal-box {
-
   position: relative;
-
   width: 100%;
-
   max-width: 430px;
-
   background: #ffffff;
-
   border-radius: 24px;
-
   padding: 24px;
-
-  box-sizing: border-box;
-
-  box-shadow:
-    0 20px 60px
-    rgba(0, 0, 0, 0.25);
-
-  animation:
-    paymentModalIn
-    0.20s
-    ease-out;
-
+  box-shadow: 0 20px 60px rgba(0,0,0,.25);
+  animation: paymentModalIn .20s ease-out;
 }
-
 
 @keyframes paymentModalIn {
-
-  from {
-
-    opacity: 0;
-
-    transform:
-      translateY(20px)
-      scale(0.97);
-
-  }
-
-  to {
-
-    opacity: 1;
-
-    transform:
-      translateY(0)
-      scale(1);
-
-  }
-
+  from { opacity: 0; transform: translateY(20px) scale(.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
+.payment-modal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
+.payment-modal-title { font-size:24px; font-weight:800; color:#111827; }
+.payment-modal-subtitle { margin-top:4px; font-size:13px; color:#6b7280; }
+.payment-close-button { width:40px; height:40px; border:none; border-radius:50%; background:#f3f4f6; color:#374151; font-size:28px; line-height:1; cursor:pointer; }
+.payment-total-box { padding:20px; border-radius:18px; background:#f3f4f6; text-align:center; margin-bottom:22px; }
+.payment-label { font-size:12px; font-weight:700; letter-spacing:1px; color:#6b7280; }
+.payment-total { margin-top:5px; font-size:36px; font-weight:900; color:#111827; }
+.payment-input-section { margin-bottom:18px; }
+.payment-input-label { display:block; margin-bottom:8px; font-size:13px; font-weight:800; color:#374151; }
+.payment-input-wrapper { display:flex; align-items:center; border:2px solid #d1d5db; border-radius:16px; background:#fff; overflow:hidden; }
+.payment-input-wrapper:focus-within { border-color:#111827; box-shadow:0 0 0 3px rgba(17,24,39,.10); }
+.payment-currency { padding-left:18px; font-size:24px; font-weight:800; color:#374151; }
+#cashReceived { width:100%; border:none; outline:none; padding:16px; font-size:28px; font-weight:800; background:transparent; color:#111827; box-sizing:border-box; }
+#cashReceived::placeholder { color:#d1d5db; }
+.payment-change-box { display:flex; align-items:center; justify-content:space-between; padding:16px 18px; border-radius:16px; background:#f9fafb; margin-bottom:12px; }
+.payment-change-label { font-size:14px; font-weight:800; color:#6b7280; }
+.payment-change { font-size:24px; font-weight:900; color:#111827; }
+.payment-message { padding:12px 14px; border-radius:12px; margin-bottom:14px; font-size:13px; font-weight:700; text-align:center; }
+.payment-buttons { display:flex; gap:10px; margin-top:10px; }
+.payment-cancel-button, .payment-complete-button { flex:1; min-height:54px; border:none; border-radius:15px; font-size:14px; font-weight:800; cursor:pointer; }
+.payment-cancel-button { background:#f3f4f6; color:#374151; }
+.payment-complete-button { background:#111827; color:#fff; }
+.payment-complete-button:disabled { background:#d1d5db; color:#9ca3af; cursor:not-allowed; }
 
-/* HEADER */
-
-.payment-modal-header {
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: space-between;
-
-  margin-bottom: 20px;
-
+@media (max-width:480px) {
+  .payment-modal { align-items:flex-end; padding:0; }
+  .payment-modal-box { max-width:none; border-radius:24px 24px 0 0; padding:22px 18px calc(22px + env(safe-area-inset-bottom)); }
+  .payment-total { font-size:34px; }
+  #cashReceived { font-size:26px; }
 }
 
-
-.payment-modal-title {
-
-  font-size: 24px;
-
-  font-weight: 800;
-
-  color: #111827;
-
-}
-
-
-.payment-modal-subtitle {
-
-  margin-top: 4px;
-
-  font-size: 13px;
-
-  color: #6b7280;
-
-}
-
-
-.payment-close-button {
-
-  width: 40px;
-
-  height: 40px;
-
-  border: none;
-
-  border-radius: 50%;
-
-  background: #f3f4f6;
-
-  color: #374151;
-
-  font-size: 28px;
-
-  line-height: 1;
-
-  cursor: pointer;
-
-}
-
-
-/* TOTAL */
-
-.payment-total-box {
-
-  padding: 20px;
-
-  border-radius: 18px;
-
-  background: #f3f4f6;
-
-  text-align: center;
-
-  margin-bottom: 22px;
-
-}
-
-
-.payment-label {
-
-  font-size: 12px;
-
-  font-weight: 700;
-
-  letter-spacing: 1px;
-
-  color: #6b7280;
-
-}
-
-
-.payment-total {
-
-  margin-top: 5px;
-
-  font-size: 36px;
-
-  font-weight: 900;
-
-  color: #111827;
-
-}
-
-
-/* CASH INPUT */
-
-.payment-input-section {
-
-  margin-bottom: 18px;
-
-}
-
-
-.payment-input-label {
-
-  display: block;
-
-  margin-bottom: 8px;
-
-  font-size: 13px;
-
-  font-weight: 800;
-
-  color: #374151;
-
-}
-
-
-.payment-input-wrapper {
-
-  display: flex;
-
-  align-items: center;
-
-  border: 2px solid #d1d5db;
-
-  border-radius: 16px;
-
-  background: #ffffff;
-
-  overflow: hidden;
-
-  transition:
-    border-color 0.15s,
-    box-shadow 0.15s;
-
-}
-
-
-.payment-input-wrapper:focus-within {
-
-  border-color: #111827;
-
-  box-shadow:
-    0 0 0 3px
-    rgba(17, 24, 39, 0.10);
-
-}
-
-
-.payment-currency {
-
-  padding-left: 18px;
-
-  font-size: 24px;
-
-  font-weight: 800;
-
-  color: #374151;
-
-}
-
-
-#cashReceived {
-
-  width: 100%;
-
-  border: none;
-
-  outline: none;
-
-  padding: 16px;
-
-  font-size: 28px;
-
-  font-weight: 800;
-
-  background: transparent;
-
-  color: #111827;
-
-  box-sizing: border-box;
-
-}
-
-
-#cashReceived::placeholder {
-
-  color: #d1d5db;
-
-}
-
-
-/* CHANGE */
-
-.payment-change-box {
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: space-between;
-
-  padding: 16px 18px;
-
-  border-radius: 16px;
-
-  background: #f9fafb;
-
-  margin-bottom: 12px;
-
-}
-
-
-.payment-change-label {
-
-  font-size: 14px;
-
-  font-weight: 800;
-
-  color: #6b7280;
-
-}
-
-
-.payment-change {
-
-  font-size: 24px;
-
-  font-weight: 900;
-
-  color: #111827;
-
-}
-
-
-/* MESSAGE */
-
-.payment-message {
-
-  padding: 12px 14px;
-
-  border-radius: 12px;
-
-  margin-bottom: 14px;
-
-  font-size: 13px;
-
-  font-weight: 700;
-
-  text-align: center;
-
-}
-
-
-/* BUTTONS */
-
-.payment-buttons {
-
-  display: flex;
-
-  gap: 10px;
-
-  margin-top: 10px;
-
-}
-
-
-.payment-cancel-button,
-
-.payment-complete-button {
-
-  flex: 1;
-
-  min-height: 54px;
-
-  border: none;
-
-  border-radius: 15px;
-
-  font-size: 14px;
-
-  font-weight: 800;
-
-  cursor: pointer;
-
-}
-
-
-.payment-cancel-button {
-
-  background: #f3f4f6;
-
-  color: #374151;
-
-}
-
-
-.payment-complete-button {
-
-  background: #111827;
-
-  color: #ffffff;
-
-}
-
-
-.payment-complete-button:disabled {
-
-  background: #d1d5db;
-
-  color: #9ca3af;
-
-  cursor: not-allowed;
-
-}
-
-
-/* MOBILE */
-
-@media (max-width: 480px) {
-
-  .payment-modal {
-
-    align-items: flex-end;
-
-    padding: 0;
-
-  }
-
-
-  .payment-modal-box {
-
-    max-width: none;
-
-    border-radius:
-      24px 24px 0 0;
-
-    padding:
-      22px 18px
-      calc(22px + env(safe-area-inset-bottom));
-
-  }
-
-
-  .payment-total {
-
-    font-size: 34px;
-
-  }
-
-
-  #cashReceived {
-
-    font-size: 26px;
-
-  }
-
-}
-    
   </style>
 
 </head>
@@ -2760,6 +2370,54 @@
 
 </div>
 
+
+
+
+
+<!-- ===============================================
+     PAYMENT MODAL
+================================================ -->
+
+<div id="paymentModal" class="payment-modal" style="display:none;">
+  <div class="payment-modal-overlay"></div>
+
+  <div class="payment-modal-box">
+
+    <div class="payment-modal-header">
+      <div>
+        <div class="payment-modal-title">Payment</div>
+        <div class="payment-modal-subtitle">Complete customer's payment</div>
+      </div>
+
+      <button type="button" class="payment-close-button" onclick="closePaymentModal()">×</button>
+    </div>
+
+    <div class="payment-total-box">
+      <div class="payment-label">TOTAL DUE</div>
+      <div id="paymentTotal" class="payment-total">₱0.00</div>
+    </div>
+
+    <div class="payment-input-section">
+      <label for="cashReceived" class="payment-input-label">CASH RECEIVED</label>
+      <div class="payment-input-wrapper">
+        <span class="payment-currency">₱</span>
+        <input id="cashReceived" type="number" inputmode="decimal" min="0" step="0.01" placeholder="0.00" autocomplete="off">
+      </div>
+    </div>
+
+    <div class="payment-change-box">
+      <div class="payment-change-label">CHANGE</div>
+      <div id="paymentChange" class="payment-change">₱0.00</div>
+    </div>
+
+    <div id="paymentMessage" class="payment-message" style="display:none;"></div>
+
+    <div class="payment-buttons">
+      <button type="button" class="payment-cancel-button" onclick="closePaymentModal()">CANCEL</button>
+      <button type="button" id="completePaymentButton" class="payment-complete-button" onclick="completePayment()" disabled>COMPLETE PAYMENT</button>
+    </div>
+  </div>
+</div>
 
 
 <!-- ===============================================
@@ -3512,11 +3170,41 @@ function escapeHtml(value) {
 }
 
 
-  /* =================================================
-   PAYMENT MODAL
+
+/* =================================================
+   CHECKOUT
+================================================= */
+
+/* =================================================
+   PAYMENT MODAL STATE
 ================================================= */
 
 let paymentTotalAmount = 0;
+
+
+/* =================================================
+   CHECKOUT
+================================================= */
+
+function checkout() {
+
+  if (!cart || cart.length === 0) {
+    alert("The cart is empty.");
+    return;
+  }
+
+  let total = 0;
+
+  cart.forEach(function(item) {
+    total +=
+      (Number(item.quantity) || 0) *
+      (Number(item.unitPrice) || 0);
+  });
+
+  total = Number(total.toFixed(2));
+
+  openPaymentModal(total);
+}
 
 
 /* =================================================
@@ -3525,92 +3213,32 @@ let paymentTotalAmount = 0;
 
 function openPaymentModal(total) {
 
-  paymentTotalAmount =
-    Number(total) || 0;
+  paymentTotalAmount = Number(total) || 0;
 
-
-  const modal =
-    document.getElementById(
-      "paymentModal"
-    );
-
-
-  const totalElement =
-    document.getElementById(
-      "paymentTotal"
-    );
-
-
-  const cashInput =
-    document.getElementById(
-      "cashReceived"
-    );
-
-
-  const changeElement =
-    document.getElementById(
-      "paymentChange"
-    );
-
-
-  const messageElement =
-    document.getElementById(
-      "paymentMessage"
-    );
-
-
-  const completeButton =
-    document.getElementById(
-      "completePaymentButton"
-    );
-
+  const modal = document.getElementById("paymentModal");
+  const totalElement = document.getElementById("paymentTotal");
+  const cashInput = document.getElementById("cashReceived");
+  const changeElement = document.getElementById("paymentChange");
+  const messageElement = document.getElementById("paymentMessage");
+  const completeButton = document.getElementById("completePaymentButton");
 
   if (!modal) {
+    alert("Payment interface could not be loaded.");
     return;
   }
 
-
-  totalElement.textContent =
-    "₱" +
-    paymentTotalAmount.toFixed(2);
-
-
+  totalElement.textContent = "₱" + formatMoney(paymentTotalAmount);
   cashInput.value = "";
+  changeElement.textContent = "₱0.00";
+  messageElement.style.display = "none";
+  messageElement.textContent = "";
+  completeButton.disabled = true;
 
+  modal.style.display = "flex";
 
-  changeElement.textContent =
-    "₱0.00";
-
-
-  messageElement.style.display =
-    "none";
-
-
-  messageElement.textContent =
-    "";
-
-
-  completeButton.disabled =
-    true;
-
-
-  modal.style.display =
-    "flex";
-
-
-  /*
-   * Focus after modal appears.
-   */
-
-  setTimeout(
-    function() {
-
-      cashInput.focus();
-
-    },
-    150
-  );
-
+  setTimeout(function() {
+    cashInput.focus();
+  }, 150);
 }
 
 
@@ -3620,158 +3248,55 @@ function openPaymentModal(total) {
 
 function closePaymentModal() {
 
-  const modal =
-    document.getElementById(
-      "paymentModal"
-    );
-
+  const modal = document.getElementById("paymentModal");
 
   if (modal) {
-
-    modal.style.display =
-      "none";
-
+    modal.style.display = "none";
   }
 
-
-  paymentTotalAmount =
-    0;
-
+  paymentTotalAmount = 0;
 }
 
 
 /* =================================================
-   UPDATE PAYMENT
+   UPDATE PAYMENT AMOUNT
 ================================================= */
 
 function updatePaymentAmount() {
 
-  const cashInput =
-    document.getElementById(
-      "cashReceived"
-    );
+  const cashInput = document.getElementById("cashReceived");
+  const changeElement = document.getElementById("paymentChange");
+  const messageElement = document.getElementById("paymentMessage");
+  const completeButton = document.getElementById("completePaymentButton");
 
+  const cash = Number(cashInput.value);
 
-  const changeElement =
-    document.getElementById(
-      "paymentChange"
-    );
-
-
-  const messageElement =
-    document.getElementById(
-      "paymentMessage"
-    );
-
-
-  const completeButton =
-    document.getElementById(
-      "completePaymentButton"
-    );
-
-
-  const cash =
-    Number(
-      cashInput.value
-    );
-
-
-  /*
-   * Empty input.
-   */
-
-  if (
-    cashInput.value === "" ||
-    !Number.isFinite(cash)
-  ) {
-
-    changeElement.textContent =
-      "₱0.00";
-
-    messageElement.style.display =
-      "none";
-
-    completeButton.disabled =
-      true;
-
+  if (cashInput.value === "" || !Number.isFinite(cash)) {
+    changeElement.textContent = "₱0.00";
+    messageElement.style.display = "none";
+    completeButton.disabled = true;
     return;
-
   }
 
-
-  /*
-   * Calculate change.
-   */
-
-  const change =
-    cash -
-    paymentTotalAmount;
-
-
-  /*
-   * Insufficient cash.
-   */
+  const change = Number((cash - paymentTotalAmount).toFixed(2));
 
   if (change < 0) {
-
-    changeElement.textContent =
-      "₱0.00";
-
-
+    changeElement.textContent = "₱0.00";
     messageElement.textContent =
-      "Insufficient cash. Short by ₱" +
-      Math.abs(change).toFixed(2);
-
-
-    messageElement.style.display =
-      "block";
-
-
-    messageElement.style.background =
-      "#fee2e2";
-
-
-    messageElement.style.color =
-      "#991b1b";
-
-
-    completeButton.disabled =
-      true;
-
-
+      "Insufficient cash. Short by ₱" + Math.abs(change).toFixed(2);
+    messageElement.style.display = "block";
+    messageElement.style.background = "#fee2e2";
+    messageElement.style.color = "#991b1b";
+    completeButton.disabled = true;
     return;
-
   }
 
-
-  /*
-   * Payment is sufficient.
-   */
-
-  changeElement.textContent =
-    "₱" +
-    change.toFixed(2);
-
-
-  messageElement.textContent =
-    "Payment is ready.";
-
-
-  messageElement.style.display =
-    "block";
-
-
-  messageElement.style.background =
-    "#ecfdf5";
-
-
-  messageElement.style.color =
-    "#065f46";
-
-
-  completeButton.disabled =
-    false;
-
+  changeElement.textContent = "₱" + change.toFixed(2);
+  messageElement.textContent = "Payment is ready.";
+  messageElement.style.display = "block";
+  messageElement.style.background = "#ecfdf5";
+  messageElement.style.color = "#065f46";
+  completeButton.disabled = false;
 }
 
 
@@ -3781,842 +3306,135 @@ function updatePaymentAmount() {
 
 function completePayment() {
 
-  const cashInput =
-    document.getElementById(
-      "cashReceived"
-    );
+  const cashInput = document.getElementById("cashReceived");
+  const cash = Number(cashInput.value);
 
-
-  const cash =
-    Number(
-      cashInput.value
-    );
-
-
-  if (
-    !Number.isFinite(cash)
-  ) {
-
-    return;
-
-  }
-
-
-  if (
-    cash < paymentTotalAmount
-  ) {
-
+  if (!Number.isFinite(cash) || cash < paymentTotalAmount) {
     updatePaymentAmount();
-
     return;
-
   }
 
-
-  const change =
-    cash -
-    paymentTotalAmount;
-
-
-  /*
-   * Close modal temporarily.
-   */
+  const change = Number((cash - paymentTotalAmount).toFixed(2));
 
   closePaymentModal();
-
-
-  /*
-   * Continue with the actual
-   * Google Sheets checkout.
-   */
-
-  processCheckoutPayment(
-    cash,
-    change
-  );
-
+  processCheckoutPayment(cash, change);
 }
 
-  /* =================================================
-   PAYMENT INPUT LISTENER
-================================================= */
-
-document.addEventListener(
-  "input",
-  function(event) {
-
-    if (
-      event.target &&
-      event.target.id ===
-      "cashReceived"
-    ) {
-
-      updatePaymentAmount();
-
-    }
-
-  }
-);
-
-/* =================================================
-   CHECKOUT
-================================================= */
-
-/* =================================================
-   CHECKOUT
-================================================= */
-
-/* =================================================
-   CHECKOUT
-================================================= */
-
-function checkout() {
-
-  console.log(
-    "================================="
-  );
-
-  console.log(
-    "CHECKOUT STARTED"
-  );
-
-  console.log(
-    "CART:",
-    cart
-  );
-
-
-  /* =============================================
-     CHECK EMPTY CART
-  ============================================= */
-
-  if (
-    !cart ||
-    cart.length === 0
-  ) {
-
-    alert(
-      "CART IS EMPTY.\n\n" +
-      "Please scan a product first."
-    );
-
-    return;
-
-  }
-
-
-  /* =============================================
-     CALCULATE TOTAL
-  ============================================= */
-
-  let total = 0;
-
-
-  cart.forEach(
-    function(item) {
-
-      total +=
-        (
-          Number(item.unitPrice) || 0
-        ) *
-        (
-          Number(item.quantity) || 0
-        );
-
-    }
-  );
-
-
-  total =
-    Number(
-      total.toFixed(2)
-    );
-
-
-  console.log(
-    "CHECKOUT TOTAL:",
-    total
-  );
-
-
-  /* =============================================
-     OPEN PAYMENT MODAL
-  ============================================= */
-
-  openPaymentModal(total);
-
-}
 
 /* =================================================
    PROCESS CHECKOUT PAYMENT
 ================================================= */
 
-function processCheckoutPayment(
-  cash,
-  change
-) {
+function processCheckoutPayment(cash, change) {
 
-  if (
-    !cart ||
-    cart.length === 0
-  ) {
-
+  if (!cart || cart.length === 0) {
     return;
-
   }
-
-
-  /* =============================================
-     CALCULATE TOTAL
-  ============================================= */
 
   let total = 0;
 
+  cart.forEach(function(item) {
+    total +=
+      (Number(item.quantity) || 0) *
+      (Number(item.unitPrice) || 0);
+  });
 
-  cart.forEach(
-    function(item) {
-
-      total +=
-        (
-          Number(item.unitPrice) || 0
-        ) *
-        (
-          Number(item.quantity) || 0
-        );
-
-    }
-  );
-
-
-  total =
-    Number(
-      total.toFixed(2)
-    );
-
-
-  /* =============================================
-     PREPARE CHECKOUT DATA
-  ============================================= */
+  total = Number(total.toFixed(2));
 
   const checkoutData = {
-
-    items:
-      cart.map(
-        function(item) {
-
-          return {
-
-            barcode:
-              item.barcode,
-
-            productId:
-              item.productId,
-
-            productName:
-              item.productName,
-
-            unitPrice:
-              Number(
-                item.unitPrice
-              ) || 0,
-
-            quantity:
-              Number(
-                item.quantity
-              ) || 0
-
-          };
-
-        }
-      ),
-
-    cash:
-      Number(cash),
-
-    change:
-      Number(change),
-
-    total:
-      Number(total)
-
+    items: cart.map(function(item) {
+      return {
+        barcode: item.barcode,
+        productId: item.productId,
+        productName: item.productName,
+        unitPrice: Number(item.unitPrice) || 0,
+        quantity: Number(item.quantity) || 0
+      };
+    }),
+    cash: Number(cash),
+    change: Number(change),
+    total: Number(total)
   };
 
+  console.log("CHECKOUT DATA:", checkoutData);
 
-  console.log(
-    "CHECKOUT DATA:",
-    checkoutData
-  );
-
-
-  /* =============================================
-     DISABLE CHECKOUT BUTTON
-  ============================================= */
-
-  const checkoutButton =
-    document.getElementById(
-      "checkoutButton"
-    );
-
+  const checkoutButton = document.getElementById("checkoutButton");
 
   if (checkoutButton) {
-
-    checkoutButton.disabled =
-      true;
-
-    checkoutButton.textContent =
-      "PROCESSING...";
-
+    checkoutButton.disabled = true;
+    checkoutButton.textContent = "PROCESSING...";
   }
-
-
-  /* =============================================
-     SEND TO GOOGLE APPS SCRIPT
-  ============================================= */
 
   callPOSApi(
-
     "checkout",
-
-    {
-      data:
-        JSON.stringify(
-          checkoutData
-        )
-    },
-
-
-    /* =========================================
-       SUCCESS
-    ========================================= */
-
+    { data: JSON.stringify(checkoutData) },
     function(result) {
 
-      console.log(
-        "CHECKOUT RESPONSE:",
-        result
-      );
-
-
-      /* Re-enable button */
+      console.log("CHECKOUT RESPONSE:", result);
 
       if (checkoutButton) {
-
-        checkoutButton.disabled =
-          false;
-
-        checkoutButton.textContent =
-          "CHECKOUT";
-
+        checkoutButton.disabled = false;
+        checkoutButton.textContent = "CHECKOUT";
       }
 
-
-      /* =======================================
-         CHECK SERVER RESPONSE
-      ======================================= */
-
-      if (
-        !result ||
-        result.success !== true
-      ) {
-
+      if (!result || result.success !== true) {
         alert(
-
           "CHECKOUT FAILED.\n\n" +
-
-          (
-            result &&
-            result.message
-              ? result.message
-              : "Unable to complete transaction."
-          )
-
+          (result && result.message
+            ? result.message
+            : "Unable to complete transaction.")
         );
-
         return;
-
       }
 
-
-      /* =======================================
-         TRANSACTION SUCCESS
-      ======================================= */
-
-      const transactionId =
-        result.transactionId ||
-        "N/A";
-
-
-      const finalTotal =
-        Number(
-          result.total
-        );
-
-
-      const finalCash =
-        Number(
-          result.cash
-        );
-
-
-      const finalChange =
-        Number(
-          result.change
-        );
-
-
-      /* =======================================
-         CLEAR CART
-         ONLY AFTER SUCCESS
-      ======================================= */
+      const transactionId = result.transactionId || "N/A";
+      const finalTotal = Number(result.total ?? total);
+      const finalCash = Number(result.cash ?? cash);
+      const finalChange = Number(result.change ?? change);
 
       cart = [];
-
-
       renderCart();
-
-
-      /* =======================================
-         RESET SCANNER STATUS
-      ======================================= */
-
-      setScannerStatus(
-        "Scanner ready — scan a product"
-      );
-
-
-      /* =======================================
-         SUCCESS MESSAGE
-      ======================================= */
+      setScannerStatus("Scanner ready — scan a product");
 
       alert(
-
         "TRANSACTION COMPLETED!\n\n" +
-
-        "Transaction ID:\n" +
-        transactionId +
-
-        "\n\n" +
-
-        "TOTAL: ₱" +
-        finalTotal.toFixed(2) +
-
-        "\n" +
-
-        "CASH: ₱" +
-        finalCash.toFixed(2) +
-
-        "\n" +
-
-        "CHANGE: ₱" +
-        finalChange.toFixed(2)
-
+        "Transaction ID:\n" + transactionId +
+        "\n\nTOTAL: ₱" + formatMoney(finalTotal) +
+        "\nCASH: ₱" + formatMoney(finalCash) +
+        "\nCHANGE: ₱" + formatMoney(finalChange)
       );
 
+      loadDashboard();
     },
-
-
-    /* =========================================
-       FAILURE
-    ========================================= */
-
     function(error) {
 
-      console.error(
-        "CHECKOUT ERROR:",
-        error
-      );
-
+      console.error("CHECKOUT ERROR:", error);
 
       if (checkoutButton) {
-
-        checkoutButton.disabled =
-          false;
-
-        checkoutButton.textContent =
-          "CHECKOUT";
-
+        checkoutButton.disabled = false;
+        checkoutButton.textContent = "CHECKOUT";
       }
 
-
       alert(
-
         "CHECKOUT FAILED.\n\n" +
-
-        (
-          error &&
-          error.message
-            ? error.message
-            : "Unable to connect to the POS server."
-        )
-
+        (error && error.message
+          ? error.message
+          : "Unable to connect to the Mobile POS server.")
       );
-
     }
-
   );
-
 }
-  /* =============================================
-     ASK FOR CASH
-  ============================================= */
-
-  const cashInput =
-    prompt(
-      "TOTAL: ₱" +
-      total.toFixed(2) +
-      "\n\n" +
-      "Enter CASH RECEIVED:"
-    );
 
 
-  /*
-   * Cancelled.
-   */
+/* =================================================
+   PAYMENT INPUT LISTENER
+================================================= */
 
-  if (
-    cashInput === null
-  ) {
-
-    return;
-
+document.addEventListener("input", function(event) {
+  if (event.target && event.target.id === "cashReceived") {
+    updatePaymentAmount();
   }
-
-
-  const cash =
-    Number(
-      String(cashInput)
-        .replace(/,/g, "")
-        .trim()
-    );
-
-
-  /* =============================================
-     VALIDATE CASH
-  ============================================= */
-
-  if (
-    !Number.isFinite(cash) ||
-    cash < 0
-  ) {
-
-    alert(
-      "INVALID CASH AMOUNT."
-    );
-
-    return;
-
-  }
-
-
-  if (
-    cash < total
-  ) {
-
-    alert(
-
-      "INSUFFICIENT CASH.\n\n" +
-
-      "Total: ₱" +
-      total.toFixed(2) +
-
-      "\nCash: ₱" +
-      cash.toFixed(2) +
-
-      "\n\nShort by: ₱" +
-      (
-        total - cash
-      ).toFixed(2)
-
-    );
-
-    return;
-
-  }
-
-
-  const change =
-    cash - total;
-
-
-  /* =============================================
-     CONFIRM TRANSACTION
-  ============================================= */
-
-  const confirmed =
-    confirm(
-
-      "CONFIRM PAYMENT\n\n" +
-
-      "TOTAL: ₱" +
-      total.toFixed(2) +
-
-      "\nCASH: ₱" +
-      cash.toFixed(2) +
-
-      "\nCHANGE: ₱" +
-      change.toFixed(2) +
-
-      "\n\n" +
-
-      "Complete this transaction?"
-
-    );
-
-
-  if (!confirmed) {
-
-    return;
-
-  }
-
-
-  /* =============================================
-     PREPARE CHECKOUT DATA
-  ============================================= */
-
-  const checkoutData = {
-
-    items:
-      cart.map(
-        function(item) {
-
-          return {
-
-            barcode:
-              item.barcode,
-
-            productId:
-              item.productId,
-
-            productName:
-              item.productName,
-
-            unitPrice:
-              Number(
-                item.unitPrice
-              ) || 0,
-
-            quantity:
-              Number(
-                item.quantity
-              ) || 0
-
-          };
-
-        }
-      ),
-
-    cash:
-      cash
-
-  };
-
-
-  console.log(
-    "CHECKOUT DATA:",
-    checkoutData
-  );
-
-
-  /* =============================================
-     DISABLE CHECKOUT BUTTON
-  ============================================= */
-
-  const checkoutButton =
-    document.getElementById(
-      "checkoutButton"
-    );
-
-
-  if (checkoutButton) {
-
-    checkoutButton.disabled =
-      true;
-
-    checkoutButton.textContent =
-      "PROCESSING...";
-
-  }
-
-
-  /* =============================================
-     SEND TO GOOGLE APPS SCRIPT
-  ============================================= */
-
-  callPOSApi(
-
-    "checkout",
-
-    {
-      data:
-        JSON.stringify(
-          checkoutData
-        )
-    },
-
-
-    /* =========================================
-       SUCCESS
-    ========================================= */
-
-    function(result) {
-
-      console.log(
-        "CHECKOUT RESPONSE:",
-        result
-      );
-
-
-      /*
-       * Re-enable button.
-       */
-
-      if (checkoutButton) {
-
-        checkoutButton.disabled =
-          false;
-
-        checkoutButton.textContent =
-          "CHECKOUT";
-
-      }
-
-
-      /*
-       * Check server response.
-       */
-
-      if (
-        !result ||
-        result.success !== true
-      ) {
-
-        alert(
-
-          "CHECKOUT FAILED.\n\n" +
-
-          (
-            result &&
-            result.message
-              ? result.message
-              : "Unable to complete transaction."
-          )
-
-        );
-
-        return;
-
-      }
-
-
-      /* =======================================
-         SUCCESS
-      ======================================= */
-
-      const transactionId =
-        result.transactionId ||
-        "N/A";
-
-
-      alert(
-
-        "TRANSACTION COMPLETED!\n\n" +
-
-        "Transaction ID:\n" +
-        transactionId +
-
-        "\n\n" +
-
-        "TOTAL: ₱" +
-        Number(
-          result.total || total
-        ).toFixed(2) +
-
-        "\n" +
-
-        "CASH: ₱" +
-        Number(
-          result.cash || cash
-        ).toFixed(2) +
-
-        "\n" +
-
-        "CHANGE: ₱" +
-        Number(
-          result.change || change
-        ).toFixed(2)
-
-      );
-
-
-      /* =======================================
-         CLEAR CART ONLY AFTER SUCCESS
-      ======================================= */
-
-      cart = [];
-
-
-      renderCart();
-
-
-      /*
-       * Return scanner to ready state.
-       */
-
-      setScannerStatus(
-        "Scanner ready — scan a product"
-      );
-
-
-      console.log(
-        "TRANSACTION COMPLETED:",
-        transactionId
-      );
-
-    },
-
-
-    /* =========================================
-       FAILURE
-    ========================================= */
-
-    function(error) {
-
-      console.error(
-        "CHECKOUT ERROR:",
-        error
-      );
-
-
-      if (checkoutButton) {
-
-        checkoutButton.disabled =
-          false;
-
-        checkoutButton.textContent =
-          "CHECKOUT";
-
-      }
-
-
-      alert(
-
-        "CHECKOUT FAILED.\n\n" +
-
-        (
-          error &&
-          error.message
-            ? error.message
-            : "Unable to connect to the POS server."
-        )
-
-      );
-
-    }
-
-  );
-
-}
+});
 
 
   /* =================================================
@@ -5030,154 +3848,7 @@ showPage = function(page) {
 
 </script>
 
-<!-- =================================================
-     PAYMENT MODAL
-================================================= -->
 
-<div
-  id="paymentModal"
-  class="payment-modal"
-  style="display:none;">
-
-  <div class="payment-modal-overlay"></div>
-
-  <div class="payment-modal-box">
-
-    <!-- HEADER -->
-
-    <div class="payment-modal-header">
-
-      <div>
-        <div class="payment-modal-title">
-          Payment
-        </div>
-
-        <div class="payment-modal-subtitle">
-          Complete customer's payment
-        </div>
-      </div>
-
-      <button
-        type="button"
-        class="payment-close-button"
-        onclick="closePaymentModal()">
-
-        ×
-
-      </button>
-
-    </div>
-
-
-    <!-- TOTAL DUE -->
-
-    <div class="payment-total-box">
-
-      <div class="payment-label">
-        TOTAL DUE
-      </div>
-
-      <div
-        id="paymentTotal"
-        class="payment-total">
-
-        ₱0.00
-
-      </div>
-
-    </div>
-
-
-    <!-- CASH RECEIVED -->
-
-    <div class="payment-input-section">
-
-      <label
-        for="cashReceived"
-        class="payment-input-label">
-
-        CASH RECEIVED
-
-      </label>
-
-      <div class="payment-input-wrapper">
-
-        <span class="payment-currency">
-          ₱
-        </span>
-
-        <input
-          id="cashReceived"
-          type="number"
-          inputmode="decimal"
-          min="0"
-          step="0.01"
-          placeholder="0.00"
-          autocomplete="off">
-
-      </div>
-
-    </div>
-
-
-    <!-- CHANGE -->
-
-    <div class="payment-change-box">
-
-      <div class="payment-change-label">
-        CHANGE
-      </div>
-
-      <div
-        id="paymentChange"
-        class="payment-change">
-
-        ₱0.00
-
-      </div>
-
-    </div>
-
-
-    <!-- MESSAGE -->
-
-    <div
-      id="paymentMessage"
-      class="payment-message"
-      style="display:none;">
-
-    </div>
-
-
-    <!-- BUTTONS -->
-
-    <div class="payment-buttons">
-
-      <button
-        type="button"
-        class="payment-cancel-button"
-        onclick="closePaymentModal()">
-
-        CANCEL
-
-      </button>
-
-      <button
-        type="button"
-        id="completePaymentButton"
-        class="payment-complete-button"
-        onclick="completePayment()"
-        disabled>
-
-        COMPLETE PAYMENT
-
-      </button>
-
-    </div>
-
-  </div>
-
-</div>
 </body>
 
 </html>
