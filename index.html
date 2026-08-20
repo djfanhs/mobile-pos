@@ -2338,104 +2338,238 @@
 
   function callPOSApi(action, params, success, failure) {
 
-    const callbackName =
-      "__posApiCallback_" +
-      Date.now() +
-      "_" +
-      Math.floor(Math.random() * 100000);
+  const callbackName =
+    "__posApiCallback_" +
+    Date.now() +
+    "_" +
+    Math.floor(Math.random() * 100000);
 
 
-    const query = new URLSearchParams();
+  console.log(
+    "CALLING POS API:",
+    action,
+    params
+  );
 
-    query.append("action", action);
-    query.append("callback", callbackName);
+
+  const query =
+    new URLSearchParams();
 
 
-    if (params) {
+  query.append(
+    "action",
+    action
+  );
 
-      Object.keys(params).forEach(function(key) {
+
+  query.append(
+    "callback",
+    callbackName
+  );
+
+
+  if (params) {
+
+    Object.keys(params).forEach(
+      function(key) {
 
         query.append(
           key,
           params[key]
         );
 
-      });
-
-    }
-
-
-    const script =
-      document.createElement("script");
-
-
-    let finished = false;
-
-
-    function cleanup() {
-
-      if (finished) {
-        return;
       }
-
-      finished = true;
-
-      try {
-        delete window[callbackName];
-      } catch (error) {
-        window[callbackName] = undefined;
-      }
-
-      if (script.parentNode) {
-        script.parentNode.removeChild(script);
-      }
-
-    }
-
-
-    window[callbackName] =
-  function(result) {
-
-    console.log(
-      "POS API RESPONSE:",
-      result
     );
-
-    cleanup();
-
-    if (typeof success === "function") {
-      success(result);
-    }
-
-  };
-
-
-    script.onerror =
-      function() {
-
-        cleanup();
-
-        if (typeof failure === "function") {
-          failure(
-            new Error(
-              "Unable to connect to the Mobile POS server."
-            )
-          );
-        }
-
-      };
-
-
-    script.src =
-      API_URL +
-      "?" +
-      query.toString();
-
-
-    document.body.appendChild(script);
 
   }
 
+
+  const script =
+    document.createElement("script");
+
+
+  let finished = false;
+
+
+  /* ============================================
+     CLEANUP
+  ============================================ */
+
+  function cleanup() {
+
+    if (finished) {
+      return;
+    }
+
+
+    finished = true;
+
+
+    try {
+
+      delete window[callbackName];
+
+    }
+
+    catch (error) {
+
+      window[callbackName] =
+        undefined;
+
+    }
+
+
+    if (script.parentNode) {
+
+      script.parentNode.removeChild(
+        script
+      );
+
+    }
+
+  }
+
+
+  /* ============================================
+     JSONP CALLBACK
+  ============================================ */
+
+  window[callbackName] =
+    function(result) {
+
+      console.log(
+        "POS API CALLBACK RECEIVED:",
+        result
+      );
+
+
+      cleanup();
+
+
+      if (
+        typeof success ===
+        "function"
+      ) {
+
+        success(result);
+
+      }
+
+    };
+
+
+  /* ============================================
+     SCRIPT ERROR
+  ============================================ */
+
+  script.onerror =
+    function(error) {
+
+      console.error(
+        "POS API SCRIPT ERROR:",
+        error
+      );
+
+
+      cleanup();
+
+
+      if (
+        typeof failure ===
+        "function"
+      ) {
+
+        failure(
+          new Error(
+            "Unable to connect to the Mobile POS server."
+          )
+        );
+
+      }
+
+    };
+
+
+  /* ============================================
+     SCRIPT LOADED
+  ============================================ */
+
+  script.onload =
+    function() {
+
+      console.log(
+        "POS API SCRIPT LOADED:",
+        callbackName
+      );
+
+    };
+
+
+  /* ============================================
+     TIMEOUT
+  ============================================ */
+
+  const timeout =
+    setTimeout(
+      function() {
+
+        if (finished) {
+          return;
+        }
+
+
+        console.error(
+          "POS API TIMEOUT:",
+          callbackName
+        );
+
+
+        cleanup();
+
+
+        if (
+          typeof failure ===
+          "function"
+        ) {
+
+          failure(
+            new Error(
+              "The Mobile POS server did not respond."
+            )
+          );
+
+        }
+
+      },
+      10000
+    );
+
+
+  /* ============================================
+     API URL
+  ============================================ */
+
+  script.src =
+    API_URL +
+    "?" +
+    query.toString();
+
+
+  console.log(
+    "POS API URL:",
+    script.src
+  );
+
+
+  /* ============================================
+     START REQUEST
+  ============================================ */
+
+  document.body.appendChild(
+    script
+  );
+
+}
 
 
   /* =================================================
