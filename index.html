@@ -2428,45 +2428,170 @@
        ADD PRODUCT PAGE
   ================================================ -->
 
-  <section
-    id="addProductPage"
-    class="page">
+  <!-- ===============================================
+     ADD PRODUCT PAGE
+================================================ -->
 
+<section
+  id="addProductPage"
+  class="page">
 
-    <div class="page-heading">
+  <div class="page-heading">
 
-      <div class="page-title">
-        Add Product
-      </div>
-
-      <div class="page-description">
-        Register a new product in your inventory.
-      </div>
-
+    <div class="page-title">
+      Add Product
     </div>
 
+    <div class="page-description">
+      Register a new product in your inventory.
+    </div>
 
-    <div class="empty-page">
+  </div>
 
-      <div class="empty-icon">
+
+  <!-- =============================================
+       ADD PRODUCT CARD
+  ============================================== -->
+
+  <div class="scanner-card">
+
+    <div class="scanner-header">
+
+      <div>
+
+        <div class="scanner-title">
+          Product Registration
+        </div>
+
+        <div class="scanner-subtitle">
+          Enter the product information below.
+        </div>
+
+      </div>
+
+      <div class="scanner-icon">
         ➕
       </div>
 
-      <div class="empty-title">
-        Add Product Coming Next
-      </div>
+    </div>
 
-      <div class="empty-text">
-        The embedded barcode scanner,
-        product details and registration
-        form will be added later.
-      </div>
+
+    <!-- BARCODE -->
+
+    <div class="form-group">
+
+      <label for="addProductBarcode">
+        Barcode
+      </label>
+
+      <input
+        id="addProductBarcode"
+        type="text"
+        inputmode="numeric"
+        placeholder="Enter or scan barcode"
+        autocomplete="off">
 
     </div>
 
 
-  </section>
+    <!-- PRODUCT ID -->
 
+    <div class="form-group">
+
+      <label for="addProductId">
+        Product ID
+      </label>
+
+      <input
+        id="addProductId"
+        type="text"
+        placeholder="Example: P001"
+        autocomplete="off">
+
+    </div>
+
+
+    <!-- PRODUCT NAME -->
+
+    <div class="form-group">
+
+      <label for="addProductName">
+        Product Name
+      </label>
+
+      <input
+        id="addProductName"
+        type="text"
+        placeholder="Example: TINAPA"
+        autocomplete="off">
+
+    </div>
+
+
+    <!-- PRICE -->
+
+    <div class="form-group">
+
+      <label for="addProductPrice">
+        Selling Price
+      </label>
+
+      <input
+        id="addProductPrice"
+        type="number"
+        min="0"
+        step="0.01"
+        placeholder="₱0.00"
+        autocomplete="off">
+
+    </div>
+
+
+    <!-- BEGINNING STOCK -->
+
+    <div class="form-group">
+
+      <label for="addProductStock">
+        Beginning Stock
+      </label>
+
+      <input
+        id="addProductStock"
+        type="number"
+        min="0"
+        step="1"
+        placeholder="Enter beginning stock"
+        autocomplete="off">
+
+    </div>
+
+
+    <!-- REGISTER BUTTON -->
+
+    <button
+      id="registerProductButton"
+      class="checkout-button"
+      type="button"
+      onclick="registerNewProduct()">
+
+      REGISTER PRODUCT
+
+    </button>
+
+
+    <!-- STATUS -->
+
+    <div
+      id="addProductStatus"
+      class="scanner-status">
+
+      Ready to register a product.
+
+    </div>
+
+  </div>
+
+</section>
 
 
   <!-- ===============================================
