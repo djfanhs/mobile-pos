@@ -1943,6 +1943,162 @@
   margin-top: 15px;
   font-size: 14px;
 }
+
+    /* =================================================
+   PRODUCT SUCCESS MESSAGE
+================================================= */
+
+.product-success-overlay {
+
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 99999;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 20px;
+
+  background: rgba(0, 0, 0, 0.65);
+
+}
+
+
+.product-success-card {
+
+  width: 100%;
+
+  max-width: 420px;
+
+  background: #ffffff;
+
+  border-radius: 24px;
+
+  padding: 30px 24px;
+
+  text-align: center;
+
+  box-shadow:
+    0 20px 60px rgba(0,0,0,0.30);
+
+}
+
+
+.product-success-icon {
+
+  width: 70px;
+
+  height: 70px;
+
+  margin: 0 auto 18px;
+
+  border-radius: 50%;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  background: #22c55e;
+
+  color: white;
+
+  font-size: 40px;
+
+  font-weight: 700;
+
+}
+
+
+.product-success-title {
+
+  font-size: 22px;
+
+  font-weight: 800;
+
+  margin-bottom: 22px;
+
+}
+
+
+.product-success-details {
+
+  text-align: left;
+
+  border-radius: 16px;
+
+  padding: 16px;
+
+  background: #f5f6f8;
+
+}
+
+
+.product-success-details div {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  gap: 15px;
+
+  padding: 10px 0;
+
+  border-bottom: 1px solid #ddd;
+
+}
+
+
+.product-success-details div:last-child {
+
+  border-bottom: none;
+
+}
+
+
+.product-success-details span {
+
+  color: #777;
+
+}
+
+
+.product-success-details strong {
+
+  text-align: right;
+
+}
+
+
+.product-success-button {
+
+  width: 100%;
+
+  margin-top: 22px;
+
+  padding: 15px;
+
+  border: none;
+
+  border-radius: 14px;
+
+  background: #111827;
+
+  color: white;
+
+  font-size: 17px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+}
     
   </style>
 
@@ -3294,23 +3450,12 @@ function registerNewProduct() {
          SUCCESS
       ========================================= */
 
-      alert(
-
-        "PRODUCT ADDED SUCCESSFULLY!\n\n" +
-
-        "Product: " +
-        productName +
-
-        "\nBarcode: " +
-        barcode +
-
-        "\nPrice: ₱" +
-        price.toFixed(2) +
-
-        "\nBeginning Stock: " +
-        beginningStock
-
-      );
+      showProductSuccessMessage({
+  productName: productName,
+  barcode: barcode,
+  price: price,
+  beginningStock: beginningStock
+});
 
 
       /* =========================================
@@ -3367,6 +3512,113 @@ function registerNewProduct() {
     }
 
   );
+
+}
+
+  /* =================================================
+   PRODUCT REGISTRATION SUCCESS MESSAGE
+================================================= */
+
+function showProductSuccessMessage(data) {
+
+  const existing =
+    document.getElementById(
+      "productSuccessMessage"
+    );
+
+  if (existing) {
+    existing.remove();
+  }
+
+
+  const overlay =
+    document.createElement("div");
+
+  overlay.id =
+    "productSuccessMessage";
+
+
+  overlay.innerHTML = `
+
+    <div class="product-success-overlay">
+
+      <div class="product-success-card">
+
+        <div class="product-success-icon">
+          ✓
+        </div>
+
+        <div class="product-success-title">
+          PRODUCT ADDED SUCCESSFULLY!
+        </div>
+
+        <div class="product-success-details">
+
+          <div>
+            <span>Product</span>
+            <strong>${escapeHtml(data.productName)}</strong>
+          </div>
+
+          <div>
+            <span>Barcode</span>
+            <strong>${escapeHtml(data.barcode)}</strong>
+          </div>
+
+          <div>
+            <span>Price</span>
+            <strong>₱${Number(data.price).toFixed(2)}</strong>
+          </div>
+
+          <div>
+            <span>Beginning Stock</span>
+            <strong>${Number(data.beginningStock)}</strong>
+          </div>
+
+        </div>
+
+        <button
+          type="button"
+          class="product-success-button"
+          onclick="closeProductSuccessMessage()">
+
+          DONE
+
+        </button>
+
+      </div>
+
+    </div>
+
+  `;
+
+
+  document.body.appendChild(
+    overlay
+  );
+
+}
+
+  function closeProductSuccessMessage() {
+
+  const message =
+    document.getElementById(
+      "productSuccessMessage"
+    );
+
+  if (message) {
+    message.remove();
+  }
+
+}
+
+  function escapeHtml(value) {
+
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 
 }
 
