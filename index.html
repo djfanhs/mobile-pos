@@ -2126,11 +2126,11 @@
       <div>
 
         <div class="brand-name">
-          EPIN SARI-SARI STORE
+          Mobile POS
         </div>
 
         <div class="brand-subtitle">
-          Mobile POS (Sales & Inventory)
+          Sales & Inventory
         </div>
 
       </div>
@@ -2631,8 +2631,8 @@
   ================================================ -->
 
   <!-- ===============================================
-       ADD PRODUCT PAGE
-  ================================================ -->
+     ADD PRODUCT PAGE
+================================================ -->
 
 <section
   id="addProductPage"
@@ -2652,51 +2652,48 @@
 
 
   <!-- =============================================
-       PRODUCT ACTION BUTTONS
-  ============================================== -->
+     PRODUCT OPTIONS
+============================================= -->
 
-  <div
-    id="productActionButtons"
-    class="product-action-buttons">
+<div
+  id="productActionButtons"
+  class="product-action-buttons">
 
-    <button
-      type="button"
-      class="checkout-button"
-      onclick="showProductRegistrationForm()">
+  <button
+    type="button"
+    class="checkout-button"
+    onclick="showProductRegistrationForm()">
 
-      PRODUCT REGISTRATION
+    PRODUCT REGISTRATION
 
-    </button>
-
-    <button
-      type="button"
-      class="checkout-button"
-      onclick="showAddStockForm()">
-
-      ADD STOCK
-
-    </button>
-
-  </div>
+  </button>
 
 
+  <button
+    type="button"
+    class="checkout-button"
+    onclick="showAddStockForm()">
+
+    ADD STOCK
+
+  </button>
+
+</div>
   <!-- =============================================
-       PRODUCT REGISTRATION FORM
+       ADD PRODUCT CARD
   ============================================== -->
+<button
+  type="button"
+  class="checkout-button"
+  onclick="showProductActionButtons()">
 
+  ← BACK
+
+</button>
   <div
-    id="productRegistrationForm"
-    class="scanner-card"
-    style="display:none;">
-
-    <button
-      type="button"
-      class="checkout-button"
-      onclick="showProductActionButtons()">
-
-      ← BACK
-
-    </button>
+  id="productRegistrationForm"
+  class="scanner-card"
+  style="display:none;">
 
     <div class="scanner-header">
 
@@ -2721,54 +2718,54 @@
 
     <!-- BARCODE -->
 
-    <div class="form-group">
+<div class="form-group">
 
-      <label for="addProductBarcode">
-        Barcode
-      </label>
+  <label for="addProductBarcode">
+    Barcode
+  </label>
 
-      <div class="barcode-input-row">
+  <div class="barcode-input-row">
 
-        <input
-          id="addProductBarcode"
-          type="text"
-          inputmode="numeric"
-          placeholder="Enter or scan barcode"
-          autocomplete="off">
+    <input
+      id="addProductBarcode"
+      type="text"
+      inputmode="numeric"
+      placeholder="Enter or scan barcode"
+      autocomplete="off">
 
-        <button
-          id="scanAddProductButton"
-          type="button"
-          onclick="startAddProductScanner()">
+    <button
+      id="scanAddProductButton"
+      type="button"
+      onclick="startAddProductScanner()">
 
-          📷 SCAN
+      📷 SCAN
 
-        </button>
+    </button>
 
-      </div>
+  </div>
 
-    </div>
+</div>
 
 
-    <!-- ADD PRODUCT BARCODE SCANNER -->
+<!-- ADD PRODUCT BARCODE SCANNER -->
 
-    <div
-      id="addProductScannerContainer"
-      style="display:none;">
+<div
+  id="addProductScannerContainer"
+  style="display:none;">
 
-      <div
-        id="add-product-barcode-reader">
-      </div>
+  <div
+    id="add-product-barcode-reader">
+  </div>
 
-      <button
-        type="button"
-        onclick="stopAddProductScanner()">
+  <button
+    type="button"
+    onclick="stopAddProductScanner()">
 
-        STOP SCANNER
+    STOP SCANNER
 
-      </button>
+  </button>
 
-    </div>
+</div>
 
 
     <!-- PRODUCT ID -->
@@ -2854,173 +2851,160 @@
       REGISTER PRODUCT
 
     </button>
+    <!-- =================================================
+     ADD STOCK
+================================================= -->
+<!-- =================================================
+     ADD STOCK
+================================================= -->
 
-    <div
-      id="addProductStatus"
-      class="scanner-status">
+<div
+  id="addStockForm"
+  style="display:none;">
 
-      Ready to register a product.
+  <div class="scanner-card">
+
+    <button
+      type="button"
+      class="checkout-button"
+      onclick="showProductActionButtons()">
+
+      ← BACK
+
+    </button>
+
+    <h3>ADD STOCK</h3>
+
+  <!-- BARCODE -->
+
+  <div class="form-group">
+
+    <label for="addStockBarcode">
+      Barcode
+    </label>
+
+    <div class="barcode-input-row">
+
+      <input
+        id="addStockBarcode"
+        type="text"
+        inputmode="numeric"
+        placeholder="Enter or scan barcode"
+        autocomplete="off">
+
+      <button
+        id="scanAddStockButton"
+        type="button"
+        onclick="startAddStockScanner()">
+
+        📷 SCAN
+
+      </button>
 
     </div>
 
   </div>
 
 
-  <!-- =============================================
-       ADD STOCK FORM
-  ============================================== -->
+  <!-- PRODUCT NAME -->
+
+  <div class="form-group">
+
+    <label for="addStockProductName">
+      Product
+    </label>
+
+    <input
+      id="addStockProductName"
+      type="text"
+      placeholder="Product name"
+      readonly>
+
+  </div>
+
+
+  <!-- CURRENT STOCK -->
+
+  <div class="form-group">
+
+    <label for="addStockCurrent">
+      Current Stock
+    </label>
+
+    <input
+      id="addStockCurrent"
+      type="number"
+      placeholder="Current stock"
+      readonly>
+
+  </div>
+
+
+  <!-- QUANTITY TO ADD -->
+
+  <div class="form-group">
+
+    <label for="addStockQuantity">
+      Quantity to Add
+    </label>
+
+    <input
+      id="addStockQuantity"
+      type="number"
+      min="1"
+      step="1"
+      placeholder="Enter quantity">
+
+  </div>
+
+
+  <!-- ADD STOCK BUTTON -->
+
+  <button
+    id="addStockButton"
+    class="checkout-button"
+    type="button"
+    onclick="addStockToProduct()">
+
+    ADD STOCK
+
+  </button>
+
+</div>
+
+</div>
+
+
+<!-- =================================================
+     ADD STOCK SCANNER
+================================================= -->
+
+<div
+  id="addStockScannerContainer"
+  style="display:none;">
 
   <div
-    id="addStockForm"
-    style="display:none;">
+    id="add-stock-barcode-reader">
+  </div>
 
-    <div class="scanner-card">
+  <button
+    type="button"
+    onclick="stopAddStockScanner()">
 
-      <button
-        type="button"
-        class="checkout-button"
-        onclick="showProductActionButtons()">
+    STOP SCANNER
 
-        ← BACK
+  </button>
 
-      </button>
-
-      <div class="scanner-header">
-
-        <div>
-
-          <div class="scanner-title">
-            Add Stock
-          </div>
-
-          <div class="scanner-subtitle">
-            Add stock to an existing product.
-          </div>
-
-        </div>
-
-        <div class="scanner-icon">
-          📦
-        </div>
-
-      </div>
+</div>
 
 
-      <!-- BARCODE -->
+    <!-- STATUS -->
 
-      <div class="form-group">
+    <div
+      id="addProductStatus"
+      class="scanner-status">
 
-        <label for="addStockBarcode">
-          Barcode
-        </label>
-
-        <div class="barcode-input-row">
-
-          <input
-            id="addStockBarcode"
-            type="text"
-            inputmode="numeric"
-            placeholder="Enter or scan barcode"
-            autocomplete="off">
-
-          <button
-            id="scanAddStockButton"
-            type="button"
-            onclick="startAddStockScanner()">
-
-            📷 SCAN
-
-          </button>
-
-        </div>
-
-      </div>
-
-
-      <!-- ADD STOCK BARCODE SCANNER -->
-
-      <div
-        id="addStockScannerContainer"
-        style="display:none;">
-
-        <div
-          id="add-stock-barcode-reader">
-        </div>
-
-        <button
-          type="button"
-          onclick="stopAddStockScanner()">
-
-          STOP SCANNER
-
-        </button>
-
-      </div>
-
-
-      <!-- PRODUCT NAME -->
-
-      <div class="form-group">
-
-        <label for="addStockProductName">
-          Product
-        </label>
-
-        <input
-          id="addStockProductName"
-          type="text"
-          placeholder="Product name"
-          readonly>
-
-      </div>
-
-
-      <!-- CURRENT STOCK -->
-
-      <div class="form-group">
-
-        <label for="addStockCurrent">
-          Current Stock
-        </label>
-
-        <input
-          id="addStockCurrent"
-          type="number"
-          placeholder="Current stock"
-          readonly>
-
-      </div>
-
-
-      <!-- QUANTITY TO ADD -->
-
-      <div class="form-group">
-
-        <label for="addStockQuantity">
-          Quantity to Add
-        </label>
-
-        <input
-          id="addStockQuantity"
-          type="number"
-          min="1"
-          step="1"
-          placeholder="Enter quantity">
-
-      </div>
-
-
-      <!-- ADD STOCK BUTTON -->
-
-      <button
-        id="addStockButton"
-        class="checkout-button"
-        type="button"
-        onclick="addStockToProduct()">
-
-        ADD STOCK
-
-      </button>
+      Ready to register a product.
 
     </div>
 
@@ -4501,20 +4485,7 @@ showAddStockSuccessMessage({
    PRODUCT ACTION FORM SWITCHING
 ================================================= */
 
-/* =================================================
-   PRODUCT ACTION FORM SWITCHING
-================================================= */
-
-/* =================================================
-   SHOW PRODUCT REGISTRATION
-================================================= */
-
-function showProductRegistrationForm() {
-
-  console.log(
-    "Opening Product Registration..."
-  );
-
+function showProductRegistrationForm(barcode) {
 
   const buttons =
     document.getElementById(
@@ -4532,55 +4503,46 @@ function showProductRegistrationForm() {
     );
 
 
-  if (!registrationForm) {
-
-    console.error(
-      "productRegistrationForm NOT FOUND."
-    );
-
-    return;
-
-  }
-
-
   if (buttons) {
-
-    buttons.style.display =
-      "none";
-
+    buttons.style.display = "none";
   }
 
-
-  registrationForm.style.display =
-    "block";
-
+  if (registrationForm) {
+    registrationForm.style.display = "block";
+  }
 
   if (addStockForm) {
-
-    addStockForm.style.display =
-      "none";
-
+    addStockForm.style.display = "none";
   }
 
 
-  console.log(
-    "Product Registration opened."
-  );
+  /* =============================================
+     PRE-FILL BARCODE WHEN OPENED FROM POS
+  ============================================= */
+
+  if (barcode) {
+
+    const barcodeInput =
+      document.getElementById(
+        "addProductBarcode"
+      );
+
+    if (barcodeInput) {
+      barcodeInput.value =
+        String(barcode).trim();
+    }
+
+  }
 
 }
 
 
 /* =================================================
-   SHOW ADD STOCK
+   SHOW ADD STOCK FORM
 ================================================= */
 
 function showAddStockForm() {
 
-  console.log(
-    "Opening Add Stock..."
-  );
-
-
   const buttons =
     document.getElementById(
       "productActionButtons"
@@ -4597,29 +4559,6 @@ function showAddStockForm() {
     );
 
 
-  /* =============================================
-     CHECK ADD STOCK FORM
-  ============================================= */
-
-  if (!addStockForm) {
-
-    console.error(
-      "addStockForm NOT FOUND."
-    );
-
-    alert(
-      "Add Stock form was not found."
-    );
-
-    return;
-
-  }
-
-
-  /* =============================================
-     HIDE ACTION BUTTONS
-  ============================================= */
-
   if (buttons) {
 
     buttons.style.display =
@@ -4628,10 +4567,6 @@ function showAddStockForm() {
   }
 
 
-  /* =============================================
-     HIDE PRODUCT REGISTRATION
-  ============================================= */
-
   if (registrationForm) {
 
     registrationForm.style.display =
@@ -4639,93 +4574,47 @@ function showAddStockForm() {
 
   }
 
-
-  /* =============================================
-     SHOW ADD STOCK
-  ============================================= */
-
-  addStockForm.style.display =
-    "block";
-
-
-  /* =============================================
-     FORCE VISIBILITY
-  ============================================= */
-
-  addStockForm.style.visibility =
-    "visible";
-
-  addStockForm.style.opacity =
-    "1";
-
-
-  console.log(
-    "Add Stock form opened."
-  );
-
-}
-
-
-/* =================================================
-   BACK TO PRODUCT ACTION BUTTONS
-================================================= */
-
-function showProductActionButtons() {
-
-  console.log(
-    "Returning to Product Action Buttons..."
-  );
-
-
-  const buttons =
-    document.getElementById(
-      "productActionButtons"
-    );
-
-  const registrationForm =
-    document.getElementById(
-      "productRegistrationForm"
-    );
-
-  const addStockForm =
-    document.getElementById(
-      "addStockForm"
-    );
-
-
-  /* =============================================
-     SHOW ACTION BUTTONS
-  ============================================= */
-
-  if (buttons) {
-
-    buttons.style.display =
-      "block";
-
-  }
-
-
-  /* =============================================
-     HIDE PRODUCT REGISTRATION
-  ============================================= */
-
-  if (registrationForm) {
-
-    registrationForm.style.display =
-      "none";
-
-  }
-
-
-  /* =============================================
-     HIDE ADD STOCK
-  ============================================= */
 
   if (addStockForm) {
 
     addStockForm.style.display =
-      "none";
+      "block";
 
+  }
+
+}
+/* =================================================
+   BACK TO PRODUCT ACTIONS
+================================================= */
+
+function showProductActionButtons() {
+
+  const buttons =
+    document.getElementById(
+      "productActionButtons"
+    );
+
+  const registrationForm =
+    document.getElementById(
+      "productRegistrationForm"
+    );
+
+  const addStockForm =
+    document.getElementById(
+      "addStockForm"
+    );
+
+
+  if (buttons) {
+    buttons.style.display = "block";
+  }
+
+  if (registrationForm) {
+    registrationForm.style.display = "none";
+  }
+
+  if (addStockForm) {
+    addStockForm.style.display = "none";
   }
 
 }
@@ -5311,6 +5200,38 @@ function closeAddStockSuccessMessage() {
     message.remove();
   }
 
+
+  /* =============================================
+     RETURN TO POS AFTER REGISTRATION
+  ============================================= */
+
+  if (returnToPOSAfterRegistration) {
+
+    returnToPOSAfterRegistration = false;
+    pendingRegistrationBarcode = "";
+
+    /*
+     * IMPORTANT:
+     * Do NOT clear cart here.
+     * The global cart array remains untouched.
+     */
+
+    showPage("pos");
+
+    renderCart();
+
+    const manualBarcode =
+      document.getElementById(
+        "manualBarcode"
+      );
+
+    if (manualBarcode) {
+      manualBarcode.value = "";
+      manualBarcode.focus();
+    }
+
+  }
+
 }
 
   function escapeHtml(value) {
@@ -5425,6 +5346,15 @@ let cart = [];
 
 
 /* =================================================
+   REGISTER PRODUCT FROM POS STATE
+================================================= */
+
+let returnToPOSAfterRegistration = false;
+let pendingRegistrationBarcode = "";
+let registerPromptOpen = false;
+
+
+/* =================================================
    ADD BARCODE TO CART
 ================================================= */
 
@@ -5467,15 +5397,11 @@ function addBarcodeToCart() {
         !result.product
       ) {
 
-        alert(
-          "PRODUCT NOT FOUND.\n\n" +
-          "Barcode: " +
-          barcode
-        );
+        showRegisterProductPrompt(barcode);
 
-        input.focus();
+      input.focus();
 
-        return;
+      return;
 
       }
 
@@ -5505,6 +5431,163 @@ function addBarcodeToCart() {
 
     }
   );
+
+}
+
+
+/* =================================================
+   PRODUCT NOT FOUND — REGISTER PROMPT
+================================================= */
+
+function showRegisterProductPrompt(barcode) {
+
+  barcode =
+    String(barcode || "").trim();
+
+  if (!barcode || registerPromptOpen) {
+    return;
+  }
+
+  registerPromptOpen = true;
+
+  const existing =
+    document.getElementById(
+      "registerProductPrompt"
+    );
+
+  if (existing) {
+    existing.remove();
+  }
+
+  const overlay =
+    document.createElement("div");
+
+  overlay.id =
+    "registerProductPrompt";
+
+  overlay.innerHTML = `
+
+    <div class="product-success-overlay">
+
+      <div class="product-success-card">
+
+        <div
+          class="product-success-icon"
+          style="background:#f59e0b;">
+          !
+        </div>
+
+        <div class="product-success-title">
+          PRODUCT NOT FOUND
+        </div>
+
+        <div class="product-success-details">
+
+          <div>
+            <span>Barcode</span>
+            <strong>${escapeHtml(barcode)}</strong>
+          </div>
+
+        </div>
+
+        <div
+          style="
+            margin-top:20px;
+            margin-bottom:18px;
+            font-size:16px;
+            font-weight:700;
+          ">
+
+          WANT TO REGISTER THIS PRODUCT?
+
+        </div>
+
+        <button
+          type="button"
+          class="product-success-button"
+          onclick="openProductRegistrationFromPOS()">
+
+          YES
+
+        </button>
+
+        <button
+          type="button"
+          class="product-success-button"
+          style="
+            margin-top:10px;
+            background:#e5e7eb;
+            color:#111827;
+          "
+          onclick="closeRegisterProductPrompt()">
+
+          CANCEL
+
+        </button>
+
+      </div>
+
+    </div>
+
+  `;
+
+  document.body.appendChild(overlay);
+
+  /* Remember the barcode for the YES action. */
+  pendingRegistrationBarcode = barcode;
+
+}
+
+
+/* =================================================
+   CLOSE REGISTER PRODUCT PROMPT
+================================================= */
+
+function closeRegisterProductPrompt() {
+
+  const prompt =
+    document.getElementById(
+      "registerProductPrompt"
+    );
+
+  if (prompt) {
+    prompt.remove();
+  }
+
+  registerPromptOpen = false;
+  pendingRegistrationBarcode = "";
+
+}
+
+
+/* =================================================
+   OPEN PRODUCT REGISTRATION FROM POS
+================================================= */
+
+function openProductRegistrationFromPOS() {
+
+  const barcode =
+    String(
+      pendingRegistrationBarcode || ""
+    ).trim();
+
+  if (!barcode) {
+    closeRegisterProductPrompt();
+    return;
+  }
+
+  returnToPOSAfterRegistration = true;
+
+  closeRegisterProductPrompt();
+
+  /* Stop the POS camera before leaving the POS page. */
+  if (scannerRunning) {
+    stopBarcodeScanner();
+  }
+
+  showPage("addProduct");
+
+  showProductRegistrationForm(barcode);
 
 }
 
@@ -6579,7 +6662,8 @@ function onBarcodeDetected(decodedText, decodedResult) {
 
       if (!result || result.success !== true || result.found !== true || !result.product) {
         setScannerStatus("Product not found: " + barcode);
-        setTimeout(function() { setScannerStatus("Scanner ready — scan a product"); }, 1500);
+        stopBarcodeScanner();
+        showRegisterProductPrompt(barcode);
         return;
       }
 
