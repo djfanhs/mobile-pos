@@ -4191,6 +4191,11 @@ function addStockToProduct() {
       quantityInput.value
     );
 
+  const previousStock =
+  Number(
+    currentStockInput.value
+  ) || 0;
+
 
   /* =============================================
      VALIDATE BARCODE
@@ -4340,9 +4345,7 @@ function addStockToProduct() {
 
       const product =
         result.product || {};
-
-
-      showAddStockSuccessMessage({
+showAddStockSuccessMessage({
 
   productName:
     product.productName ||
@@ -4359,8 +4362,7 @@ function addStockToProduct() {
     previousStock,
 
   available:
-    product.available ||
-    0
+    product.available || 0
 
 });
 
