@@ -3299,6 +3299,7 @@ function startAddProductScanner() {
         "ADD PRODUCT BARCODE DETECTED:",
         barcode
       );
+      playBarcodeScanSound();
 
 
       const input =
@@ -3441,6 +3442,74 @@ function stopAddProductScanner() {
       }
 
     });
+
+}
+
+  /* =================================================
+   BARCODE SCAN SOUND
+================================================= */
+
+function playBarcodeScanSound() {
+
+  try {
+
+    const audioContext =
+      new (
+        window.AudioContext ||
+        window.webkitAudioContext
+      )();
+
+
+    const oscillator =
+      audioContext.createOscillator();
+
+
+    const gainNode =
+      audioContext.createGain();
+
+
+    oscillator.type =
+      "sine";
+
+    oscillator.frequency.value =
+      1000;
+
+
+    gainNode.gain.setValueAtTime(
+      0.25,
+      audioContext.currentTime
+    );
+
+    gainNode.gain.exponentialRampToValueAtTime(
+      0.001,
+      audioContext.currentTime + 0.15
+    );
+
+
+    oscillator.connect(
+      gainNode
+    );
+
+    gainNode.connect(
+      audioContext.destination
+    );
+
+
+    oscillator.start();
+
+    oscillator.stop(
+      audioContext.currentTime + 0.15
+    );
+
+
+  } catch (error) {
+
+    console.warn(
+      "Barcode scan sound unavailable:",
+      error
+    );
+
+  }
 
 }
   /* =================================================
