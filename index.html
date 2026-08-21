@@ -3483,6 +3483,10 @@ function stopAddProductScanner() {
    BARCODE SCAN SOUND
 ================================================= */
 
+/* =================================================
+   BARCODE SCAN SOUND
+================================================= */
+
 let barcodeAudioContext = null;
 
 function playBarcodeScanSound() {
@@ -3500,57 +3504,79 @@ function playBarcodeScanSound() {
     }
 
 
+    const playBeep = function() {
+
+      const oscillator =
+        barcodeAudioContext.createOscillator();
+
+      const gainNode =
+        barcodeAudioContext.createGain();
+
+
+      oscillator.type =
+        "sine";
+
+      oscillator.frequency.setValueAtTime(
+        1200,
+        barcodeAudioContext.currentTime
+      );
+
+
+      gainNode.gain.setValueAtTime(
+        0.30,
+        barcodeAudioContext.currentTime
+      );
+
+      gainNode.gain.exponentialRampToValueAtTime(
+        0.001,
+        barcodeAudioContext.currentTime + 0.20
+      );
+
+
+      oscillator.connect(
+        gainNode
+      );
+
+      gainNode.connect(
+        barcodeAudioContext.destination
+      );
+
+
+      oscillator.start();
+
+      oscillator.stop(
+        barcodeAudioContext.currentTime + 0.20
+      );
+
+    };
+
+
     if (
       barcodeAudioContext.state ===
       "suspended"
     ) {
 
-      barcodeAudioContext.resume();
+      barcodeAudioContext
+        .resume()
+        .then(function() {
+
+          playBeep();
+
+        })
+        .catch(function(error) {
+
+          console.error(
+            "Unable to resume audio:",
+            error
+          );
+
+        });
+
+    } else {
+
+      playBeep();
 
     }
-
-
-    const oscillator =
-      barcodeAudioContext.createOscillator();
-
-    const gainNode =
-      barcodeAudioContext.createGain();
-
-
-    oscillator.type =
-      "sine";
-
-    oscillator.frequency.setValueAtTime(
-      1200,
-      barcodeAudioContext.currentTime
-    );
-
-
-    gainNode.gain.setValueAtTime(
-      0.30,
-      barcodeAudioContext.currentTime
-    );
-
-    gainNode.gain.exponentialRampToValueAtTime(
-      0.001,
-      barcodeAudioContext.currentTime + 0.20
-    );
-
-
-    oscillator.connect(
-      gainNode
-    );
-
-    gainNode.connect(
-      barcodeAudioContext.destination
-    );
-
-
-    oscillator.start();
-
-    oscillator.stop(
-      barcodeAudioContext.currentTime + 0.20
-    );
 
 
   } catch (error) {
