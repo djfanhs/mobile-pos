@@ -2652,10 +2652,48 @@
 
 
   <!-- =============================================
+     PRODUCT OPTIONS
+============================================= -->
+
+<div
+  id="productActionButtons"
+  class="product-action-buttons">
+
+  <button
+    type="button"
+    class="checkout-button"
+    onclick="showProductRegistrationForm()">
+
+    PRODUCT REGISTRATION
+
+  </button>
+
+
+  <button
+    type="button"
+    class="checkout-button"
+    onclick="showAddStockForm()">
+
+    ADD STOCK
+
+  </button>
+
+</div>
+  <!-- =============================================
        ADD PRODUCT CARD
   ============================================== -->
+<button
+  type="button"
+  class="checkout-button"
+  onclick="showProductActionButtons()">
 
-  <div class="scanner-card">
+  ← BACK
+
+</button>
+  <div
+  id="productRegistrationForm"
+  class="scanner-card"
+  style="display:none;">
 
     <div class="scanner-header">
 
@@ -2816,8 +2854,18 @@
     <!-- =================================================
      ADD STOCK
 ================================================= -->
+<button
+  type="button"
+  class="checkout-button"
+  onclick="showProductActionButtons()">
 
-<div class="form-section">
+  ← BACK
+
+</button>
+<div
+  id="addStockForm"
+  class="form-section"
+  style="display:none;">
 
   <h3>ADD STOCK</h3>
 
@@ -4422,6 +4470,116 @@ showAddStockSuccessMessage({
     }
 
   );
+
+}
+
+  /* =================================================
+   PRODUCT ACTION FORM SWITCHING
+================================================= */
+
+function showProductRegistrationForm() {
+
+  const buttons =
+    document.getElementById(
+      "productActionButtons"
+    );
+
+  const registrationForm =
+    document.getElementById(
+      "productRegistrationForm"
+    );
+
+  const addStockForm =
+    document.getElementById(
+      "addStockForm"
+    );
+
+
+  if (buttons) {
+    buttons.style.display = "none";
+  }
+
+  if (registrationForm) {
+    registrationForm.style.display = "block";
+  }
+
+  if (addStockForm) {
+    addStockForm.style.display = "none";
+  }
+
+}
+
+
+/* =================================================
+   SHOW ADD STOCK FORM
+================================================= */
+
+function showAddStockForm() {
+
+  const buttons =
+    document.getElementById(
+      "productActionButtons"
+    );
+
+  const registrationForm =
+    document.getElementById(
+      "productRegistrationForm"
+    );
+
+  const addStockForm =
+    document.getElementById(
+      "addStockForm"
+    );
+
+
+  if (buttons) {
+    buttons.style.display = "none";
+  }
+
+  if (registrationForm) {
+    registrationForm.style.display = "none";
+  }
+
+  if (addStockForm) {
+    addStockForm.style.display = "block";
+  }
+
+}
+
+
+/* =================================================
+   BACK TO PRODUCT ACTIONS
+================================================= */
+
+function showProductActionButtons() {
+
+  const buttons =
+    document.getElementById(
+      "productActionButtons"
+    );
+
+  const registrationForm =
+    document.getElementById(
+      "productRegistrationForm"
+    );
+
+  const addStockForm =
+    document.getElementById(
+      "addStockForm"
+    );
+
+
+  if (buttons) {
+    buttons.style.display = "block";
+  }
+
+  if (registrationForm) {
+    registrationForm.style.display = "none";
+  }
+
+  if (addStockForm) {
+    addStockForm.style.display = "none";
+  }
 
 }
   /* =================================================
