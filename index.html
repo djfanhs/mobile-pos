@@ -4847,6 +4847,10 @@ function showProductSuccessMessage(data) {
    ADD STOCK SUCCESS MESSAGE
 ================================================= */
 
+/* =================================================
+   ADD STOCK SUCCESS MODAL
+================================================= */
+
 function showAddStockSuccessMessage(data) {
 
   const existing =
@@ -4866,6 +4870,40 @@ function showAddStockSuccessMessage(data) {
     "addStockSuccessMessage";
 
 
+  /* =============================================
+     SAFE VALUES
+  ============================================= */
+
+  const productName =
+    String(
+      data.productName || ""
+    );
+
+  const barcode =
+    String(
+      data.barcode || ""
+    );
+
+  const addedStock =
+    Number(
+      data.addedStock || 0
+    );
+
+  const previousStock =
+    Number(
+      data.previousStock || 0
+    );
+
+  const available =
+    Number(
+      data.available || 0
+    );
+
+
+  /* =============================================
+     CREATE MODAL
+  ============================================= */
+
   overlay.innerHTML = `
 
     <div class="product-success-overlay">
@@ -4877,34 +4915,35 @@ function showAddStockSuccessMessage(data) {
         </div>
 
         <div class="product-success-title">
-          STOCK ADDED SUCCESSFULLY!
+          STOCK ADDED<br>
+          SUCCESSFULLY!
         </div>
 
         <div class="product-success-details">
 
           <div>
             <span>Product</span>
-            <strong>${escapeHtml(data.productName)}</strong>
+            <strong>${productName}</strong>
           </div>
 
           <div>
             <span>Barcode</span>
-            <strong>${escapeHtml(data.barcode)}</strong>
+            <strong>${barcode}</strong>
           </div>
 
           <div>
             <span>Added Stock</span>
-            <strong>${Number(data.addedStock)}</strong>
+            <strong>${addedStock}</strong>
           </div>
 
           <div>
             <span>Previous Stock</span>
-            <strong>${Number(data.previousStock)}</strong>
+            <strong>${previousStock}</strong>
           </div>
 
           <div>
             <span>New Available Stock</span>
-            <strong>${Number(data.available)}</strong>
+            <strong>${available}</strong>
           </div>
 
         </div>
@@ -4933,7 +4972,7 @@ function showAddStockSuccessMessage(data) {
 
 
 /* =================================================
-   CLOSE ADD STOCK SUCCESS MESSAGE
+   CLOSE ADD STOCK SUCCESS MODAL
 ================================================= */
 
 function closeAddStockSuccessMessage() {
@@ -4950,7 +4989,6 @@ function closeAddStockSuccessMessage() {
   }
 
 }
-
   function closeProductSuccessMessage() {
 
   const message =
