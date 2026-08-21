@@ -2813,6 +2813,133 @@
       REGISTER PRODUCT
 
     </button>
+    <!-- =================================================
+     ADD STOCK
+================================================= -->
+
+<div class="form-section">
+
+  <h3>ADD STOCK</h3>
+
+  <!-- BARCODE -->
+
+  <div class="form-group">
+
+    <label for="addStockBarcode">
+      Barcode
+    </label>
+
+    <div class="barcode-input-row">
+
+      <input
+        id="addStockBarcode"
+        type="text"
+        inputmode="numeric"
+        placeholder="Enter or scan barcode"
+        autocomplete="off">
+
+      <button
+        id="scanAddStockButton"
+        type="button"
+        onclick="startAddStockScanner()">
+
+        📷 SCAN
+
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- PRODUCT NAME -->
+
+  <div class="form-group">
+
+    <label for="addStockProductName">
+      Product
+    </label>
+
+    <input
+      id="addStockProductName"
+      type="text"
+      placeholder="Product name"
+      readonly>
+
+  </div>
+
+
+  <!-- CURRENT STOCK -->
+
+  <div class="form-group">
+
+    <label for="addStockCurrent">
+      Current Stock
+    </label>
+
+    <input
+      id="addStockCurrent"
+      type="number"
+      placeholder="Current stock"
+      readonly>
+
+  </div>
+
+
+  <!-- QUANTITY TO ADD -->
+
+  <div class="form-group">
+
+    <label for="addStockQuantity">
+      Quantity to Add
+    </label>
+
+    <input
+      id="addStockQuantity"
+      type="number"
+      min="1"
+      step="1"
+      placeholder="Enter quantity">
+
+  </div>
+
+
+  <!-- ADD STOCK BUTTON -->
+
+  <button
+    id="addStockButton"
+    class="checkout-button"
+    type="button"
+    onclick="addStockToProduct()">
+
+    ADD STOCK
+
+  </button>
+
+</div>
+
+
+<!-- =================================================
+     ADD STOCK SCANNER
+================================================= -->
+
+<div
+  id="addStockScannerContainer"
+  style="display:none;">
+
+  <div
+    id="add-stock-barcode-reader">
+  </div>
+
+  <button
+    type="button"
+    onclick="stopAddStockScanner()">
+
+    STOP SCANNER
+
+  </button>
+
+</div>
 
 
     <!-- STATUS -->
