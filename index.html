@@ -3021,6 +3021,354 @@
     document.head.appendChild(script);
   }
 
+  /* =================================================
+   REGISTER NEW PRODUCT
+================================================= */
+
+function registerNewProduct() {
+
+  const barcodeInput =
+    document.getElementById(
+      "addProductBarcode"
+    );
+
+  const productIdInput =
+    document.getElementById(
+      "addProductId"
+    );
+
+  const productNameInput =
+    document.getElementById(
+      "addProductName"
+    );
+
+  const priceInput =
+    document.getElementById(
+      "addProductPrice"
+    );
+
+  const stockInput =
+    document.getElementById(
+      "addProductStock"
+    );
+
+  const button =
+    document.getElementById(
+      "registerProductButton"
+    );
+
+
+  /* =============================================
+     CHECK INPUT ELEMENTS
+  ============================================= */
+
+  if (
+    !barcodeInput ||
+    !productIdInput ||
+    !productNameInput ||
+    !priceInput ||
+    !stockInput ||
+    !button
+  ) {
+
+    console.error(
+      "ADD PRODUCT FORM ELEMENT NOT FOUND."
+    );
+
+    alert(
+      "Add Product form is incomplete."
+    );
+
+    return;
+
+  }
+
+
+  /* =============================================
+     READ VALUES
+  ============================================= */
+
+  const barcode =
+    String(
+      barcodeInput.value
+    ).trim();
+
+
+  const productId =
+    String(
+      productIdInput.value
+    ).trim();
+
+
+  const productName =
+    String(
+      productNameInput.value
+    ).trim();
+
+
+  const price =
+    Number(
+      priceInput.value
+    );
+
+
+  const beginningStock =
+    Number(
+      stockInput.value
+    );
+
+
+  /* =============================================
+     VALIDATION
+  ============================================= */
+
+  if (!barcode) {
+
+    alert(
+      "Please enter the barcode."
+    );
+
+    barcodeInput.focus();
+
+    return;
+
+  }
+
+
+  if (!productId) {
+
+    alert(
+      "Please enter the Product ID."
+    );
+
+    productIdInput.focus();
+
+    return;
+
+  }
+
+
+  if (!productName) {
+
+    alert(
+      "Please enter the Product Name."
+    );
+
+    productNameInput.focus();
+
+    return;
+
+  }
+
+
+  if (
+    !Number.isFinite(price) ||
+    price < 0
+  ) {
+
+    alert(
+      "Please enter a valid price."
+    );
+
+    priceInput.focus();
+
+    return;
+
+  }
+
+
+  if (
+    !Number.isFinite(beginningStock) ||
+    beginningStock < 0
+  ) {
+
+    alert(
+      "Please enter a valid beginning stock."
+    );
+
+    stockInput.focus();
+
+    return;
+
+  }
+
+
+  /* =============================================
+     PREPARE PRODUCT DATA
+  ============================================= */
+
+  const productData = {
+
+    barcode:
+      barcode,
+
+    productId:
+      productId,
+
+    productName:
+      productName,
+
+    price:
+      price,
+
+    beginningStock:
+      beginningStock
+
+  };
+
+
+  console.log(
+    "REGISTERING PRODUCT:",
+    productData
+  );
+
+
+  /* =============================================
+     DISABLE BUTTON
+  ============================================= */
+
+  button.disabled =
+    true;
+
+  button.textContent =
+    "ADDING...";
+
+
+  /* =============================================
+     SEND TO APPS SCRIPT
+  ============================================= */
+
+  callPOSApi(
+
+    "addProduct",
+
+    {
+      data:
+        JSON.stringify(
+          productData
+        )
+    },
+
+
+    function(result) {
+
+      console.log(
+        "ADD PRODUCT RESPONSE:",
+        result
+      );
+
+
+      button.disabled =
+        false;
+
+      button.textContent =
+        "REGISTER PRODUCT";
+
+
+      /* =========================================
+         FAILED
+      ========================================= */
+
+      if (
+        !result ||
+        result.success !== true
+      ) {
+
+        alert(
+
+          result &&
+          result.message
+
+            ? result.message
+
+            : "Unable to register product."
+
+        );
+
+        return;
+
+      }
+
+
+      /* =========================================
+         SUCCESS
+      ========================================= */
+
+      alert(
+
+        "PRODUCT ADDED SUCCESSFULLY!\n\n" +
+
+        "Product: " +
+        productName +
+
+        "\nBarcode: " +
+        barcode +
+
+        "\nPrice: ₱" +
+        price.toFixed(2) +
+
+        "\nBeginning Stock: " +
+        beginningStock
+
+      );
+
+
+      /* =========================================
+         CLEAR FORM
+      ========================================= */
+
+      barcodeInput.value =
+        "";
+
+      productIdInput.value =
+        "";
+
+      productNameInput.value =
+        "";
+
+      priceInput.value =
+        "";
+
+      stockInput.value =
+        "";
+
+
+      barcodeInput.focus();
+
+    },
+
+
+    function(error) {
+
+      console.error(
+        "REGISTER PRODUCT ERROR:",
+        error
+      );
+
+
+      button.disabled =
+        false;
+
+      button.textContent =
+        "REGISTER PRODUCT";
+
+
+      alert(
+
+        error &&
+        error.message
+
+          ? error.message
+
+          : "Unable to connect to the Mobile POS server."
+
+      );
+
+    }
+
+  );
+
+}
 
   /* =================================================
      PAGE NAVIGATION
