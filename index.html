@@ -2634,6 +2634,10 @@
      ADD PRODUCT PAGE
 ================================================ -->
 
+<!-- ===============================================
+     ADD PRODUCT PAGE
+================================================ -->
+
 <section
   id="addProductPage"
   class="page">
@@ -2652,48 +2656,55 @@
 
 
   <!-- =============================================
-     PRODUCT OPTIONS
-============================================= -->
-
-<div
-  id="productActionButtons"
-  class="product-action-buttons">
-
-  <button
-    type="button"
-    class="checkout-button"
-    onclick="showProductRegistrationForm()">
-
-    PRODUCT REGISTRATION
-
-  </button>
-
-
-  <button
-    type="button"
-    class="checkout-button"
-    onclick="showAddStockForm()">
-
-    ADD STOCK
-
-  </button>
-
-</div>
-  <!-- =============================================
-       ADD PRODUCT CARD
+       PRODUCT OPTIONS
   ============================================== -->
-<button
-  type="button"
-  class="checkout-button"
-  onclick="showProductActionButtons()">
 
-  ← BACK
-
-</button>
   <div
-  id="productRegistrationForm"
-  class="scanner-card"
-  style="display:none;">
+    id="productActionButtons"
+    class="product-action-buttons">
+
+    <button
+      type="button"
+      class="checkout-button"
+      onclick="showProductRegistrationForm()">
+
+      PRODUCT REGISTRATION
+
+    </button>
+
+
+    <button
+      type="button"
+      class="checkout-button"
+      onclick="showAddStockForm()">
+
+      ADD STOCK
+
+    </button>
+
+  </div>
+
+
+  <!-- =============================================
+       PRODUCT REGISTRATION FORM
+  ============================================== -->
+
+  <div
+    id="productRegistrationForm"
+    class="scanner-card"
+    style="display:none;">
+
+    <!-- BACK -->
+
+    <button
+      type="button"
+      class="checkout-button"
+      onclick="showProductActionButtons()">
+
+      ← BACK
+
+    </button>
+
 
     <div class="scanner-header">
 
@@ -2716,59 +2727,63 @@
     </div>
 
 
-    <!-- BARCODE -->
+    <!-- =========================================
+         BARCODE
+    ========================================== -->
 
-<div class="form-group">
+    <div class="form-group">
 
-  <label for="addProductBarcode">
-    Barcode
-  </label>
+      <label for="addProductBarcode">
+        Barcode
+      </label>
 
-  <div class="barcode-input-row">
+      <div class="barcode-input-row">
 
-    <input
-      id="addProductBarcode"
-      type="text"
-      inputmode="numeric"
-      placeholder="Enter or scan barcode"
-      autocomplete="off">
+        <input
+          id="addProductBarcode"
+          type="text"
+          inputmode="numeric"
+          placeholder="Enter or scan barcode"
+          autocomplete="off">
 
-    <button
-      id="scanAddProductButton"
-      type="button"
-      onclick="startAddProductScanner()">
+        <button
+          id="scanAddProductButton"
+          type="button"
+          onclick="startAddProductScanner()">
 
-      📷 SCAN
+          📷 SCAN
 
-    </button>
+        </button>
 
-  </div>
+      </div>
 
-</div>
-
-
-<!-- ADD PRODUCT BARCODE SCANNER -->
-
-<div
-  id="addProductScannerContainer"
-  style="display:none;">
-
-  <div
-    id="add-product-barcode-reader">
-  </div>
-
-  <button
-    type="button"
-    onclick="stopAddProductScanner()">
-
-    STOP SCANNER
-
-  </button>
-
-</div>
+    </div>
 
 
-    <!-- PRODUCT ID -->
+    <!-- ADD PRODUCT BARCODE SCANNER -->
+
+    <div
+      id="addProductScannerContainer"
+      style="display:none;">
+
+      <div
+        id="add-product-barcode-reader">
+      </div>
+
+      <button
+        type="button"
+        onclick="stopAddProductScanner()">
+
+        STOP SCANNER
+
+      </button>
+
+    </div>
+
+
+    <!-- =========================================
+         PRODUCT ID
+    ========================================== -->
 
     <div class="form-group">
 
@@ -2785,7 +2800,9 @@
     </div>
 
 
-    <!-- PRODUCT NAME -->
+    <!-- =========================================
+         PRODUCT NAME
+    ========================================== -->
 
     <div class="form-group">
 
@@ -2802,7 +2819,9 @@
     </div>
 
 
-    <!-- PRICE -->
+    <!-- =========================================
+         PRICE
+    ========================================== -->
 
     <div class="form-group">
 
@@ -2821,7 +2840,9 @@
     </div>
 
 
-    <!-- BEGINNING STOCK -->
+    <!-- =========================================
+         BEGINNING STOCK
+    ========================================== -->
 
     <div class="form-group">
 
@@ -2840,7 +2861,9 @@
     </div>
 
 
-    <!-- REGISTER BUTTON -->
+    <!-- =========================================
+         REGISTER BUTTON
+    ========================================== -->
 
     <button
       id="registerProductButton"
@@ -2851,151 +2874,6 @@
       REGISTER PRODUCT
 
     </button>
-    <!-- =================================================
-     ADD STOCK
-================================================= -->
-<!-- =================================================
-     ADD STOCK
-================================================= -->
-
-<div
-  id="addStockForm"
-  style="display:none;">
-
-  <div class="scanner-card">
-
-    <button
-      type="button"
-      class="checkout-button"
-      onclick="showProductActionButtons()">
-
-      ← BACK
-
-    </button>
-
-    <h3>ADD STOCK</h3>
-
-  <!-- BARCODE -->
-
-  <div class="form-group">
-
-    <label for="addStockBarcode">
-      Barcode
-    </label>
-
-    <div class="barcode-input-row">
-
-      <input
-        id="addStockBarcode"
-        type="text"
-        inputmode="numeric"
-        placeholder="Enter or scan barcode"
-        autocomplete="off">
-
-      <button
-        id="scanAddStockButton"
-        type="button"
-        onclick="startAddStockScanner()">
-
-        📷 SCAN
-
-      </button>
-
-    </div>
-
-  </div>
-
-
-  <!-- PRODUCT NAME -->
-
-  <div class="form-group">
-
-    <label for="addStockProductName">
-      Product
-    </label>
-
-    <input
-      id="addStockProductName"
-      type="text"
-      placeholder="Product name"
-      readonly>
-
-  </div>
-
-
-  <!-- CURRENT STOCK -->
-
-  <div class="form-group">
-
-    <label for="addStockCurrent">
-      Current Stock
-    </label>
-
-    <input
-      id="addStockCurrent"
-      type="number"
-      placeholder="Current stock"
-      readonly>
-
-  </div>
-
-
-  <!-- QUANTITY TO ADD -->
-
-  <div class="form-group">
-
-    <label for="addStockQuantity">
-      Quantity to Add
-    </label>
-
-    <input
-      id="addStockQuantity"
-      type="number"
-      min="1"
-      step="1"
-      placeholder="Enter quantity">
-
-  </div>
-
-
-  <!-- ADD STOCK BUTTON -->
-
-  <button
-    id="addStockButton"
-    class="checkout-button"
-    type="button"
-    onclick="addStockToProduct()">
-
-    ADD STOCK
-
-  </button>
-
-</div>
-
-</div>
-
-
-<!-- =================================================
-     ADD STOCK SCANNER
-================================================= -->
-
-<div
-  id="addStockScannerContainer"
-  style="display:none;">
-
-  <div
-    id="add-stock-barcode-reader">
-  </div>
-
-  <button
-    type="button"
-    onclick="stopAddStockScanner()">
-
-    STOP SCANNER
-
-  </button>
-
-</div>
 
 
     <!-- STATUS -->
@@ -3005,6 +2883,180 @@
       class="scanner-status">
 
       Ready to register a product.
+
+    </div>
+
+  </div>
+
+
+  <!-- =============================================
+       ADD STOCK FORM
+  ============================================== -->
+
+  <div
+    id="addStockForm"
+    style="display:none;">
+
+    <div class="scanner-card">
+
+      <!-- BACK -->
+
+      <button
+        type="button"
+        class="checkout-button"
+        onclick="showProductActionButtons()">
+
+        ← BACK
+
+      </button>
+
+
+      <div class="scanner-header">
+
+        <div>
+
+          <div class="scanner-title">
+            Add Stock
+          </div>
+
+          <div class="scanner-subtitle">
+            Add stock to an existing product.
+          </div>
+
+        </div>
+
+        <div class="scanner-icon">
+          📦
+        </div>
+
+      </div>
+
+
+      <!-- =========================================
+           BARCODE
+      ========================================== -->
+
+      <div class="form-group">
+
+        <label for="addStockBarcode">
+          Barcode
+        </label>
+
+        <div class="barcode-input-row">
+
+          <input
+            id="addStockBarcode"
+            type="text"
+            inputmode="numeric"
+            placeholder="Enter or scan barcode"
+            autocomplete="off">
+
+          <button
+            id="scanAddStockButton"
+            type="button"
+            onclick="startAddStockScanner()">
+
+            📷 SCAN
+
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- ADD STOCK BARCODE SCANNER -->
+
+      <div
+        id="addStockScannerContainer"
+        style="display:none;">
+
+        <div
+          id="add-stock-barcode-reader">
+        </div>
+
+        <button
+          type="button"
+          onclick="stopAddStockScanner()">
+
+          STOP SCANNER
+
+        </button>
+
+      </div>
+
+
+      <!-- =========================================
+           PRODUCT NAME
+      ========================================== -->
+
+      <div class="form-group">
+
+        <label for="addStockProductName">
+          Product
+        </label>
+
+        <input
+          id="addStockProductName"
+          type="text"
+          placeholder="Product name"
+          readonly>
+
+      </div>
+
+
+      <!-- =========================================
+           CURRENT STOCK
+      ========================================== -->
+
+      <div class="form-group">
+
+        <label for="addStockCurrent">
+          Current Stock
+        </label>
+
+        <input
+          id="addStockCurrent"
+          type="number"
+          placeholder="Current stock"
+          readonly>
+
+      </div>
+
+
+      <!-- =========================================
+           QUANTITY TO ADD
+      ========================================== -->
+
+      <div class="form-group">
+
+        <label for="addStockQuantity">
+          Quantity to Add
+        </label>
+
+        <input
+          id="addStockQuantity"
+          type="number"
+          min="1"
+          step="1"
+          placeholder="Enter quantity">
+
+      </div>
+
+
+      <!-- =========================================
+           ADD STOCK BUTTON
+      ========================================== -->
+
+      <button
+        id="addStockButton"
+        class="checkout-button"
+        type="button"
+        onclick="addStockToProduct()">
+
+        ADD STOCK
+
+      </button>
 
     </div>
 
