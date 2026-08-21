@@ -4501,44 +4501,20 @@ showAddStockSuccessMessage({
    PRODUCT ACTION FORM SWITCHING
 ================================================= */
 
-function showProductRegistrationForm() {
-
-  const buttons =
-    document.getElementById(
-      "productActionButtons"
-    );
-
-  const registrationForm =
-    document.getElementById(
-      "productRegistrationForm"
-    );
-
-  const addStockForm =
-    document.getElementById(
-      "addStockForm"
-    );
-
-
-  if (buttons) {
-    buttons.style.display = "none";
-  }
-
-  if (registrationForm) {
-    registrationForm.style.display = "block";
-  }
-
-  if (addStockForm) {
-    addStockForm.style.display = "none";
-  }
-
-}
-
-
 /* =================================================
-   SHOW ADD STOCK FORM
+   PRODUCT ACTION FORM SWITCHING
 ================================================= */
 
-function showAddStockForm() {
+/* =================================================
+   SHOW PRODUCT REGISTRATION
+================================================= */
+
+function showProductRegistrationForm() {
+
+  console.log(
+    "Opening Product Registration..."
+  );
+
 
   const buttons =
     document.getElementById(
@@ -4554,6 +4530,17 @@ function showAddStockForm() {
     document.getElementById(
       "addStockForm"
     );
+
+
+  if (!registrationForm) {
+
+    console.error(
+      "productRegistrationForm NOT FOUND."
+    );
+
+    return;
+
+  }
 
 
   if (buttons) {
@@ -4564,27 +4551,35 @@ function showAddStockForm() {
   }
 
 
-  if (registrationForm) {
-
-    registrationForm.style.display =
-      "none";
-
-  }
+  registrationForm.style.display =
+    "block";
 
 
   if (addStockForm) {
 
     addStockForm.style.display =
-      "block";
+      "none";
 
   }
 
+
+  console.log(
+    "Product Registration opened."
+  );
+
 }
+
+
 /* =================================================
-   BACK TO PRODUCT ACTIONS
+   SHOW ADD STOCK
 ================================================= */
 
-function showProductActionButtons() {
+function showAddStockForm() {
+
+  console.log(
+    "Opening Add Stock..."
+  );
+
 
   const buttons =
     document.getElementById(
@@ -4602,16 +4597,135 @@ function showProductActionButtons() {
     );
 
 
-  if (buttons) {
-    buttons.style.display = "block";
+  /* =============================================
+     CHECK ADD STOCK FORM
+  ============================================= */
+
+  if (!addStockForm) {
+
+    console.error(
+      "addStockForm NOT FOUND."
+    );
+
+    alert(
+      "Add Stock form was not found."
+    );
+
+    return;
+
   }
+
+
+  /* =============================================
+     HIDE ACTION BUTTONS
+  ============================================= */
+
+  if (buttons) {
+
+    buttons.style.display =
+      "none";
+
+  }
+
+
+  /* =============================================
+     HIDE PRODUCT REGISTRATION
+  ============================================= */
 
   if (registrationForm) {
-    registrationForm.style.display = "none";
+
+    registrationForm.style.display =
+      "none";
+
   }
 
+
+  /* =============================================
+     SHOW ADD STOCK
+  ============================================= */
+
+  addStockForm.style.display =
+    "block";
+
+
+  /* =============================================
+     FORCE VISIBILITY
+  ============================================= */
+
+  addStockForm.style.visibility =
+    "visible";
+
+  addStockForm.style.opacity =
+    "1";
+
+
+  console.log(
+    "Add Stock form opened."
+  );
+
+}
+
+
+/* =================================================
+   BACK TO PRODUCT ACTION BUTTONS
+================================================= */
+
+function showProductActionButtons() {
+
+  console.log(
+    "Returning to Product Action Buttons..."
+  );
+
+
+  const buttons =
+    document.getElementById(
+      "productActionButtons"
+    );
+
+  const registrationForm =
+    document.getElementById(
+      "productRegistrationForm"
+    );
+
+  const addStockForm =
+    document.getElementById(
+      "addStockForm"
+    );
+
+
+  /* =============================================
+     SHOW ACTION BUTTONS
+  ============================================= */
+
+  if (buttons) {
+
+    buttons.style.display =
+      "block";
+
+  }
+
+
+  /* =============================================
+     HIDE PRODUCT REGISTRATION
+  ============================================= */
+
+  if (registrationForm) {
+
+    registrationForm.style.display =
+      "none";
+
+  }
+
+
+  /* =============================================
+     HIDE ADD STOCK
+  ============================================= */
+
   if (addStockForm) {
-    addStockForm.style.display = "none";
+
+    addStockForm.style.display =
+      "none";
+
   }
 
 }
