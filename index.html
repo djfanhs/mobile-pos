@@ -3226,6 +3226,40 @@ let addProductScannerRunning = false;
 
 function startAddProductScanner() {
 
+  /* Unlock browser audio */
+
+  try {
+
+    if (!barcodeAudioContext) {
+
+      barcodeAudioContext =
+        new (
+          window.AudioContext ||
+          window.webkitAudioContext
+        )();
+
+    }
+
+    if (
+      barcodeAudioContext.state ===
+      "suspended"
+    ) {
+
+      barcodeAudioContext.resume();
+
+    }
+
+  } catch (error) {
+
+    console.warn(
+      "Audio initialization failed:",
+      error
+    );
+
+  }
+
+
+  // EXISTING CODE CONTINUES HERE...
   const container =
     document.getElementById(
       "addProductScannerContainer"
