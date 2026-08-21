@@ -1718,6 +1718,118 @@
   }
 }
 
+
+/* =================================================
+   POS ALERT MODAL
+================================================= */
+
+.pos-alert-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100002;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.pos-alert-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.62);
+  backdrop-filter: blur(5px);
+}
+
+.pos-alert-box {
+  position: relative;
+  width: 100%;
+  max-width: 390px;
+  background: #fff;
+  border-radius: 24px;
+  padding: 28px 24px 22px;
+  box-shadow: 0 24px 70px rgba(0,0,0,.28);
+  animation: posAlertIn .20s ease-out;
+  text-align: center;
+}
+
+@keyframes posAlertIn {
+  from { opacity: 0; transform: translateY(18px) scale(.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.pos-alert-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 14px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fef3c7;
+  color: #d97706;
+  font-size: 32px;
+  font-weight: 900;
+}
+
+.pos-alert-title {
+  font-size: 23px;
+  font-weight: 900;
+  color: #111827;
+}
+
+.pos-alert-product {
+  margin-top: 8px;
+  font-size: 18px;
+  font-weight: 800;
+  color: #374151;
+  word-break: break-word;
+}
+
+.pos-alert-message {
+  margin-top: 7px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #6b7280;
+}
+
+.pos-alert-stock {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 14px;
+  padding: 8px 13px;
+  border-radius: 999px;
+  background: #f3f4f6;
+  color: #374151;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.pos-alert-button {
+  width: 100%;
+  min-height: 52px;
+  margin-top: 20px;
+  border: none;
+  border-radius: 15px;
+  background: #111827;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+@media (max-width:480px) {
+  .pos-alert-modal {
+    align-items: flex-end;
+    padding: 0;
+  }
+  .pos-alert-box {
+    max-width: none;
+    border-radius: 26px 26px 0 0;
+    padding: 25px 18px calc(18px + env(safe-area-inset-bottom));
+  }
+}
+
 /* =================================================
    PAYMENT MODAL
 ================================================= */
@@ -1812,11 +1924,11 @@
       <div>
 
         <div class="brand-name">
-          EPIN Store
+          Mobile POS
         </div>
 
         <div class="brand-subtitle">
-          Mobile POS (Sales & Inventory)
+          Sales & Inventory
         </div>
 
       </div>
@@ -2578,6 +2690,24 @@
 </div>
 
 
+
+<!-- ===============================================
+     POS ALERT MODAL
+================================================ -->
+
+<div id="posAlertModal" class="pos-alert-modal" style="display:none;">
+  <div class="pos-alert-overlay" onclick="closePOSAlert()"></div>
+
+  <div class="pos-alert-box" role="dialog" aria-modal="true" aria-labelledby="posAlertTitle">
+    <div id="posAlertIcon" class="pos-alert-icon">!</div>
+    <div id="posAlertTitle" class="pos-alert-title">OUT OF STOCK</div>
+    <div id="posAlertProduct" class="pos-alert-product">—</div>
+    <div id="posAlertMessage" class="pos-alert-message">This product is currently unavailable.</div>
+    <div id="posAlertStock" class="pos-alert-stock" style="display:none;"></div>
+    <button type="button" class="pos-alert-button" onclick="closePOSAlert()">OK</button>
+  </div>
+</div>
+
 <!-- ===============================================
      PAYMENT MODAL
 ================================================ -->
@@ -2652,7 +2782,7 @@
    * GOOGLE APPS SCRIPT WEB APP URL
    *******************************************************/
 
-  const API_URL =
+ const API_URL =
     "https://script.google.com/macros/s/AKfycbxQDcGzC2LMuDGawzSIRZPmVmIMWDSJrRzsNNl-Q566HTUX-KU1G_2FWRwZZjmjNdpyQw/exec";
 
 
@@ -2938,11 +3068,12 @@ function addProductToCart(product) {
       Number(product.available)
     ) {
 
-      alert(
-        "INSUFFICIENT STOCK.\n\n" +
-        product.productName +
-        "\nAvailable: " +
-        product.available
+      showPOSAlert(
+        "INSUFFICIENT STOCK",
+        product.productName,
+        "You cannot add more of this product than the available stock.",
+        "Available stock: " + product.available,
+        "⚠"
       );
 
       return;
@@ -2960,9 +3091,12 @@ function addProductToCart(product) {
       Number(product.available) <= 0
     ) {
 
-      alert(
-        "OUT OF STOCK.\n\n" +
-        product.productName
+      showPOSAlert(
+        "OUT OF STOCK",
+        product.productName,
+        "This product is currently unavailable and cannot be added to the order.",
+        "Available stock: 0",
+        "!"
       );
 
       return;
@@ -3374,6 +3508,53 @@ function escapeHtml(value) {
 }
 
 
+
+
+/* =================================================
+   POS ALERT MODAL
+================================================= */
+
+function showPOSAlert(title, productName, message, stockText, icon) {
+
+  const modal = document.getElementById("posAlertModal");
+  const titleElement = document.getElementById("posAlertTitle");
+  const productElement = document.getElementById("posAlertProduct");
+  const messageElement = document.getElementById("posAlertMessage");
+  const stockElement = document.getElementById("posAlertStock");
+  const iconElement = document.getElementById("posAlertIcon");
+
+  if (!modal) {
+    alert(
+      String(title || "NOTICE") + "\n\n" +
+      String(productName || "") + "\n\n" +
+      String(message || "") +
+      (stockText ? "\n" + stockText : "")
+    );
+    return;
+  }
+
+  titleElement.textContent = title || "NOTICE";
+  productElement.textContent = productName || "";
+  messageElement.textContent = message || "";
+  iconElement.textContent = icon || "!";
+
+  if (stockText) {
+    stockElement.textContent = stockText;
+    stockElement.style.display = "inline-flex";
+  } else {
+    stockElement.textContent = "";
+    stockElement.style.display = "none";
+  }
+
+  modal.style.display = "flex";
+}
+
+function closePOSAlert() {
+  const modal = document.getElementById("posAlertModal");
+  if (modal) {
+    modal.style.display = "none";
+  }
+}
 
 /* =================================================
    CHECKOUT
