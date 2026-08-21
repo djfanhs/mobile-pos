@@ -3839,6 +3839,7 @@ function startAddStockScanner() {
         );
 
       }
+      findProductForAddStock(barcode);
 
 
       /* =========================================
@@ -3968,6 +3969,151 @@ function stopAddStockScanner() {
       }
 
     });
+
+}
+
+  /* =================================================
+   FIND PRODUCT FOR ADD STOCK
+================================================= */
+
+function findProductForAddStock(barcode) {
+
+  const productNameInput =
+    document.getElementById(
+      "addStockProductName"
+    );
+
+  const currentStockInput =
+    document.getElementById(
+      "addStockCurrent"
+    );
+
+
+  if (!barcode) {
+
+    return;
+
+  }
+
+
+  /* =============================================
+     CLEAR OLD PRODUCT INFORMATION
+  ============================================= */
+
+  if (productNameInput) {
+    productNameInput.value = "";
+  }
+
+  if (currentStockInput) {
+    currentStockInput.value = "";
+  }
+
+
+  /* =============================================
+     LOOK UP PRODUCT
+  ============================================= */
+
+  callPOSApi(
+
+    "product",
+
+    {
+      barcode: barcode
+    },
+
+    function(result) {
+
+      console.log(
+        "ADD STOCK PRODUCT RESPONSE:",
+        result
+      );
+
+
+      if (
+        !result ||
+        result.success !== true
+      ) {
+
+        alert(
+          result &&
+          result.message
+            ? result.message
+            : "Product was not found."
+        );
+
+        return;
+
+      }
+
+
+      /* =========================================
+         GET PRODUCT DATA
+      ========================================= */
+
+      const product =
+        result.product;
+
+
+      if (!product) {
+
+        alert(
+          "Product information was not returned."
+        );
+
+        return;
+
+      }
+
+
+      /* =========================================
+         DISPLAY PRODUCT NAME
+      ========================================= */
+
+      if (productNameInput) {
+
+        productNameInput.value =
+          product.productName || "";
+
+      }
+
+
+      /* =========================================
+         DISPLAY CURRENT STOCK
+      ========================================= */
+
+      if (currentStockInput) {
+
+        currentStockInput.value =
+          Number(
+            product.available
+          ) || 0;
+
+      }
+
+    },
+
+    function(error) {
+
+      console.error(
+        "ADD STOCK PRODUCT LOOKUP ERROR:",
+        error
+      );
+
+
+      alert(
+
+        error &&
+        error.message
+
+          ? error.message
+
+          : "Unable to find the product."
+
+      );
+
+    }
+
+  );
 
 }
   /* =================================================
