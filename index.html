@@ -3716,6 +3716,260 @@ function playBarcodeScanSound() {
   }
 
 }
+
+  /* =================================================
+   ADD STOCK BARCODE SCANNER
+================================================= */
+
+let addStockScanner = null;
+let addStockScannerRunning = false;
+
+
+/* =================================================
+   START ADD STOCK SCANNER
+================================================= */
+
+function startAddStockScanner() {
+
+  const container =
+    document.getElementById(
+      "addStockScannerContainer"
+    );
+
+  const reader =
+    document.getElementById(
+      "add-stock-barcode-reader"
+    );
+
+
+  if (!container || !reader) {
+
+    alert(
+      "Add Stock scanner area was not found."
+    );
+
+    return;
+
+  }
+
+
+  if (
+    addStockScannerRunning
+  ) {
+
+    return;
+
+  }
+
+
+  container.style.display =
+    "block";
+
+
+  addStockScanner =
+    new Html5Qrcode(
+      "add-stock-barcode-reader"
+    );
+
+
+  addStockScanner.start(
+
+    {
+      facingMode: "environment"
+    },
+
+    {
+      fps: 10,
+
+      qrbox: {
+        width: 280,
+        height: 150
+      }
+
+    },
+
+    function(decodedText) {
+
+      const barcode =
+        String(
+          decodedText
+        ).trim();
+
+
+      if (!barcode) {
+        return;
+      }
+
+
+      console.log(
+        "ADD STOCK BARCODE DETECTED:",
+        barcode
+      );
+
+
+      /* =========================================
+         PLAY SCAN SOUND
+      ========================================= */
+
+      playBarcodeScanSound();
+
+
+      /* =========================================
+         PUT BARCODE INTO INPUT
+      ========================================= */
+
+      const input =
+        document.getElementById(
+          "addStockBarcode"
+        );
+
+
+      if (input) {
+
+        input.value =
+          barcode;
+
+        input.dispatchEvent(
+          new Event(
+            "input",
+            {
+              bubbles: true
+            }
+          )
+        );
+
+      }
+
+
+      /* =========================================
+         STOP SCANNER
+      ========================================= */
+
+      stopAddStockScanner();
+
+
+      if (input) {
+        input.focus();
+      }
+
+    },
+
+    function(errorMessage) {
+
+      // Normal scanner decoding errors.
+      // Do not display alerts.
+
+    }
+
+  )
+
+  .then(function() {
+
+    addStockScannerRunning =
+      true;
+
+  })
+
+  .catch(function(error) {
+
+    console.error(
+      "ADD STOCK SCANNER ERROR:",
+      error
+    );
+
+
+    container.style.display =
+      "none";
+
+
+    addStockScanner =
+      null;
+
+
+    addStockScannerRunning =
+      false;
+
+
+    alert(
+      "Unable to start the camera scanner."
+    );
+
+  });
+
+}
+
+
+/* =================================================
+   STOP ADD STOCK SCANNER
+================================================= */
+
+function stopAddStockScanner() {
+
+  if (
+    !addStockScanner
+  ) {
+
+    const container =
+      document.getElementById(
+        "addStockScannerContainer"
+      );
+
+    if (container) {
+
+      container.style.display =
+        "none";
+
+    }
+
+    return;
+
+  }
+
+
+  addStockScanner
+    .stop()
+
+    .then(function() {
+
+      return addStockScanner.clear();
+
+    })
+
+    .catch(function(error) {
+
+      console.warn(
+        "Add Stock scanner stop warning:",
+        error
+      );
+
+    })
+
+    .finally(function() {
+
+      addStockScanner =
+        null;
+
+
+      addStockScannerRunning =
+        false;
+
+
+      const container =
+        document.getElementById(
+          "addStockScannerContainer"
+        );
+
+
+      if (container) {
+
+        container.style.display =
+          "none";
+
+      }
+
+    });
+
+}
   /* =================================================
    REGISTER NEW PRODUCT
 ================================================= */
