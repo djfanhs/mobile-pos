@@ -4342,29 +4342,27 @@ function addStockToProduct() {
         result.product || {};
 
 
-      alert(
+      showAddStockSuccessMessage({
 
-        "STOCK ADDED SUCCESSFULLY!\n\n" +
+  productName:
+    product.productName ||
+    productName,
 
-        "Product: " +
-        (
-          product.productName ||
-          productName
-        ) +
+  barcode:
+    barcode,
 
-        "\nAdded Stock: " +
-        (
-          product.addedStock ||
-          quantity
-        ) +
+  addedStock:
+    product.addedStock ||
+    quantity,
 
-        "\nNew Available Stock: " +
-        (
-          product.available ||
-          0
-        )
+  previousStock:
+    previousStock,
 
-      );
+  available:
+    product.available ||
+    0
+
+});
 
 
       /* =========================================
@@ -4842,6 +4840,114 @@ function showProductSuccessMessage(data) {
   document.body.appendChild(
     overlay
   );
+
+}
+
+  /* =================================================
+   ADD STOCK SUCCESS MESSAGE
+================================================= */
+
+function showAddStockSuccessMessage(data) {
+
+  const existing =
+    document.getElementById(
+      "addStockSuccessMessage"
+    );
+
+  if (existing) {
+    existing.remove();
+  }
+
+
+  const overlay =
+    document.createElement("div");
+
+  overlay.id =
+    "addStockSuccessMessage";
+
+
+  overlay.innerHTML = `
+
+    <div class="product-success-overlay">
+
+      <div class="product-success-card">
+
+        <div class="product-success-icon">
+          ✓
+        </div>
+
+        <div class="product-success-title">
+          STOCK ADDED SUCCESSFULLY!
+        </div>
+
+        <div class="product-success-details">
+
+          <div>
+            <span>Product</span>
+            <strong>${escapeHtml(data.productName)}</strong>
+          </div>
+
+          <div>
+            <span>Barcode</span>
+            <strong>${escapeHtml(data.barcode)}</strong>
+          </div>
+
+          <div>
+            <span>Added Stock</span>
+            <strong>${Number(data.addedStock)}</strong>
+          </div>
+
+          <div>
+            <span>Previous Stock</span>
+            <strong>${Number(data.previousStock)}</strong>
+          </div>
+
+          <div>
+            <span>New Available Stock</span>
+            <strong>${Number(data.available)}</strong>
+          </div>
+
+        </div>
+
+        <button
+          type="button"
+          class="product-success-button"
+          onclick="closeAddStockSuccessMessage()">
+
+          DONE
+
+        </button>
+
+      </div>
+
+    </div>
+
+  `;
+
+
+  document.body.appendChild(
+    overlay
+  );
+
+}
+
+
+/* =================================================
+   CLOSE ADD STOCK SUCCESS MESSAGE
+================================================= */
+
+function closeAddStockSuccessMessage() {
+
+  const overlay =
+    document.getElementById(
+      "addStockSuccessMessage"
+    );
+
+  if (overlay) {
+
+    overlay.remove();
+
+  }
 
 }
 
