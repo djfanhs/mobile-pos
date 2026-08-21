@@ -2680,20 +2680,54 @@
 
     <!-- BARCODE -->
 
-    <div class="form-group">
+<div class="form-group">
 
-      <label for="addProductBarcode">
-        Barcode
-      </label>
+  <label for="addProductBarcode">
+    Barcode
+  </label>
 
-      <input
-        id="addProductBarcode"
-        type="text"
-        inputmode="numeric"
-        placeholder="Enter or scan barcode"
-        autocomplete="off">
+  <div class="barcode-input-row">
 
-    </div>
+    <input
+      id="addProductBarcode"
+      type="text"
+      inputmode="numeric"
+      placeholder="Enter or scan barcode"
+      autocomplete="off">
+
+    <button
+      id="scanAddProductButton"
+      type="button"
+      onclick="startAddProductScanner()">
+
+      📷 SCAN
+
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- ADD PRODUCT BARCODE SCANNER -->
+
+<div
+  id="addProductScannerContainer"
+  style="display:none;">
+
+  <div
+    id="add-product-barcode-reader">
+  </div>
+
+  <button
+    type="button"
+    onclick="stopAddProductScanner()">
+
+    STOP SCANNER
+
+  </button>
+
+</div>
 
 
     <!-- PRODUCT ID -->
@@ -3177,6 +3211,238 @@
     document.head.appendChild(script);
   }
 
+
+  /* =================================================
+   ADD PRODUCT BARCODE SCANNER
+================================================= */
+
+let addProductScanner = null;
+let addProductScannerRunning = false;
+
+
+/* =================================================
+   START ADD PRODUCT SCANNER
+================================================= */
+
+function startAddProductScanner() {
+
+  const container =
+    document.getElementById(
+      "addProductScannerContainer"
+    );
+
+  const reader =
+    document.getElementById(
+      "add-product-barcode-reader"
+    );
+
+  if (!container || !reader) {
+
+    alert(
+      "Add Product scanner area was not found."
+    );
+
+    return;
+
+  }
+
+
+  if (
+    addProductScannerRunning
+  ) {
+
+    return;
+
+  }
+
+
+  container.style.display =
+    "block";
+
+
+  addProductScanner =
+    new Html5Qrcode(
+      "add-product-barcode-reader"
+    );
+
+
+  addProductScanner.start(
+
+    {
+      facingMode: "environment"
+    },
+
+    {
+      fps: 10,
+
+      qrbox: {
+        width: 280,
+        height: 150
+      }
+
+    },
+
+    function(decodedText) {
+
+      const barcode =
+        String(
+          decodedText
+        ).trim();
+
+
+      if (!barcode) {
+        return;
+      }
+
+
+      console.log(
+        "ADD PRODUCT BARCODE DETECTED:",
+        barcode
+      );
+
+
+      const input =
+        document.getElementById(
+          "addProductBarcode"
+        );
+
+
+      if (input) {
+
+        input.value =
+          barcode;
+
+        input.dispatchEvent(
+          new Event(
+            "input",
+            {
+              bubbles: true
+            }
+          )
+        );
+
+      }
+
+
+      stopAddProductScanner();
+
+
+      if (input) {
+        input.focus();
+      }
+
+    },
+
+    function(errorMessage) {
+
+      // Normal scanner decoding errors.
+      // Do not display an alert for these.
+
+    }
+
+  )
+
+  .then(function() {
+
+    addProductScannerRunning =
+      true;
+
+  })
+
+  .catch(function(error) {
+
+    console.error(
+      "ADD PRODUCT SCANNER ERROR:",
+      error
+    );
+
+    container.style.display =
+      "none";
+
+    addProductScanner =
+      null;
+
+    addProductScannerRunning =
+      false;
+
+
+    alert(
+      "Unable to start the camera scanner."
+    );
+
+  });
+
+}
+
+
+/* =================================================
+   STOP ADD PRODUCT SCANNER
+================================================= */
+
+function stopAddProductScanner() {
+
+  if (
+    !addProductScanner
+  ) {
+
+    const container =
+      document.getElementById(
+        "addProductScannerContainer"
+      );
+
+    if (container) {
+      container.style.display =
+        "none";
+    }
+
+    return;
+
+  }
+
+
+  addProductScanner
+    .stop()
+
+    .then(function() {
+
+      return addProductScanner.clear();
+
+    })
+
+    .catch(function(error) {
+
+      console.warn(
+        "Scanner stop warning:",
+        error
+      );
+
+    })
+
+    .finally(function() {
+
+      addProductScanner =
+        null;
+
+      addProductScannerRunning =
+        false;
+
+
+      const container =
+        document.getElementById(
+          "addProductScannerContainer"
+        );
+
+
+      if (container) {
+
+        container.style.display =
+          "none";
+
+      }
+
+    });
+
+}
   /* =================================================
    REGISTER NEW PRODUCT
 ================================================= */
