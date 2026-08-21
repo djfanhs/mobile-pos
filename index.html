@@ -3445,44 +3445,61 @@ function stopAddProductScanner() {
 
 }
 
-  /* =================================================
+/* =================================================
    BARCODE SCAN SOUND
 ================================================= */
+
+let barcodeAudioContext = null;
 
 function playBarcodeScanSound() {
 
   try {
 
-    const audioContext =
-      new (
-        window.AudioContext ||
-        window.webkitAudioContext
-      )();
+    if (!barcodeAudioContext) {
+
+      barcodeAudioContext =
+        new (
+          window.AudioContext ||
+          window.webkitAudioContext
+        )();
+
+    }
+
+
+    if (
+      barcodeAudioContext.state ===
+      "suspended"
+    ) {
+
+      barcodeAudioContext.resume();
+
+    }
 
 
     const oscillator =
-      audioContext.createOscillator();
-
+      barcodeAudioContext.createOscillator();
 
     const gainNode =
-      audioContext.createGain();
+      barcodeAudioContext.createGain();
 
 
     oscillator.type =
       "sine";
 
-    oscillator.frequency.value =
-      1000;
+    oscillator.frequency.setValueAtTime(
+      1200,
+      barcodeAudioContext.currentTime
+    );
 
 
     gainNode.gain.setValueAtTime(
-      0.25,
-      audioContext.currentTime
+      0.30,
+      barcodeAudioContext.currentTime
     );
 
     gainNode.gain.exponentialRampToValueAtTime(
       0.001,
-      audioContext.currentTime + 0.15
+      barcodeAudioContext.currentTime + 0.20
     );
 
 
@@ -3491,21 +3508,21 @@ function playBarcodeScanSound() {
     );
 
     gainNode.connect(
-      audioContext.destination
+      barcodeAudioContext.destination
     );
 
 
     oscillator.start();
 
     oscillator.stop(
-      audioContext.currentTime + 0.15
+      barcodeAudioContext.currentTime + 0.20
     );
 
 
   } catch (error) {
 
-    console.warn(
-      "Barcode scan sound unavailable:",
+    console.error(
+      "Barcode scan sound error:",
       error
     );
 
