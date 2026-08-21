@@ -5277,6 +5277,7 @@ function onBarcodeDetected(decodedText, decodedResult) {
   lastScanTime = now;
 
   setScannerStatus("Product detected: " + barcode);
+  playBarcodeScanSound();
   console.log("Barcode detected:", barcode);
 
   callPOSApi(
