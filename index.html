@@ -4116,6 +4116,314 @@ function findProductForAddStock(barcode) {
   );
 
 }
+
+  /* =================================================
+   ADD STOCK TO PRODUCT
+================================================= */
+
+function addStockToProduct() {
+
+  const barcodeInput =
+    document.getElementById(
+      "addStockBarcode"
+    );
+
+  const productNameInput =
+    document.getElementById(
+      "addStockProductName"
+    );
+
+  const currentStockInput =
+    document.getElementById(
+      "addStockCurrent"
+    );
+
+  const quantityInput =
+    document.getElementById(
+      "addStockQuantity"
+    );
+
+  const button =
+    document.getElementById(
+      "addStockButton"
+    );
+
+
+  /* =============================================
+     CHECK ELEMENTS
+  ============================================= */
+
+  if (
+    !barcodeInput ||
+    !productNameInput ||
+    !currentStockInput ||
+    !quantityInput ||
+    !button
+  ) {
+
+    alert(
+      "Add Stock form is incomplete."
+    );
+
+    return;
+
+  }
+
+
+  /* =============================================
+     READ VALUES
+  ============================================= */
+
+  const barcode =
+    String(
+      barcodeInput.value
+    ).trim();
+
+
+  const productName =
+    String(
+      productNameInput.value
+    ).trim();
+
+
+  const quantity =
+    Number(
+      quantityInput.value
+    );
+
+
+  /* =============================================
+     VALIDATE BARCODE
+  ============================================= */
+
+  if (!barcode) {
+
+    alert(
+      "Please scan or enter a barcode."
+    );
+
+    barcodeInput.focus();
+
+    return;
+
+  }
+
+
+  /* =============================================
+     VALIDATE PRODUCT
+  ============================================= */
+
+  if (!productName) {
+
+    alert(
+      "Please scan a valid existing product first."
+    );
+
+    barcodeInput.focus();
+
+    return;
+
+  }
+
+
+  /* =============================================
+     VALIDATE QUANTITY
+  ============================================= */
+
+  if (
+    !Number.isFinite(quantity) ||
+    quantity <= 0
+  ) {
+
+    alert(
+      "Please enter a valid quantity to add."
+    );
+
+    quantityInput.focus();
+
+    return;
+
+  }
+
+
+  /* =============================================
+     DISABLE BUTTON
+  ============================================= */
+
+  button.disabled =
+    true;
+
+  button.textContent =
+    "ADDING...";
+
+
+  /* =============================================
+     PREPARE DATA
+  ============================================= */
+
+  const stockData = {
+
+    barcode:
+      barcode,
+
+    quantity:
+      quantity
+
+  };
+
+
+  console.log(
+    "ADDING STOCK:",
+    stockData
+  );
+
+
+  /* =============================================
+     SEND TO APPS SCRIPT
+  ============================================= */
+
+  callPOSApi(
+
+    "addStock",
+
+    {
+      data:
+        JSON.stringify(
+          stockData
+        )
+    },
+
+
+    function(result) {
+
+      console.log(
+        "ADD STOCK RESPONSE:",
+        result
+      );
+
+
+      button.disabled =
+        false;
+
+      button.textContent =
+        "ADD STOCK";
+
+
+      /* =========================================
+         FAILED
+      ========================================= */
+
+      if (
+        !result ||
+        result.success !== true
+      ) {
+
+        alert(
+
+          result &&
+          result.message
+
+            ? result.message
+
+            : "Unable to add stock."
+
+        );
+
+        return;
+
+      }
+
+
+      /* =========================================
+         SUCCESS
+      ========================================= */
+
+      const product =
+        result.product || {};
+
+
+      alert(
+
+        "STOCK ADDED SUCCESSFULLY!\n\n" +
+
+        "Product: " +
+        (
+          product.productName ||
+          productName
+        ) +
+
+        "\nAdded Stock: " +
+        (
+          product.addedStock ||
+          quantity
+        ) +
+
+        "\nNew Available Stock: " +
+        (
+          product.available ||
+          0
+        )
+
+      );
+
+
+      /* =========================================
+         UPDATE CURRENT STOCK DISPLAY
+      ========================================= */
+
+      if (currentStockInput) {
+
+        currentStockInput.value =
+          Number(
+            product.available
+          ) || 0;
+
+      }
+
+
+      /* =========================================
+         CLEAR QUANTITY
+      ========================================= */
+
+      quantityInput.value =
+        "";
+
+      quantityInput.focus();
+
+    },
+
+
+    function(error) {
+
+      console.error(
+        "ADD STOCK ERROR:",
+        error
+      );
+
+
+      button.disabled =
+        false;
+
+      button.textContent =
+        "ADD STOCK";
+
+
+      alert(
+
+        error &&
+        error.message
+
+          ? error.message
+
+          : "Unable to connect to the Mobile POS server."
+
+      );
+
+    }
+
+  );
+
+}
   /* =================================================
    REGISTER NEW PRODUCT
 ================================================= */
