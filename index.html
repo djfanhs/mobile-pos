@@ -2864,8 +2864,9 @@
 </button>
 <div
   id="addStockForm"
-  class="form-section"
   style="display:none;">
+
+  <div class="scanner-card">
 
   <h3>ADD STOCK</h3>
 
@@ -2963,6 +2964,8 @@
     ADD STOCK
 
   </button>
+
+</div>
 
 </div>
 
@@ -4533,20 +4536,29 @@ function showAddStockForm() {
 
 
   if (buttons) {
-    buttons.style.display = "none";
+
+    buttons.style.display =
+      "none";
+
   }
+
 
   if (registrationForm) {
-    registrationForm.style.display = "none";
+
+    registrationForm.style.display =
+      "none";
+
   }
 
+
   if (addStockForm) {
-    addStockForm.style.display = "block";
+
+    addStockForm.style.display =
+      "block";
+
   }
 
 }
-
-
 /* =================================================
    BACK TO PRODUCT ACTIONS
 ================================================= */
