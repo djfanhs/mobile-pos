@@ -6355,7 +6355,8 @@ function loadInventory(searchText) {
           ? result.products
           : [];
 
-
+window.inventoryProducts =
+  products;
       renderInventory(
         products
       );
@@ -6424,7 +6425,7 @@ function loadInventory(searchText) {
 
 }
 
-
+setupInventorySearch();
 /* =================================================
    RENDER INVENTORY
 ================================================= */
@@ -6590,6 +6591,127 @@ else {
 let currentInventoryFilter =
   "ALL";
 
+
+  /* =================================================
+   INVENTORY SEARCH
+================================================= */
+
+function setupInventorySearch() {
+
+  const searchInput =
+    document.getElementById(
+      "inventorySearch"
+    );
+
+  if (!searchInput) {
+    return;
+  }
+
+
+  /* Prevent duplicate listeners */
+
+  if (
+    searchInput.dataset.searchReady ===
+    "true"
+  ) {
+    return;
+  }
+
+
+  searchInput.dataset.searchReady =
+    "true";
+
+
+  searchInput.addEventListener(
+    "input",
+    function() {
+
+      const search =
+        String(
+          searchInput.value || ""
+        )
+        .trim()
+        .toLowerCase();
+
+
+      /* =========================================
+         GET CURRENT INVENTORY
+      ========================================= */
+
+      if (
+        !Array.isArray(
+          window.inventoryProducts
+        )
+      ) {
+
+        return;
+
+      }
+
+
+      /* =========================================
+         FILTER
+      ========================================= */
+
+      const filteredProducts =
+        window.inventoryProducts.filter(
+          function(product) {
+
+            if (!search) {
+              return true;
+            }
+
+
+            const barcode =
+              String(
+                product.barcode || ""
+              ).toLowerCase();
+
+
+            const productId =
+              String(
+                product.productId || ""
+              ).toLowerCase();
+
+
+            const productName =
+              String(
+                product.productName || ""
+              ).toLowerCase();
+
+
+            return (
+
+              barcode.includes(
+                search
+              ) ||
+
+              productId.includes(
+                search
+              ) ||
+
+              productName.includes(
+                search
+              )
+
+            );
+
+          }
+        );
+
+
+      /* =========================================
+         RENDER FILTERED RESULTS
+      ========================================= */
+
+      renderInventory(
+        filteredProducts
+      );
+
+    }
+  );
+
+}
 /* =================================================
    UPDATE INVENTORY FILTER COUNTS
 ================================================= */
