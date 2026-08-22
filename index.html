@@ -6520,7 +6520,7 @@ function showInventoryProductDetails(product) {
         <button
   type="button"
   class="inventory-details-add-stock-button"
-  onclick="openInventoryAddStock()">
+  onclick='openInventoryAddStock(${JSON.stringify(product)})'>
 
   📦 ADD STOCK
 
@@ -6578,15 +6578,20 @@ function closeInventoryProductDetails() {
    OPEN ADD STOCK FROM INVENTORY
 ================================================= */
 
-function openInventoryAddStock() {
+/* =================================================
+   OPEN ADD STOCK FROM INVENTORY
+================================================= */
+
+function openInventoryAddStock(product) {
 
   console.log(
-    "Opening Add Stock from Inventory..."
+    "Opening Add Stock from Inventory:",
+    product
   );
 
 
   /* =============================================
-     CLOSE PRODUCT DETAILS MODAL
+     CLOSE PRODUCT DETAILS
   ============================================= */
 
   const modal =
@@ -6602,10 +6607,7 @@ function openInventoryAddStock() {
 
 
   /* =============================================
-     OPEN ADD PRODUCT PAGE PROPERLY
-     
-     IMPORTANT:
-     Your system uses .page.active
+     OPEN ADD PRODUCT PAGE
   ============================================= */
 
   if (
@@ -6629,7 +6631,7 @@ function openInventoryAddStock() {
 
 
   /* =============================================
-     GET PRODUCT ACTION ELEMENTS
+     GET FORMS
   ============================================= */
 
   const buttons =
@@ -6649,26 +6651,7 @@ function openInventoryAddStock() {
 
 
   /* =============================================
-     CHECK ADD STOCK FORM
-  ============================================= */
-
-  if (!addStockForm) {
-
-    console.error(
-      "addStockForm NOT FOUND."
-    );
-
-    alert(
-      "Add Stock form was not found."
-    );
-
-    return;
-
-  }
-
-
-  /* =============================================
-     HIDE PRODUCT ACTION BUTTONS
+     SWITCH TO ADD STOCK
   ============================================= */
 
   if (buttons) {
@@ -6678,11 +6661,6 @@ function openInventoryAddStock() {
 
   }
 
-
-  /* =============================================
-     HIDE PRODUCT REGISTRATION
-  ============================================= */
-
   if (registrationForm) {
 
     registrationForm.style.display =
@@ -6690,23 +6668,16 @@ function openInventoryAddStock() {
 
   }
 
+  if (addStockForm) {
 
-  /* =============================================
-     SHOW ADD STOCK
-  ============================================= */
+    addStockForm.style.display =
+      "block";
 
-  addStockForm.style.display =
-    "block";
-
-  addStockForm.style.visibility =
-    "visible";
-
-  addStockForm.style.opacity =
-    "1";
+  }
 
 
   /* =============================================
-     CLEAR PREVIOUS VALUES
+     GET ADD STOCK INPUTS
   ============================================= */
 
   const barcodeInput =
@@ -6730,29 +6701,11 @@ function openInventoryAddStock() {
     );
 
 
-  if (barcodeInput) {
-
-    barcodeInput.value =
-      "";
-
-  }
-
-
-  if (productNameInput) {
-
-    productNameInput.value =
-      "";
-
-  }
-
-
-  if (currentStockInput) {
-
-    currentStockInput.value =
-      "";
-
-  }
-
+  /* =============================================
+     CLEAR QUANTITY ONLY
+     
+     We are NOT clearing the selected product.
+  ============================================= */
 
   if (quantityInput) {
 
@@ -6763,15 +6716,51 @@ function openInventoryAddStock() {
 
 
   /* =============================================
-     FOCUS BARCODE
+     FILL SELECTED PRODUCT
+  ============================================= */
+
+  if (product) {
+
+    if (barcodeInput) {
+
+      barcodeInput.value =
+        product.barcode ||
+        "";
+
+    }
+
+
+    if (productNameInput) {
+
+      productNameInput.value =
+        product.productName ||
+        "";
+
+    }
+
+
+    if (currentStockInput) {
+
+      currentStockInput.value =
+        Number(
+          product.available
+        ) || 0;
+
+    }
+
+  }
+
+
+  /* =============================================
+     FOCUS QUANTITY
   ============================================= */
 
   setTimeout(
     function() {
 
-      if (barcodeInput) {
+      if (quantityInput) {
 
-        barcodeInput.focus();
+        quantityInput.focus();
 
       }
 
@@ -6781,11 +6770,26 @@ function openInventoryAddStock() {
 
 
   console.log(
-    "Add Stock form opened from Inventory."
+    "ADD STOCK READY:",
+    {
+      barcode:
+        barcodeInput
+          ? barcodeInput.value
+          : "",
+
+      product:
+        productNameInput
+          ? productNameInput.value
+          : "",
+
+      currentStock:
+        currentStockInput
+          ? currentStockInput.value
+          : ""
+    }
   );
 
-}
-/* =================================================
+}/* =================================================
    INVENTORY SEARCH
 ================================================= */
 
