@@ -2522,6 +2522,41 @@
   cursor: pointer;
 
 }
+
+    /* =================================================
+   INVENTORY DETAILS - ADD STOCK BUTTON
+================================================= */
+
+.inventory-details-add-stock-button {
+
+  width: 100%;
+
+  margin-top: 22px;
+
+  padding: 15px;
+
+  border: none;
+
+  border-radius: 14px;
+
+  background: #16a34a;
+
+  color: white;
+
+  font-size: 17px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+}
+
+
+.inventory-details-add-stock-button:active {
+
+  transform: scale(0.98);
+
+}
     
   </style>
 
@@ -6483,13 +6518,22 @@ function showInventoryProductDetails(product) {
 
 
         <button
-          type="button"
-          class="inventory-details-close-button"
-          onclick="closeInventoryProductDetails()">
+  type="button"
+  class="inventory-details-add-stock-button"
+  onclick="openInventoryAddStock()">
 
-          DONE
+  📦 ADD STOCK
 
-        </button>
+</button>
+
+<button
+  type="button"
+  class="inventory-details-close-button"
+  onclick="closeInventoryProductDetails()">
+
+  DONE
+
+</button>
 
 
       </div>
@@ -6526,6 +6570,135 @@ function closeInventoryProductDetails() {
 
 }
 
+  /* =================================================
+   OPEN ADD STOCK FROM INVENTORY
+================================================= */
+
+function openInventoryAddStock() {
+
+  const modal =
+    document.getElementById(
+      "inventoryProductDetails"
+    );
+
+
+  if (modal) {
+
+    modal.remove();
+
+  }
+
+
+  const inventoryPage =
+    document.getElementById(
+      "inventoryPage"
+    );
+
+
+  const addStockForm =
+    document.getElementById(
+      "addStockForm"
+    );
+
+
+  if (!addStockForm) {
+
+    alert(
+      "Add Stock form was not found."
+    );
+
+    return;
+
+  }
+
+
+  /* =============================================
+     HIDE INVENTORY
+  ============================================= */
+
+  if (inventoryPage) {
+
+    inventoryPage.style.display =
+      "none";
+
+  }
+
+
+  /* =============================================
+     SHOW ADD STOCK FORM
+  ============================================= */
+
+  addStockForm.style.display =
+    "block";
+
+
+  /* =============================================
+     CLEAR PREVIOUS VALUES
+  ============================================= */
+
+  const barcodeInput =
+    document.getElementById(
+      "addStockBarcode"
+    );
+
+
+  const productNameInput =
+    document.getElementById(
+      "addStockProductName"
+    );
+
+
+  const currentStockInput =
+    document.getElementById(
+      "addStockCurrent"
+    );
+
+
+  const quantityInput =
+    document.getElementById(
+      "addStockQuantity"
+    );
+
+
+  if (barcodeInput) {
+
+    barcodeInput.value =
+      "";
+
+  }
+
+
+  if (productNameInput) {
+
+    productNameInput.value =
+      "";
+
+  }
+
+
+  if (currentStockInput) {
+
+    currentStockInput.value =
+      "";
+
+  }
+
+
+  if (quantityInput) {
+
+    quantityInput.value =
+      "";
+
+  }
+
+
+  if (barcodeInput) {
+
+    barcodeInput.focus();
+
+  }
+
+}
 /* =================================================
    INVENTORY SEARCH
 ================================================= */
