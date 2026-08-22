@@ -2618,64 +2618,7 @@
 
 }
 
-    /* =================================================
-   INVENTORY FILTERS
-================================================= */
 
-.inventory-filters {
-
-  display: flex;
-
-  gap: 8px;
-
-  overflow-x: auto;
-
-  margin-bottom: 18px;
-
-  padding-bottom: 4px;
-
-}
-
-
-.inventory-filter-button {
-
-  flex-shrink: 0;
-
-  padding: 10px 14px;
-
-  border: 1px solid #d9dce1;
-
-  border-radius: 999px;
-
-  background: #ffffff;
-
-  color: #111827;
-
-  font-size: 13px;
-
-  font-weight: 700;
-
-  cursor: pointer;
-
-}
-
-
-.inventory-filter-button.active {
-
-  background: #111827;
-
-  color: #ffffff;
-
-  border-color: #111827;
-
-}
-
-
-.inventory-filter-button:active {
-
-  transform: scale(0.97);
-
-}
     
   </style>
 
@@ -6423,6 +6366,8 @@ function loadInventory(searchText) {
 function renderInventory(
   products
 ) {
+  window.inventoryProducts =
+  products;
 
   const tableBody =
     document.getElementById(
@@ -6567,6 +6512,155 @@ else {
       );
 
     }
+  );
+
+}
+
+  /* =================================================
+   INVENTORY FILTER
+================================================= */
+
+let currentInventoryFilter =
+  "ALL";
+
+
+function filterInventory(filter) {
+
+  currentInventoryFilter =
+    String(
+      filter || "ALL"
+    ).toUpperCase();
+
+
+  /* =============================================
+     UPDATE ACTIVE BUTTON
+  ============================================= */
+
+  const buttons =
+    document.querySelectorAll(
+      ".inventory-filter-button"
+    );
+
+
+  buttons.forEach(
+    function(button) {
+
+      const buttonFilter =
+        String(
+          button.dataset.filter || ""
+        ).toUpperCase();
+
+
+      if (
+        buttonFilter ===
+        currentInventoryFilter
+      ) {
+
+        button.classList.add(
+          "active"
+        );
+
+      } else {
+
+        button.classList.remove(
+          "active"
+        );
+
+      }
+
+    }
+  );
+
+
+  /* =============================================
+     GET CURRENT INVENTORY DATA
+  ============================================= */
+
+  if (
+    !Array.isArray(
+      window.inventoryProducts
+    )
+  ) {
+
+    console.warn(
+      "Inventory products are not available."
+    );
+
+    return;
+
+  }
+
+
+  /* =============================================
+     FILTER PRODUCTS
+  ============================================= */
+
+  let filteredProducts =
+    window.inventoryProducts;
+
+
+  if (
+    currentInventoryFilter !==
+    "ALL"
+  ) {
+
+    filteredProducts =
+      window.inventoryProducts.filter(
+        function(product) {
+
+          const available =
+            Number(
+              product.available || 0
+            );
+
+
+          if (
+            currentInventoryFilter ===
+            "AVAILABLE"
+          ) {
+
+            return available > 5;
+
+          }
+
+
+          if (
+            currentInventoryFilter ===
+            "LOW STOCK"
+          ) {
+
+            return (
+              available > 0 &&
+              available <= 5
+            );
+
+          }
+
+
+          if (
+            currentInventoryFilter ===
+            "OUT OF STOCK"
+          ) {
+
+            return available <= 0;
+
+          }
+
+
+          return true;
+
+        }
+      );
+
+  }
+
+
+  /* =============================================
+     RENDER FILTERED PRODUCTS
+  ============================================= */
+
+  renderInventory(
+    filteredProducts
   );
 
 }
