@@ -2099,6 +2099,180 @@
   cursor: pointer;
 
 }
+
+    /* =================================================
+   INVENTORY
+================================================= */
+
+.inventory-toolbar {
+
+  display: flex;
+
+  gap: 12px;
+
+  align-items: center;
+
+  margin-bottom: 18px;
+
+}
+
+
+.inventory-search {
+
+  flex: 1;
+
+}
+
+
+.inventory-search input {
+
+  width: 100%;
+
+  box-sizing: border-box;
+
+  padding: 14px 16px;
+
+  border-radius: 12px;
+
+  border: 1px solid #d9dce1;
+
+  background: #fff;
+
+  font-size: 16px;
+
+  outline: none;
+
+}
+
+
+.inventory-search input:focus {
+
+  border-color: #111827;
+
+}
+
+
+#inventoryRefreshButton {
+
+  width: auto;
+
+  min-width: 120px;
+
+  margin-top: 0;
+
+}
+
+
+.inventory-status {
+
+  text-align: center;
+
+  padding: 12px;
+
+  margin-bottom: 12px;
+
+  font-size: 14px;
+
+  color: #777;
+
+}
+
+
+.inventory-table-wrapper {
+
+  width: 100%;
+
+  overflow-x: auto;
+
+  border-radius: 16px;
+
+}
+
+
+.inventory-table {
+
+  width: 100%;
+
+  border-collapse: collapse;
+
+  min-width: 950px;
+
+  background: #fff;
+
+}
+
+
+.inventory-table th {
+
+  padding: 14px 12px;
+
+  text-align: left;
+
+  font-size: 13px;
+
+  font-weight: 700;
+
+  white-space: nowrap;
+
+  background: #f5f6f8;
+
+  border-bottom: 1px solid #ddd;
+
+}
+
+
+.inventory-table td {
+
+  padding: 13px 12px;
+
+  font-size: 14px;
+
+  border-bottom: 1px solid #eee;
+
+  white-space: nowrap;
+
+}
+
+
+.inventory-table tbody tr:hover {
+
+  background: #f9fafb;
+
+}
+
+
+.inventory-status-available {
+
+  font-weight: 700;
+
+}
+
+
+.inventory-status-out {
+
+  font-weight: 700;
+
+}
+
+
+@media (max-width: 700px) {
+
+  .inventory-toolbar {
+
+    flex-direction: column;
+
+    align-items: stretch;
+
+  }
+
+
+  #inventoryRefreshButton {
+
+    width: 100%;
+
+  }
+
+}
     
   </style>
 
@@ -3007,50 +3181,159 @@
 </section>
 
 
-  <!-- ===============================================
-       INVENTORY PAGE
-  ================================================ -->
+  <!-- =================================================
+     INVENTORY PAGE
+================================================= -->
 
-  <section
-    id="inventoryPage"
-    class="page">
+<section
+  id="inventoryPage"
+  class="page">
 
+  <div class="page-heading">
 
-    <div class="page-heading">
-
-      <div class="page-title">
-        Inventory
-      </div>
-
-      <div class="page-description">
-        Monitor your available products and stock.
-      </div>
-
+    <div class="page-title">
+      Inventory
     </div>
 
+    <div class="page-description">
+      View and manage your current product inventory.
+    </div>
 
-    <div class="empty-page">
+  </div>
 
-      <div class="empty-icon">
+
+  <!-- =================================================
+       INVENTORY CARD
+  ================================================= -->
+
+  <div class="scanner-card">
+
+    <div class="scanner-header">
+
+      <div>
+
+        <div class="scanner-title">
+          Product Inventory
+        </div>
+
+        <div class="scanner-subtitle">
+          Search and view your registered products.
+        </div>
+
+      </div>
+
+      <div class="scanner-icon">
         📦
       </div>
 
-      <div class="empty-title">
-        Inventory Coming Next
+    </div>
+
+
+    <!-- =================================================
+         SEARCH + REFRESH
+    ================================================= -->
+
+    <div class="inventory-toolbar">
+
+      <div class="inventory-search">
+
+        <input
+          id="inventorySearch"
+          type="text"
+          placeholder="Search barcode, product ID, or product name..."
+          autocomplete="off">
+
       </div>
 
-      <div class="empty-text">
-        The product inventory list,
-        search and stock status will
-        be added in the inventory part.
-      </div>
+
+      <button
+        id="inventoryRefreshButton"
+        type="button"
+        class="checkout-button"
+        onclick="loadInventory()">
+
+        🔄 REFRESH
+
+      </button>
 
     </div>
 
 
-  </section>
+    <!-- =================================================
+         STATUS
+    ================================================= -->
+
+    <div
+      id="inventoryStatus"
+      class="inventory-status">
+
+      Loading inventory...
+
+    </div>
 
 
+    <!-- =================================================
+         INVENTORY TABLE
+    ================================================= -->
+
+    <div class="inventory-table-wrapper">
+
+      <table
+        id="inventoryTable"
+        class="inventory-table">
+
+        <thead>
+
+          <tr>
+
+            <th>
+              Barcode
+            </th>
+
+            <th>
+              Product ID
+            </th>
+
+            <th>
+              Product Name
+            </th>
+
+            <th>
+              Price
+            </th>
+
+            <th>
+              Beginning Stock
+            </th>
+
+            <th>
+              Sold
+            </th>
+
+            <th>
+              Available
+            </th>
+
+            <th>
+              Status
+            </th>
+
+          </tr>
+
+        </thead>
+
+        <tbody
+          id="inventoryTableBody">
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</section>
 
   <!-- ===============================================
        SALES PAGE
@@ -5314,6 +5597,19 @@ function closeAddStockSuccessMessage() {
 
     }
 
+    if (page === "inventory") {
+
+  setTimeout(
+    function() {
+
+      loadInventory();
+
+    },
+    50
+  );
+
+}
+
 
     if (page === "sales") {
 
@@ -5429,6 +5725,381 @@ function addBarcodeToCart() {
 
 }
 
+  /* =================================================
+   INVENTORY
+================================================= */
+
+let inventoryLoaded = false;
+
+
+/* =================================================
+   LOAD INVENTORY
+================================================= */
+
+function loadInventory(searchText) {
+
+  const status =
+    document.getElementById(
+      "inventoryStatus"
+    );
+
+  const tableBody =
+    document.getElementById(
+      "inventoryTableBody"
+    );
+
+  const refreshButton =
+    document.getElementById(
+      "inventoryRefreshButton"
+    );
+
+
+  if (!status || !tableBody) {
+
+    console.error(
+      "Inventory elements were not found."
+    );
+
+    return;
+
+  }
+
+
+  const search =
+    String(
+      searchText !== undefined
+        ? searchText
+        : (
+            document.getElementById(
+              "inventorySearch"
+            )?.value || ""
+          )
+    ).trim();
+
+
+  status.textContent =
+    "Loading inventory...";
+
+
+  tableBody.innerHTML =
+    "";
+
+
+  if (refreshButton) {
+
+    refreshButton.disabled =
+      true;
+
+    refreshButton.textContent =
+      "LOADING...";
+
+  }
+
+
+  callPOSApi(
+
+    "inventory",
+
+    {
+      search:
+        search
+    },
+
+
+    function(result) {
+
+      console.log(
+        "INVENTORY RESPONSE:",
+        result
+      );
+
+
+      if (refreshButton) {
+
+        refreshButton.disabled =
+          false;
+
+        refreshButton.textContent =
+          "🔄 REFRESH";
+
+      }
+
+
+      if (
+        !result ||
+        result.success !== true
+      ) {
+
+        status.textContent =
+          result &&
+          result.message
+
+            ? result.message
+
+            : "Unable to load inventory.";
+
+        return;
+
+      }
+
+
+      const products =
+        Array.isArray(
+          result.products
+        )
+          ? result.products
+          : [];
+
+
+      renderInventory(
+        products
+      );
+
+
+      inventoryLoaded =
+        true;
+
+
+      if (products.length === 0) {
+
+        status.textContent =
+          search
+
+            ? "No products found."
+
+            : "No products registered.";
+
+      } else {
+
+        status.textContent =
+          products.length +
+          (
+            products.length === 1
+              ? " product"
+              : " products"
+          ) +
+          " found.";
+
+      }
+
+    },
+
+
+    function(error) {
+
+      console.error(
+        "INVENTORY ERROR:",
+        error
+      );
+
+
+      if (refreshButton) {
+
+        refreshButton.disabled =
+          false;
+
+        refreshButton.textContent =
+          "🔄 REFRESH";
+
+      }
+
+
+      status.textContent =
+
+        error &&
+        error.message
+
+          ? error.message
+
+          : "Unable to connect to the Mobile POS server.";
+
+    }
+
+  );
+
+}
+
+
+/* =================================================
+   RENDER INVENTORY
+================================================= */
+
+function renderInventory(
+  products
+) {
+
+  const tableBody =
+    document.getElementById(
+      "inventoryTableBody"
+    );
+
+
+  if (!tableBody) {
+    return;
+  }
+
+
+  tableBody.innerHTML =
+    "";
+
+
+  products.forEach(
+    function(product) {
+
+      const row =
+        document.createElement(
+          "tr"
+        );
+
+
+      const status =
+        String(
+          product.status || ""
+        ).trim();
+
+
+      const statusClass =
+
+        status === "AVAILABLE"
+
+          ? "inventory-status-available"
+
+          : "inventory-status-out";
+
+
+      row.innerHTML = `
+
+        <td>
+          ${escapeHtml(
+            product.barcode || ""
+          )}
+        </td>
+
+        <td>
+          ${escapeHtml(
+            product.productId || ""
+          )}
+        </td>
+
+        <td>
+          ${escapeHtml(
+            product.productName || ""
+          )}
+        </td>
+
+        <td>
+          ₱${Number(
+            product.price || 0
+          ).toFixed(2)}
+        </td>
+
+        <td>
+          ${Number(
+            product.beginningStock || 0
+          )}
+        </td>
+
+        <td>
+          ${Number(
+            product.sold || 0
+          )}
+        </td>
+
+        <td>
+          ${Number(
+            product.available || 0
+          )}
+        </td>
+
+        <td
+          class="${statusClass}">
+          ${escapeHtml(
+            status
+          )}
+        </td>
+
+      `;
+
+
+      tableBody.appendChild(
+        row
+      );
+
+    }
+  );
+
+}
+
+
+/* =================================================
+   INVENTORY SEARCH
+================================================= */
+
+function searchInventory() {
+
+  const input =
+    document.getElementById(
+      "inventorySearch"
+    );
+
+
+  if (!input) {
+    return;
+  }
+
+
+  loadInventory(
+    input.value
+  );
+
+}
+
+  /* =================================================
+   INVENTORY SEARCH LISTENER
+================================================= */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function() {
+
+    const searchInput =
+      document.getElementById(
+        "inventorySearch"
+      );
+
+
+    if (!searchInput) {
+      return;
+    }
+
+
+    let searchTimer = null;
+
+
+    searchInput.addEventListener(
+      "input",
+      function() {
+
+        clearTimeout(
+          searchTimer
+        );
+
+
+        searchTimer =
+          setTimeout(
+            function() {
+
+              searchInventory();
+
+            },
+            350
+          );
+
+      }
+    );
+
+  }
+);
 
 /* =================================================
    PRODUCT NOT FOUND — REGISTER PROMPT
