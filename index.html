@@ -2100,7 +2100,7 @@
 
 }
 
-    /* =================================================
+/* =================================================
    INVENTORY
 ================================================= */
 
@@ -2138,9 +2138,18 @@
 
   background: #fff;
 
+  color: #111827;
+
   font-size: 16px;
 
   outline: none;
+
+}
+
+
+.inventory-search input::placeholder {
+
+  color: #777;
 
 }
 
@@ -2151,6 +2160,10 @@
 
 }
 
+
+/* =================================================
+   REFRESH BUTTON
+================================================= */
 
 #inventoryRefreshButton {
 
@@ -2163,6 +2176,10 @@
 }
 
 
+/* =================================================
+   STATUS
+================================================= */
+
 .inventory-status {
 
   text-align: center;
@@ -2173,10 +2190,14 @@
 
   font-size: 14px;
 
-  color: #777;
+  color: #d1d5db;
 
 }
 
+
+/* =================================================
+   INVENTORY TABLE
+================================================= */
 
 .inventory-table-wrapper {
 
@@ -2186,8 +2207,14 @@
 
   border-radius: 16px;
 
+  background: #ffffff;
+
 }
 
+
+/* IMPORTANT:
+   Explicitly set the table text color.
+*/
 
 .inventory-table {
 
@@ -2197,10 +2224,14 @@
 
   min-width: 950px;
 
-  background: #fff;
+  background: #ffffff;
+
+  color: #111827;
 
 }
 
+
+/* TABLE HEADER */
 
 .inventory-table th {
 
@@ -2216,16 +2247,24 @@
 
   background: #f5f6f8;
 
+  color: #111827;
+
   border-bottom: 1px solid #ddd;
 
 }
 
+
+/* TABLE CELLS */
 
 .inventory-table td {
 
   padding: 13px 12px;
 
   font-size: 14px;
+
+  color: #111827;
+
+  background: #ffffff;
 
   border-bottom: 1px solid #eee;
 
@@ -2234,26 +2273,42 @@
 }
 
 
-.inventory-table tbody tr:hover {
+/* ROW HOVER */
+
+.inventory-table tbody tr:hover td {
 
   background: #f9fafb;
 
+  color: #111827;
+
 }
 
+
+/* AVAILABLE */
 
 .inventory-status-available {
 
   font-weight: 700;
 
+  color: #16a34a !important;
+
 }
 
+
+/* OUT OF STOCK */
 
 .inventory-status-out {
 
   font-weight: 700;
 
+  color: #dc2626 !important;
+
 }
 
+
+/* =================================================
+   MOBILE
+================================================= */
 
 @media (max-width: 700px) {
 
