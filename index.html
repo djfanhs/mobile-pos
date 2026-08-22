@@ -2294,6 +2294,13 @@
 
 }
 
+    .inventory-status-low {
+
+  font-weight: 700;
+
+  color: #f59e0b !important;
+
+}
 
 /* OUT OF STOCK */
 
@@ -6291,19 +6298,51 @@ row.addEventListener(
 );
 
 
-      const status =
-        String(
-          product.status || ""
-        ).trim();
+      /* =============================================
+   AUTOMATIC STOCK STATUS
+============================================= */
+
+const available =
+  Number(
+    product.available || 0
+  );
 
 
-      const statusClass =
+let status = "";
+let statusClass = "";
 
-        status === "AVAILABLE"
 
-          ? "inventory-status-available"
+if (available <= 0) {
 
-          : "inventory-status-out";
+  status =
+    "OUT OF STOCK";
+
+  statusClass =
+    "inventory-status-out";
+
+}
+
+
+else if (available <= 5) {
+
+  status =
+    "LOW STOCK";
+
+  statusClass =
+    "inventory-status-low";
+
+}
+
+
+else {
+
+  status =
+    "AVAILABLE";
+
+  statusClass =
+    "inventory-status-available";
+
+}
 
 
       row.innerHTML = `
