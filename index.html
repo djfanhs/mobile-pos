@@ -2328,6 +2328,200 @@
   }
 
 }
+
+/* =================================================
+   INVENTORY PRODUCT DETAILS MODAL
+================================================= */
+
+.inventory-details-overlay {
+
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 99999;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 20px;
+
+  background: rgba(0, 0, 0, 0.65);
+
+}
+
+
+.inventory-details-card {
+
+  width: 100%;
+
+  max-width: 420px;
+
+  max-height: 90vh;
+
+  overflow-y: auto;
+
+  box-sizing: border-box;
+
+  background: #ffffff;
+
+  border-radius: 24px;
+
+  padding: 28px 24px;
+
+  box-shadow:
+    0 20px 60px rgba(0,0,0,0.30);
+
+}
+
+
+.inventory-details-header {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 15px;
+
+  margin-bottom: 22px;
+
+}
+
+
+.inventory-details-title {
+
+  font-size: 22px;
+
+  font-weight: 800;
+
+  color: #111827;
+
+}
+
+
+.inventory-details-close {
+
+  width: 42px;
+
+  height: 42px;
+
+  border: none;
+
+  border-radius: 50%;
+
+  background: #f1f2f4;
+
+  color: #111827;
+
+  font-size: 22px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+}
+
+
+.inventory-details-product-name {
+
+  text-align: center;
+
+  font-size: 25px;
+
+  font-weight: 800;
+
+  color: #111827;
+
+  margin-bottom: 22px;
+
+}
+
+
+.inventory-details-list {
+
+  background: #f5f6f8;
+
+  border-radius: 16px;
+
+  padding: 15px 16px;
+
+}
+
+
+.inventory-details-row {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 15px;
+
+  padding: 12px 0;
+
+  border-bottom: 1px solid #ddd;
+
+}
+
+
+.inventory-details-row:last-child {
+
+  border-bottom: none;
+
+}
+
+
+.inventory-details-label {
+
+  color: #777;
+
+  font-size: 14px;
+
+}
+
+
+.inventory-details-value {
+
+  color: #111827;
+
+  font-size: 15px;
+
+  font-weight: 700;
+
+  text-align: right;
+
+}
+
+
+.inventory-details-close-button {
+
+  width: 100%;
+
+  margin-top: 22px;
+
+  padding: 15px;
+
+  border: none;
+
+  border-radius: 14px;
+
+  background: #111827;
+
+  color: white;
+
+  font-size: 17px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+}
     
   </style>
 
@@ -6002,9 +6196,23 @@ function renderInventory(
     function(product) {
 
       const row =
-        document.createElement(
-          "tr"
-        );
+  document.createElement(
+    "tr"
+  );
+
+row.style.cursor =
+  "pointer";
+
+row.addEventListener(
+  "click",
+  function() {
+
+    showInventoryProductDetails(
+      product
+    );
+
+  }
+);
 
 
       const status =
@@ -6085,6 +6293,238 @@ function renderInventory(
 
 }
 
+  /* =================================================
+   INVENTORY PRODUCT DETAILS
+================================================= */
+
+function showInventoryProductDetails(product) {
+
+  const existing =
+    document.getElementById(
+      "inventoryProductDetails"
+    );
+
+
+  if (existing) {
+
+    existing.remove();
+
+  }
+
+
+  const overlay =
+    document.createElement(
+      "div"
+    );
+
+
+  overlay.id =
+    "inventoryProductDetails";
+
+
+  overlay.innerHTML = `
+
+    <div class="inventory-details-overlay">
+
+      <div class="inventory-details-card">
+
+
+        <div class="inventory-details-header">
+
+          <div class="inventory-details-title">
+            Product Details
+          </div>
+
+
+          <button
+            type="button"
+            class="inventory-details-close"
+            onclick="closeInventoryProductDetails()">
+
+            ×
+
+          </button>
+
+        </div>
+
+
+        <div class="inventory-details-product-name">
+
+          ${escapeHtml(
+            product.productName || ""
+          )}
+
+        </div>
+
+
+        <div class="inventory-details-list">
+
+
+          <div class="inventory-details-row">
+
+            <span class="inventory-details-label">
+              Product ID
+            </span>
+
+            <strong class="inventory-details-value">
+
+              ${escapeHtml(
+                product.productId || ""
+              )}
+
+            </strong>
+
+          </div>
+
+
+          <div class="inventory-details-row">
+
+            <span class="inventory-details-label">
+              Barcode
+            </span>
+
+            <strong class="inventory-details-value">
+
+              ${escapeHtml(
+                product.barcode || ""
+              )}
+
+            </strong>
+
+          </div>
+
+
+          <div class="inventory-details-row">
+
+            <span class="inventory-details-label">
+              Selling Price
+            </span>
+
+            <strong class="inventory-details-value">
+
+              ₱${Number(
+                product.price || 0
+              ).toFixed(2)}
+
+            </strong>
+
+          </div>
+
+
+          <div class="inventory-details-row">
+
+            <span class="inventory-details-label">
+              Beginning Stock
+            </span>
+
+            <strong class="inventory-details-value">
+
+              ${Number(
+                product.beginningStock || 0
+              )}
+
+            </strong>
+
+          </div>
+
+
+          <div class="inventory-details-row">
+
+            <span class="inventory-details-label">
+              Sold
+            </span>
+
+            <strong class="inventory-details-value">
+
+              ${Number(
+                product.sold || 0
+              )}
+
+            </strong>
+
+          </div>
+
+
+          <div class="inventory-details-row">
+
+            <span class="inventory-details-label">
+              Available Stock
+            </span>
+
+            <strong class="inventory-details-value">
+
+              ${Number(
+                product.available || 0
+              )}
+
+            </strong>
+
+          </div>
+
+
+          <div class="inventory-details-row">
+
+            <span class="inventory-details-label">
+              Status
+            </span>
+
+            <strong class="inventory-details-value">
+
+              ${escapeHtml(
+                product.status || ""
+              )}
+
+            </strong>
+
+          </div>
+
+
+        </div>
+
+
+        <button
+          type="button"
+          class="inventory-details-close-button"
+          onclick="closeInventoryProductDetails()">
+
+          DONE
+
+        </button>
+
+
+      </div>
+
+    </div>
+
+  `;
+
+
+  document.body.appendChild(
+    overlay
+  );
+
+}
+
+
+/* =================================================
+   CLOSE PRODUCT DETAILS
+================================================= */
+
+function closeInventoryProductDetails() {
+
+  const modal =
+    document.getElementById(
+      "inventoryProductDetails"
+    );
+
+
+  if (modal) {
+
+    modal.remove();
+
+  }
+
+}
 
 /* =================================================
    INVENTORY SEARCH
