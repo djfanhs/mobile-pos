@@ -7097,6 +7097,241 @@ function showInventoryProductDetails(product) {
 
 }
 
+  /* =================================================
+   OPEN EDIT PRODUCT
+================================================= */
+
+function openEditProduct(product) {
+
+  /* =============================================
+     CLOSE PRODUCT DETAILS
+  ============================================= */
+
+  const details =
+    document.getElementById(
+      "inventoryProductDetails"
+    );
+
+  if (details) {
+
+    details.remove();
+
+  }
+
+
+  /* =============================================
+     REMOVE EXISTING EDIT MODAL
+  ============================================= */
+
+  const existing =
+    document.getElementById(
+      "editProductModal"
+    );
+
+  if (existing) {
+
+    existing.remove();
+
+  }
+
+
+  /* =============================================
+     SAFE VALUES
+  ============================================= */
+
+  const barcode =
+    String(
+      product.barcode || ""
+    );
+
+  const productId =
+    String(
+      product.productId || ""
+    );
+
+  const productName =
+    String(
+      product.productName || ""
+    );
+
+  const price =
+    Number(
+      product.price || 0
+    );
+
+
+  /* =============================================
+     CREATE MODAL
+  ============================================= */
+
+  const overlay =
+    document.createElement(
+      "div"
+    );
+
+  overlay.id =
+    "editProductModal";
+
+
+  overlay.innerHTML = `
+
+    <div class="product-success-overlay">
+
+      <div class="product-success-card">
+
+        <div class="product-success-title">
+          EDIT PRODUCT
+        </div>
+
+
+        <!-- BARCODE -->
+
+        <div class="form-group">
+
+          <label>
+            Barcode
+          </label>
+
+          <input
+            type="text"
+            value="${escapeHtml(barcode)}"
+            readonly>
+
+        </div>
+
+
+        <!-- PRODUCT ID -->
+
+        <div class="form-group">
+
+          <label for="editProductId">
+            Product ID
+          </label>
+
+          <input
+            id="editProductId"
+            type="text"
+            value="${escapeHtml(productId)}"
+            autocomplete="off">
+
+        </div>
+
+
+        <!-- PRODUCT NAME -->
+
+        <div class="form-group">
+
+          <label for="editProductName">
+            Product Name
+          </label>
+
+          <input
+            id="editProductName"
+            type="text"
+            value="${escapeHtml(productName)}"
+            autocomplete="off">
+
+        </div>
+
+
+        <!-- PRICE -->
+
+        <div class="form-group">
+
+          <label for="editProductPrice">
+            Selling Price
+          </label>
+
+          <input
+            id="editProductPrice"
+            type="number"
+            min="0"
+            step="0.01"
+            value="${price.toFixed(2)}"
+            autocomplete="off">
+
+        </div>
+
+
+        <!-- BUTTONS -->
+
+        <button
+          type="button"
+          id="saveEditProductButton"
+          class="product-success-button"
+          onclick='saveEditedProduct(${JSON.stringify(product)})'>
+
+          SAVE CHANGES
+
+        </button>
+
+
+        <button
+          type="button"
+          class="inventory-details-close-button"
+          onclick="closeEditProductModal()">
+
+          CANCEL
+
+        </button>
+
+      </div>
+
+    </div>
+
+  `;
+
+
+  document.body.appendChild(
+    overlay
+  );
+
+
+  /* =============================================
+     FOCUS PRODUCT NAME
+  ============================================= */
+
+  setTimeout(
+    function() {
+
+      const input =
+        document.getElementById(
+          "editProductName"
+        );
+
+      if (input) {
+
+        input.focus();
+
+        input.select();
+
+      }
+
+    },
+    100
+  );
+
+}
+
+  /* =================================================
+   CLOSE EDIT PRODUCT MODAL
+================================================= */
+
+function closeEditProductModal() {
+
+  const modal =
+    document.getElementById(
+      "editProductModal"
+    );
+
+  if (modal) {
+
+    modal.remove();
+
+  }
+
+}
+
 
 /* =================================================
    CLOSE PRODUCT DETAILS
