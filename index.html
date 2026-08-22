@@ -2617,6 +2617,65 @@
   color: #dc2626 !important;
 
 }
+
+    /* =================================================
+   INVENTORY FILTERS
+================================================= */
+
+.inventory-filters {
+
+  display: flex;
+
+  gap: 8px;
+
+  overflow-x: auto;
+
+  margin-bottom: 18px;
+
+  padding-bottom: 4px;
+
+}
+
+
+.inventory-filter-button {
+
+  flex-shrink: 0;
+
+  padding: 10px 14px;
+
+  border: 1px solid #d9dce1;
+
+  border-radius: 999px;
+
+  background: #ffffff;
+
+  color: #111827;
+
+  font-size: 13px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+}
+
+
+.inventory-filter-button.active {
+
+  background: #111827;
+
+  color: #ffffff;
+
+  border-color: #111827;
+
+}
+
+
+.inventory-filter-button:active {
+
+  transform: scale(0.97);
+
+}
     
   </style>
 
@@ -3588,6 +3647,50 @@
           autocomplete="off">
 
       </div>
+
+      <div class="inventory-filters">
+
+  <button
+    type="button"
+    class="inventory-filter-button active"
+    data-filter="ALL"
+    onclick="filterInventory('ALL')">
+
+    ALL
+
+  </button>
+
+  <button
+    type="button"
+    class="inventory-filter-button"
+    data-filter="AVAILABLE"
+    onclick="filterInventory('AVAILABLE')">
+
+    🟢 AVAILABLE
+
+  </button>
+
+  <button
+    type="button"
+    class="inventory-filter-button"
+    data-filter="LOW STOCK"
+    onclick="filterInventory('LOW STOCK')">
+
+    🟠 LOW STOCK
+
+  </button>
+
+  <button
+    type="button"
+    class="inventory-filter-button"
+    data-filter="OUT OF STOCK"
+    onclick="filterInventory('OUT OF STOCK')">
+
+    🔴 OUT OF STOCK
+
+  </button>
+
+</div>
 
 
       <button
