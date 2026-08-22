@@ -6570,17 +6570,50 @@ function closeInventoryProductDetails() {
 
 }
 
-  /* =================================================
+/* =================================================
    OPEN ADD STOCK FROM INVENTORY
 ================================================= */
 
 function openInventoryAddStock() {
 
+  /* =============================================
+     GET PAGES / FORMS
+  ============================================= */
+
+  const inventoryPage =
+    document.getElementById(
+      "inventoryPage"
+    );
+
+  const addProductPage =
+    document.getElementById(
+      "addProductPage"
+    );
+
+  const productActionButtons =
+    document.getElementById(
+      "productActionButtons"
+    );
+
+  const registrationForm =
+    document.getElementById(
+      "productRegistrationForm"
+    );
+
+  const addStockForm =
+    document.getElementById(
+      "addStockForm"
+    );
+
+
+  /* =============================================
+     CLOSE PRODUCT DETAILS MODAL
+  ============================================= */
+
   const modal =
     document.getElementById(
       "inventoryProductDetails"
     );
-
 
   if (modal) {
 
@@ -6589,31 +6622,8 @@ function openInventoryAddStock() {
   }
 
 
-  const inventoryPage =
-    document.getElementById(
-      "inventoryPage"
-    );
-
-
-  const addStockForm =
-    document.getElementById(
-      "addStockForm"
-    );
-
-
-  if (!addStockForm) {
-
-    alert(
-      "Add Stock form was not found."
-    );
-
-    return;
-
-  }
-
-
   /* =============================================
-     HIDE INVENTORY
+     HIDE INVENTORY PAGE
   ============================================= */
 
   if (inventoryPage) {
@@ -6625,15 +6635,55 @@ function openInventoryAddStock() {
 
 
   /* =============================================
-     SHOW ADD STOCK FORM
+     SHOW ADD PRODUCT PAGE
   ============================================= */
 
-  addStockForm.style.display =
-    "block";
+  if (addProductPage) {
+
+    addProductPage.style.display =
+      "block";
+
+  }
 
 
   /* =============================================
-     CLEAR PREVIOUS VALUES
+     HIDE PRODUCT ACTION BUTTONS
+  ============================================= */
+
+  if (productActionButtons) {
+
+    productActionButtons.style.display =
+      "none";
+
+  }
+
+
+  /* =============================================
+     HIDE PRODUCT REGISTRATION
+  ============================================= */
+
+  if (registrationForm) {
+
+    registrationForm.style.display =
+      "none";
+
+  }
+
+
+  /* =============================================
+     SHOW ADD STOCK FORM
+  ============================================= */
+
+  if (addStockForm) {
+
+    addStockForm.style.display =
+      "block";
+
+  }
+
+
+  /* =============================================
+     CLEAR OLD VALUES
   ============================================= */
 
   const barcodeInput =
@@ -6641,18 +6691,15 @@ function openInventoryAddStock() {
       "addStockBarcode"
     );
 
-
   const productNameInput =
     document.getElementById(
       "addStockProductName"
     );
 
-
   const currentStockInput =
     document.getElementById(
       "addStockCurrent"
     );
-
 
   const quantityInput =
     document.getElementById(
@@ -6692,11 +6739,19 @@ function openInventoryAddStock() {
   }
 
 
-  if (barcodeInput) {
+  /* =============================================
+     FOCUS BARCODE
+  ============================================= */
 
-    barcodeInput.focus();
+  setTimeout(function() {
 
-  }
+    if (barcodeInput) {
+
+      barcodeInput.focus();
+
+    }
+
+  }, 100);
 
 }
 /* =================================================
