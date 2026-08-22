@@ -2649,6 +2649,40 @@
   font-weight: 800;
 
 }
+
+/* =================================================
+   EDIT PRODUCT BUTTON
+================================================= */
+
+.inventory-details-edit-button {
+
+  width: 100%;
+
+  margin-top: 10px;
+
+  padding: 14px;
+
+  border: none;
+
+  border-radius: 14px;
+
+  background: #f3f4f6;
+
+  color: #111827;
+
+  font-size: 16px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+}
+
+.inventory-details-edit-button:active {
+
+  transform: scale(0.98);
+
+}
     
   </style>
 
@@ -7028,6 +7062,15 @@ function showInventoryProductDetails(product) {
   onclick='openInventoryAddStock(${JSON.stringify(product)})'>
 
   📦 ADD STOCK
+
+</button>
+
+<button
+  type="button"
+  class="inventory-details-edit-button"
+  onclick='openEditProduct(${JSON.stringify(product)})'>
+
+  ✏️ EDIT PRODUCT
 
 </button>
 
