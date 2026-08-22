@@ -7332,6 +7332,300 @@ function closeEditProductModal() {
 
 }
 
+  /* =================================================
+   SAVE EDITED PRODUCT
+================================================= */
+
+function saveEditedProduct(originalProduct) {
+
+  const productIdInput =
+    document.getElementById(
+      "editProductId"
+    );
+
+  const productNameInput =
+    document.getElementById(
+      "editProductName"
+    );
+
+  const priceInput =
+    document.getElementById(
+      "editProductPrice"
+    );
+
+  const button =
+    document.getElementById(
+      "saveEditProductButton"
+    );
+
+
+  /* =============================================
+     CHECK ELEMENTS
+  ============================================= */
+
+  if (
+    !productIdInput ||
+    !productNameInput ||
+    !priceInput ||
+    !button
+  ) {
+
+    alert(
+      "Edit Product form is incomplete."
+    );
+
+    return;
+
+  }
+
+
+  /* =============================================
+     READ VALUES
+  ============================================= */
+
+  const barcode =
+    String(
+      originalProduct.barcode || ""
+    ).trim();
+
+  const productId =
+    String(
+      productIdInput.value || ""
+    ).trim();
+
+  const productName =
+    String(
+      productNameInput.value || ""
+    ).trim();
+
+  const price =
+    Number(
+      priceInput.value
+    );
+
+
+  /* =============================================
+     VALIDATE
+  ============================================= */
+
+  if (!barcode) {
+
+    alert(
+      "Product barcode is missing."
+    );
+
+    return;
+
+  }
+
+
+  if (!productId) {
+
+    alert(
+      "Please enter the Product ID."
+    );
+
+    productIdInput.focus();
+
+    return;
+
+  }
+
+
+  if (!productName) {
+
+    alert(
+      "Please enter the Product Name."
+    );
+
+    productNameInput.focus();
+
+    return;
+
+  }
+
+
+  if (
+    !Number.isFinite(price) ||
+    price < 0
+  ) {
+
+    alert(
+      "Please enter a valid selling price."
+    );
+
+    priceInput.focus();
+
+    return;
+
+  }
+
+
+  /* =============================================
+     DISABLE BUTTON
+  ============================================= */
+
+  button.disabled =
+    true;
+
+  button.textContent =
+    "SAVING...";
+
+
+  /* =============================================
+     PREPARE DATA
+  ============================================= */
+
+  const productData = {
+
+    barcode:
+      barcode,
+
+    productId:
+      productId,
+
+    productName:
+      productName,
+
+    price:
+      price
+
+  };
+
+
+  console.log(
+    "UPDATING PRODUCT:",
+    productData
+  );
+
+
+  /* =============================================
+     SEND TO APPS SCRIPT
+  ============================================= */
+
+  callPOSApi(
+
+    "updateProduct",
+
+    {
+      data:
+        JSON.stringify(
+          productData
+        )
+    },
+
+
+    function(result) {
+
+      console.log(
+        "UPDATE PRODUCT RESPONSE:",
+        result
+      );
+
+
+      button.disabled =
+        false;
+
+      button.textContent =
+        "SAVE CHANGES";
+
+
+      /* =========================================
+         FAILED
+      ========================================= */
+
+      if (
+        !result ||
+        result.success !== true
+      ) {
+
+        alert(
+
+          result &&
+          result.message
+
+            ? result.message
+
+            : "Unable to update product."
+
+        );
+
+        return;
+
+      }
+
+
+      /* =========================================
+         SUCCESS
+      ========================================= */
+
+      closeEditProductModal();
+
+
+      /* =========================================
+         SHOW SUCCESS MESSAGE
+      ========================================= */
+
+      alert(
+        "PRODUCT UPDATED SUCCESSFULLY!"
+      );
+
+
+      /* =========================================
+         REFRESH INVENTORY
+      ========================================= */
+
+      if (
+        typeof loadInventory ===
+        "function"
+      ) {
+
+        setTimeout(
+          function() {
+
+            loadInventory();
+
+          },
+          200
+        );
+
+      }
+
+    },
+
+
+    function(error) {
+
+      console.error(
+        "UPDATE PRODUCT ERROR:",
+        error
+      );
+
+
+      button.disabled =
+        false;
+
+      button.textContent =
+        "SAVE CHANGES";
+
+
+      alert(
+
+        error &&
+        error.message
+
+          ? error.message
+
+          : "Unable to connect to the Mobile POS server."
+
+      );
+
+    }
+
+  );
+
+}
+
 
 /* =================================================
    CLOSE PRODUCT DETAILS
