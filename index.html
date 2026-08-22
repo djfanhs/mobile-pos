@@ -2564,6 +2564,59 @@
   transform: scale(0.98);
 
 }
+
+    /* =================================================
+   INVENTORY STATUS BADGE
+================================================= */
+
+.inventory-status-badge {
+
+  display: inline-block;
+
+  padding: 6px 10px;
+
+  border-radius: 999px;
+
+  font-size: 12px;
+
+  font-weight: 800;
+
+  white-space: nowrap;
+
+}
+
+
+/* AVAILABLE */
+
+.inventory-status-badge.inventory-status-available {
+
+  background: #dcfce7;
+
+  color: #16a34a !important;
+
+}
+
+
+/* LOW STOCK */
+
+.inventory-status-badge.inventory-status-low {
+
+  background: #fef3c7;
+
+  color: #f59e0b !important;
+
+}
+
+
+/* OUT OF STOCK */
+
+.inventory-status-badge.inventory-status-out {
+
+  background: #fee2e2;
+
+  color: #dc2626 !important;
+
+}
     
   </style>
 
@@ -6389,12 +6442,11 @@ else {
           )}
         </td>
 
-        <td
-          class="${statusClass}">
-          ${escapeHtml(
-            status
-          )}
-        </td>
+        <td>
+  <span class="inventory-status-badge ${statusClass}">
+    ${escapeHtml(status)}
+  </span>
+</td>
 
       `;
 
