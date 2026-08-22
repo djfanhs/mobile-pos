@@ -5737,6 +5737,10 @@ function showAddStockSuccessMessage(data) {
    CLOSE ADD STOCK SUCCESS MODAL
 ================================================= */
 
+/* =================================================
+   CLOSE ADD STOCK SUCCESS MODAL
+================================================= */
+
 function closeAddStockSuccessMessage() {
 
   const overlay =
@@ -5747,6 +5751,43 @@ function closeAddStockSuccessMessage() {
   if (overlay) {
 
     overlay.remove();
+
+  }
+
+
+  /* =============================================
+     RETURN TO INVENTORY
+  ============================================= */
+
+  if (
+    typeof showPage ===
+    "function"
+  ) {
+
+    showPage(
+      "inventory"
+    );
+
+  }
+
+
+  /* =============================================
+     REFRESH INVENTORY
+  ============================================= */
+
+  if (
+    typeof loadInventory ===
+    "function"
+  ) {
+
+    setTimeout(
+      function() {
+
+        loadInventory();
+
+      },
+      200
+    );
 
   }
 
