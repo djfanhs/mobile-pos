@@ -3633,33 +3633,86 @@
 
 
     <!-- =================================================
-         SEARCH + REFRESH
-    ================================================= -->
+     SEARCH + REFRESH
+================================================= -->
 
-    <div class="inventory-toolbar">
+<div class="inventory-toolbar">
 
-      <div class="inventory-search">
+  <div class="inventory-search">
 
-        <input
-          id="inventorySearch"
-          type="text"
-          placeholder="Search barcode, product ID, or product name..."
-          autocomplete="off">
+    <input
+      id="inventorySearch"
+      type="text"
+      placeholder="Search barcode, product ID, or product name..."
+      autocomplete="off">
+
+  </div>
 
 
+  <button
+    id="inventoryRefreshButton"
+    type="button"
+    class="checkout-button"
+    onclick="loadInventory()">
 
-      <button
-        id="inventoryRefreshButton"
-        type="button"
-        class="checkout-button"
-        onclick="loadInventory()">
+    🔄 REFRESH
 
-        🔄 REFRESH
+  </button>
 
-      </button>
+</div>
 
-    </div>
 
+<!-- =================================================
+     INVENTORY FILTERS
+================================================= -->
+
+<div class="inventory-filters">
+
+  <button
+    type="button"
+    class="inventory-filter-button active"
+    data-filter="ALL"
+    onclick="filterInventory('ALL')">
+
+    ALL
+
+  </button>
+
+
+  <button
+    type="button"
+    class="inventory-filter-button"
+    data-filter="AVAILABLE"
+    onclick="filterInventory('AVAILABLE')">
+
+    🟢 AVAILABLE
+
+  </button>
+
+
+  <button
+    type="button"
+    class="inventory-filter-button"
+    data-filter="LOW STOCK"
+    onclick="filterInventory('LOW STOCK')">
+
+    🟠 LOW STOCK
+
+  </button>
+
+
+  <button
+    type="button"
+    class="inventory-filter-button"
+    data-filter="OUT OF STOCK"
+    onclick="filterInventory('OUT OF STOCK')">
+
+    🔴 OUT OF STOCK
+
+  </button>
+
+</div>
+  </div>
 
     <!-- =================================================
          STATUS
