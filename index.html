@@ -2618,7 +2618,37 @@
 
 }
 
+/* =================================================
+   INVENTORY FILTER COUNT
+================================================= */
 
+.inventory-filter-count {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  min-width: 20px;
+
+  height: 20px;
+
+  margin-left: 4px;
+
+  padding: 0 5px;
+
+  box-sizing: border-box;
+
+  border-radius: 999px;
+
+  background: rgba(0, 0, 0, 0.08);
+
+  font-size: 11px;
+
+  font-weight: 800;
+
+}
     
   </style>
 
@@ -6370,6 +6400,7 @@ function renderInventory(
 ) {
   window.inventoryProducts =
   products;
+  updateInventoryFilterCounts();
 
   const tableBody =
     document.getElementById(
@@ -6525,7 +6556,142 @@ else {
 let currentInventoryFilter =
   "ALL";
 
+/* =================================================
+   UPDATE INVENTORY FILTER COUNTS
+================================================= */
 
+function updateInventoryFilterCounts() {
+
+  if (
+    !Array.isArray(
+      window.inventoryProducts
+    )
+  ) {
+
+    return;
+
+  }
+
+
+  let allCount =
+    window.inventoryProducts.length;
+
+  let availableCount = 0;
+
+  let lowStockCount = 0;
+
+  let outOfStockCount = 0;
+
+
+  window.inventoryProducts.forEach(
+    function(product) {
+
+      const available =
+        Number(
+          product.available || 0
+        );
+
+
+      if (available <= 0) {
+
+        outOfStockCount++;
+
+      }
+
+      else if (available <= 5) {
+
+        lowStockCount++;
+
+      }
+
+      else {
+
+        availableCount++;
+
+      }
+
+    }
+  );
+
+
+  /* =============================================
+     UPDATE BUTTON COUNTS
+  ============================================= */
+
+  const filterButtons =
+    document.querySelectorAll(
+      ".inventory-filter-button"
+    );
+
+
+  filterButtons.forEach(
+    function(button) {
+
+      const filter =
+        String(
+          button.dataset.filter || ""
+        ).toUpperCase();
+
+
+      const countElement =
+        button.querySelector(
+          ".inventory-filter-count"
+        );
+
+
+      if (!countElement) {
+
+        return;
+
+      }
+
+
+      let count = 0;
+
+
+      if (filter === "ALL") {
+
+        count =
+          allCount;
+
+      }
+
+      else if (
+        filter === "AVAILABLE"
+      ) {
+
+        count =
+          availableCount;
+
+      }
+
+      else if (
+        filter === "LOW STOCK"
+      ) {
+
+        count =
+          lowStockCount;
+
+      }
+
+      else if (
+        filter === "OUT OF STOCK"
+      ) {
+
+        count =
+          outOfStockCount;
+
+      }
+
+
+      countElement.textContent =
+        count;
+
+    }
+  );
+
+}
+  
 function filterInventory(filter) {
 
   currentInventoryFilter =
