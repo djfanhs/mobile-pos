@@ -6574,36 +6574,15 @@ function closeInventoryProductDetails() {
    OPEN ADD STOCK FROM INVENTORY
 ================================================= */
 
+/* =================================================
+   OPEN ADD STOCK FROM INVENTORY
+================================================= */
+
 function openInventoryAddStock() {
 
-  /* =============================================
-     GET PAGES / FORMS
-  ============================================= */
-
-  const inventoryPage =
-    document.getElementById(
-      "inventoryPage"
-    );
-
-  const addProductPage =
-    document.getElementById(
-      "addProductPage"
-    );
-
-  const productActionButtons =
-    document.getElementById(
-      "productActionButtons"
-    );
-
-  const registrationForm =
-    document.getElementById(
-      "productRegistrationForm"
-    );
-
-  const addStockForm =
-    document.getElementById(
-      "addStockForm"
-    );
+  console.log(
+    "Opening Add Stock from Inventory..."
+  );
 
 
   /* =============================================
@@ -6623,25 +6602,67 @@ function openInventoryAddStock() {
 
 
   /* =============================================
-     HIDE INVENTORY PAGE
+     OPEN ADD PRODUCT PAGE PROPERLY
+     
+     IMPORTANT:
+     Your system uses .page.active
   ============================================= */
 
-  if (inventoryPage) {
+  if (
+    typeof showPage ===
+    "function"
+  ) {
 
-    inventoryPage.style.display =
-      "none";
+    showPage(
+      "addProduct"
+    );
+
+  } else {
+
+    console.error(
+      "showPage() was not found."
+    );
+
+    return;
 
   }
 
 
   /* =============================================
-     SHOW ADD PRODUCT PAGE
+     GET PRODUCT ACTION ELEMENTS
   ============================================= */
 
-  if (addProductPage) {
+  const buttons =
+    document.getElementById(
+      "productActionButtons"
+    );
 
-    addProductPage.style.display =
-      "block";
+  const registrationForm =
+    document.getElementById(
+      "productRegistrationForm"
+    );
+
+  const addStockForm =
+    document.getElementById(
+      "addStockForm"
+    );
+
+
+  /* =============================================
+     CHECK ADD STOCK FORM
+  ============================================= */
+
+  if (!addStockForm) {
+
+    console.error(
+      "addStockForm NOT FOUND."
+    );
+
+    alert(
+      "Add Stock form was not found."
+    );
+
+    return;
 
   }
 
@@ -6650,9 +6671,9 @@ function openInventoryAddStock() {
      HIDE PRODUCT ACTION BUTTONS
   ============================================= */
 
-  if (productActionButtons) {
+  if (buttons) {
 
-    productActionButtons.style.display =
+    buttons.style.display =
       "none";
 
   }
@@ -6671,19 +6692,21 @@ function openInventoryAddStock() {
 
 
   /* =============================================
-     SHOW ADD STOCK FORM
+     SHOW ADD STOCK
   ============================================= */
 
-  if (addStockForm) {
+  addStockForm.style.display =
+    "block";
 
-    addStockForm.style.display =
-      "block";
+  addStockForm.style.visibility =
+    "visible";
 
-  }
+  addStockForm.style.opacity =
+    "1";
 
 
   /* =============================================
-     CLEAR OLD VALUES
+     CLEAR PREVIOUS VALUES
   ============================================= */
 
   const barcodeInput =
@@ -6743,15 +6766,23 @@ function openInventoryAddStock() {
      FOCUS BARCODE
   ============================================= */
 
-  setTimeout(function() {
+  setTimeout(
+    function() {
 
-    if (barcodeInput) {
+      if (barcodeInput) {
 
-      barcodeInput.focus();
+        barcodeInput.focus();
 
-    }
+      }
 
-  }, 100);
+    },
+    150
+  );
+
+
+  console.log(
+    "Add Stock form opened from Inventory."
+  );
 
 }
 /* =================================================
